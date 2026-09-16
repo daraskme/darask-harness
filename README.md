@@ -14,6 +14,7 @@ darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.ym
 └─ packages/
    ├─ darask/              dsh-darask (パッケージ名は互換のため dsh-darask のまま)
    ├─ dsh-hashline/        @darask/dsh-hashline — grok-build の hashline read/edit/grep 移植
+   ├─ dsh-hunk-tracker/    @darask/dsh-hunk-tracker — セッション変更の hunk 追跡 (ターン帰属 / 外部編集検出 / accept・reject)
    ├─ dsh-memory/          @darask/dsh-memory — クロスセッション記憶 (観測キャプチャ / Dream 統合 / memory_search・memory_get)
    ├─ dsh-rules/           @darask/dsh-rules — .grok/.claude/.cursor rules ディレクトリと glob 条件ルール
    └─ dsh-status-line/     @darask/dsh-status-line — モデル/コンテキスト/コスト/経過時間のステータスライン
@@ -30,6 +31,7 @@ darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.ym
 | ディレクトリ型ルール (`.grok/rules` / `.claude/rules` / `.cursor/rules` の `.md` / `.mdc`、`alwaysApply` / `globs` / `paths` frontmatter): 常時ルールはステップ前に、glob 条件ルールは該当ファイルの読み取り成功後に一度だけ注入 | grok-build `project_rules` / cursor-rules-on-read | `packages/dsh-rules` (`agent/pre-step` と `tools/result` を購読) |
 | ステータスライン (モデル、コンテキスト使用率、トークン、コスト、ターン経過時間、セッション名): 表示項目の設定と外部コマンド契約 (JSON on stdin) | grok-build `ui.status_line` | `packages/dsh-status-line`。上流の `tokenUsage` / `contextPressure` / `sessionStats` projection を参照し、独自 projection はモデル・ターン・料金だけ |
 | クロスセッション記憶 (Memory v2): 完了ターンからツール無しの補助モデル呼び出しで観測を抽出し、global / workspace スコープの不変ファイル + SQLite FTS5 索引 + `MEMORY.md` 目次として保存。Dream (統合) ジョブで観測をトピックへ集約・アーカイブ | grok-build Memory v2 (`memory/`) | `packages/dsh-memory` (`session/event` を購読、`memory_search` / `memory_get` ツール、`/memory` コマンド)。セッション永続化・compaction は上流のまま |
+| 変更追跡 (Hunk tracker): エージェント編集をターン帰属付きの hunk として保持し、外部編集 (`external` / `externalEditOnAgentFile`) と区別。作成・削除・バイナリ・巨大ファイルを個別に扱い、accept でベースラインへ畳み込み、reject でディスクを復元 | grok-build `xai-hunk-tracker` | `packages/dsh-hunk-tracker` (上流ファイルツールの `fs/write-intent` / `fs/edit-intent` / `tools/result` を観測。ファイルツール自体は置き換えない)。`hunks_status` / `hunks_diff` ツール、`/hunks` コマンド |
 | Auto 権限プリセット | dsh-darask | `cordis.patch.yml` の `permission` 行 |
 
 ## 導入
@@ -90,6 +92,15 @@ memory.sqlite                 メタデータと FTS5 索引 (unicode61 + trigra
 - モデル出力はコマンド実行やファイル書き込みを直接行えません。未知のフィールドや上限超過は拒否します。SQLite は Node 24 組み込みの `node:sqlite` を使い、再起動後は不変ファイルから索引を再構築します。
 - 設定は `cordis.patch.yml` の `darask-memory` 項目 (`provider` / `model` を省くとセッションのモデルを使用、`capture` / `injectContext` / `dream` で各段を無効化可能)。
 
+## 変更追跡 (Hunk tracker)
+
+上流の書き込み・編集ツールが通す `fs/write-intent` / `fs/edit-intent` ゲートで、そのセッションが初めて触るファイルの内容をベースラインとして保存し、ツールが `tools/result` で確定した後に再読込して差分を hunk (連続する変更行の塊) として保持します。各 hunk は `agentEdit { turn }` / `externalEditOnAgentFile` / `external` のいずれかに帰属し、追跡中ファイルはターン開始時と照会時に再読込して外部編集を検出します。再計算時は内容一致・重なりで旧 hunk と照合し、ID と帰属を引き継ぎます。
+
+- `hunks_status` (ターン別・ファイル別の保留 hunk 数、accept / reject 集計) と `hunks_diff` (ベースライン→現在の unified diff、`agent_only` でエージェント hunk のみ) はモデル向けの読み取り専用ツール。出力は `diffOutputMaxBytes` で打ち切ります。
+- `/hunks status|list [path]|diff [path]|accept <all|turn N|path|id>|reject <all|turn N|path|id> [--yes]|forget <path>`。accept は hunk をベースラインへ畳み込み、reject は `ctx.fs.writeText` で該当 hunk だけを元に戻します (作成ファイルの reject は削除)。複数 hunk の reject は `--yes` が必要です。
+- 状態は `$DSH_HOME/darask/hunks/<session>.json` に一時ファイル → rename で保存し、再起動後も引き継ぎます (`persist: false` で無効)。`baseline: git-head` にすると初回のベースラインを `git show HEAD:<file>` から取ります。バイナリ (`FS_NOT_TEXT`)・`maxFileBytes` 超・非通常ファイルは hunk を計算せず種別だけ記録します。
+- 追跡はエージェントが触ったファイルに限ります (grok-build の `AgentOnly` 相当)。作業ツリー全体の dirty ファイル追跡と、hunk 単位の UI レビューは未実装です。
+
 ## ハブ更新の配布
 
 dsh-darask の `host-update` はこの monorepo でも動作します。開発モードの PC はハーネスのチェックアウトを `git merge --ff-only` し、インストール済み PC には `packages/darask` を `npm pack` したアーカイブ (`dsh-darask-*.tgz`) を配布します。配布単位をハーネス全体にするのは今後の課題です (下記)。
@@ -97,7 +108,7 @@ dsh-darask の `host-update` はこの monorepo でも動作します。開発�
 ## 今後の課題
 
 - 配布単位を `darask-harness` パッケージにし、リモート PC のインストーラーもハーネスを導入する。
-- grok-build の Hunk tracker、Codebase graph、Agent Dashboard の DSH プラグイン化。
+- grok-build の Codebase graph、Agent Dashboard の DSH プラグイン化。Hunk tracker の全 dirty ファイル追跡と UI レビュー。
 - Memory の埋め込み検索・クエリ拡張 (現状は語彙検索のみ)。
 - dsh-darask 内で上流と重なる補助 UI の整理。
 
