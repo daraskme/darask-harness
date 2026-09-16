@@ -151,10 +151,10 @@ export function DashboardPanel({ navigation, openLocal, loadGroups, hostName, us
       </header>
       <div className="darask-dashboard-toolbar">
         <Input value={query} onChange={event => setQuery(event.target.value)} placeholder="タイトル・PC・フォルダー・モデルで絞り込み" aria-label="絞り込み" />
-        <select value={prefs.grouping} onChange={event => update({ grouping: event.target.value })} aria-label="グループ化">{GROUPINGS.map(value => <option key={value} value={value}>{GROUPING_LABEL[value]}</option>)}</select>
-        <select value={prefs.filter} onChange={event => update({ filter: event.target.value })} aria-label="フィルター">{FILTERS.map(value => <option key={value} value={value}>{FILTER_LABEL[value]}</option>)}</select>
-        <select value={prefs.sort} onChange={event => update({ sort: event.target.value })} aria-label="並べ替え">{SORTS.map(value => <option key={value} value={value}>{SORT_LABEL[value]}</option>)}</select>
-        <Switch checked={prefs.showSubagents} onChange={checked => update({ showSubagents: checked })} label="サブエージェントを表示" />
+        <label className="darask-dashboard-control"><span>グループ化</span><select value={prefs.grouping} onChange={event => update({ grouping: event.target.value })}>{GROUPINGS.map(value => <option key={value} value={value}>{GROUPING_LABEL[value]}</option>)}</select></label>
+        <label className="darask-dashboard-control"><span>フィルター</span><select value={prefs.filter} onChange={event => update({ filter: event.target.value })}>{FILTERS.map(value => <option key={value} value={value}>{FILTER_LABEL[value]}</option>)}</select></label>
+        <label className="darask-dashboard-control"><span>並べ替え</span><select value={prefs.sort} onChange={event => update({ sort: event.target.value })}>{SORTS.map(value => <option key={value} value={value}>{SORT_LABEL[value]}</option>)}</select></label>
+        <span className="darask-dashboard-control"><Switch checked={prefs.showSubagents} onChange={checked => update({ showSubagents: checked })} label="サブエージェントを表示" /><span aria-hidden="true">サブエージェント</span></span>
         <Button variant="outline" size="sm" onClick={() => { setTick(value => value + 1); window.dispatchEvent(new Event('darask-workspaces-changed')); }}>更新</Button>
       </div>
       {error && <p className="darask-error" role="alert">{error}</p>}
