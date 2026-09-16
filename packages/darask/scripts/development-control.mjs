@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createServer } from 'node:http';
 import { randomBytes } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, realpath } from 'node:fs/promises';
 import { resolve, join, relative, sep, isAbsolute } from 'node:path';
 
 const execute = promisify(execFile);
@@ -10,8 +10,10 @@ const official = 'https://github.com/daraskme/dsh-darask.git';
 const officialRemotes = new Set(['dsh-darask', 'darask-harness'].flatMap(repo => [
   `https://github.com/daraskme/${repo}.git`, `https://github.com/daraskme/${repo}`, `git@github.com:daraskme/${repo}.git`,
 ]));
+const canonical = async path => realpath(resolve(path)).catch(() => resolve(path));
 function isWithin(parent, child) {
-  const relation = relative(parent, child);
+  const fold = path => process.platform === 'win32' ? path.toLowerCase() : path;
+  const relation = relative(fold(parent), fold(child));
   return relation === '' || relation !== '..' && !relation.startsWith(`..${sep}`) && !isAbsolute(relation);
 }
 export function createDevelopmentControl({ source, build, stop, start, install, expectedRemote = official }) {
@@ -21,8 +23,8 @@ export function createDevelopmentControl({ source, build, stop, start, install, 
     env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
   })).stdout.trimEnd();
   async function inspect() {
-    const toplevel = resolve(await git('rev-parse', '--show-toplevel'));
-    if (!isWithin(toplevel, resolve(source))) throw new Error('開発用の Git フォルダーを確認してください。');
+    const toplevel = await canonical(await git('rev-parse', '--show-toplevel'));
+    if (!isWithin(toplevel, await canonical(source))) throw new Error('開発用の Git フォルダーを確認してください。');
     const [branch, head, changes, remote, version] = await Promise.all([
       git('branch', '--show-current'), git('rev-parse', 'HEAD'), git('status', '--porcelain=v1'),
       git('remote', 'get-url', 'origin').catch(() => ''), readFile(join(source, 'package.json'), 'utf8').then(text => JSON.parse(text).version),
