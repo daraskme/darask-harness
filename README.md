@@ -135,6 +135,13 @@ memory.sqlite                 メタデータと FTS5 索引 (unicode61 + trigra
 - `worktree_remove` は dirty な worktree を `force` 無しでは消しません。`delete_branch` でブランチも削除。レジストリに無い worktree は対象外です。
 - `/worktree gc [--all]` は消失・prunable と (clean な) stale エントリを片付け、`git worktree prune` を実行します。名前は `[A-Za-z0-9._-]` 64 字まで、ブランチと基点は `git check-ref-format` 相当の検査で `-` 始まりや空白を拒否します。同一リポジトリの上限は `maxWorktrees` (既定 24)。
 
+## エージェント ダッシュボード
+
+サイドバーのパネル一覧 (`sidebar.panellist`) にダッシュボードを追加し、`main` パネルにこの PC と登録済みリモート PC の全セッションを 1 画面で表示します (grok-build の Agent Dashboard の設計を移植)。行は毎回、上流の `sessions` スナップショット (実行中 / 完了 / サブエージェント / ジョブ / 保留中の許可・質問 / モデル選択)、開いているリモートワークスペースの iframe が届ける状態、開いていないリモートワークスペースは読み取り専用一覧 (`/api/darask/sessions/dashboard`、既存の `darask_remote_sessions` と同じ上限・秘匿処理) から組み直します。セッションの複製保存はありません。
+
+- 状態は `要対応` (許可・計画レビュー・質問待ち、ジョブ失敗) → `作業中` → `完了` → `待機` → `未接続` の優先順で 1 つに決め、状態別 / PC 別 / ワークスペース別のグループ化、すべて / 要対応 / 作業中 / 接続中 / トップレベルの絞り込み、状態 / 更新 / タイトル順の並べ替え、タイトル・PC・フォルダー・モデルの検索ができます。表示設定だけを `localStorage` (`darask-dashboard:prefs`) に検証付きで保存します。
+- 行を選ぶと、ローカルは上流 `sessions.open`、開いているリモートワークスペースは既存の `darask-open-session` メッセージ、未接続のリモートはワークスペースを開いてから当該セッションへ移動します。「≡」で本文を読み取り専用で確認 (ユーザー・アシスタント本文のみ、推論・ツール・秘匿情報は除外、50 件ずつ)。リモートへの操作 (停止・送信) は行いません。
+
 ## ハブ更新の配布
 
 dsh-darask の `host-update` はこの monorepo でも動作します。開発モードの PC はハーネスのチェックアウトを `git merge --ff-only` し、インストール済み PC には `packages/darask` を `npm pack` したアーカイブ (`dsh-darask-*.tgz`) を配布します。配布単位をハーネス全体にするのは今後の課題です (下記)。
@@ -142,7 +149,7 @@ dsh-darask の `host-update` はこの monorepo でも動作します。開発�
 ## 今後の課題
 
 - 配布単位を `darask-harness` パッケージにし、リモート PC のインストーラーもハーネスを導入する。
-- grok-build の Agent Dashboard の DSH プラグイン化。Hunk tracker の全 dirty ファイル追跡と UI レビュー。Code graph のスコープ解決 (同名シンボルの絞り込み) と言語追加。
+- ダッシュボードの使用量・コスト表示 (Status line と共有) とリモートセッションのタイトル取得 (現状は未接続のリモートは ID 表示)。Hunk tracker の全 dirty ファイル追跡と UI レビュー。Code graph のスコープ解決 (同名シンボルの絞り込み) と言語追加。
 - worktree の CoW 複製 (Btrfs / APFS clonefile) と `node_modules` の共有 (現状は plain `git worktree add`)。
 - Memory の埋め込み検索・クエリ拡張 (現状は語彙検索のみ)。
 - dsh-darask 内で上流と重なる補助 UI の整理。

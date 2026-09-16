@@ -10071,7 +10071,7 @@ __export(client_exports, {
 module.exports = __toCommonJS(client_exports);
 
 // src/client.css
-var client_default = '.darask {\n  color: var(--dsw-alias-label-primary);\n  font: inherit;\n  padding: 20px 0;\n  max-width: 920px;\n  margin: 0 auto;\n}\n.darask *, .darask *::before, .darask *::after { box-sizing: border-box; }\n.darask-workspace-groups { display: grid; gap: 16px; margin-bottom: 24px; }\n.darask-workspace-group { min-width: 0; }\n.darask .darask-workspace-group h3 { margin-bottom: 8px; font-size: 13px; font-weight: 600; }\n.darask-workspace-group h3 span { font-size: 11px; font-weight: 400; }\n.darask-workspace-entry button { display: grid; justify-items: start; gap: 3px; width: 100%; padding: 8px 10px; text-align: left; border: .5px solid var(--dsw-alias-border-l2); border-radius: 8px; margin-top: 4px; font: inherit; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); cursor: pointer; }\n.darask-workspace-entry button:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-entry button:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: 2px; }\n.darask-workspace-entry button:disabled { cursor: default; }\n.darask-workspace-entry strong { font-size: 13px; overflow-wrap: anywhere; display: inline-flex; align-items: center; gap: 6px; }\n.darask-workspace-entry small { font-size: 11px; color: var(--dsw-alias-label-secondary); overflow-wrap: anywhere; }\n.darask-unified-workspace-list { overflow-y: auto !important; scrollbar-gutter: stable; }\n.darask-local-workspaces { flex: none; min-width: 0; }\n.darask-local-workspaces .darask-native-workspace-tree, .darask-local-workspaces .darask-native-workspace-list { flex: none; overflow: visible; }\n.darask-local-workspaces .darask-native-workspace-list { padding-bottom: 4px; scrollbar-gutter: auto; }\n.darask-local-workspaces .darask-native-workspace-fade { display: none; }\n.darask.darask-workspaces-sidebar { padding: 0 var(--dsh-sidebar-inline-padding, 12px) 12px 0; margin: 0; width: 100%; flex: none; }\n.darask-remote-workspaces { display: grid; gap: 4px; min-width: 0; }\n.darask-remote-workspaces:empty { display: none; }\n.darask-workspace-row { display: flex; align-items: center; min-width: 0; border-radius: 8px; min-height: 36px; }\n.darask-workspace-row:hover, .darask-workspace-row[data-active] { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-row button { border: 0; color: var(--dsw-alias-label-primary); background: transparent; font: inherit; cursor: pointer; border-radius: 8px; }\n.darask-workspace-row button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n.darask-workspace-globe { width: 34px; height: 34px; padding: 0; flex: none; }\n.darask-workspace-globe:hover, .darask-workspace-globe[aria-expanded=true] { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-action { flex: none; width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; line-height: 1; color: var(--dsw-alias-label-secondary) !important; }\n.darask-workspace-action:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-row > span, .darask-session-row > span { display: inline-flex; align-items: center; align-self: center; }\n.darask-workspace-dialog { padding: 4px 0; display: grid; gap: 16px; }\n.darask-workspace-title { flex: 1; min-width: 0; padding: 8px 8px 8px 0; text-align: left; font-size: 13px !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.darask-workspace-info { display: grid; gap: 4px; margin: 2px 4px 6px 32px; padding: 10px; background: var(--dsw-alias-bg-layer-2); border: .5px solid var(--dsw-alias-border-l2); border-radius: 8px; color: var(--dsw-alias-label-secondary); font-size: 12px; overflow-wrap: anywhere; }\n.darask-workspace-info strong { color: var(--dsw-alias-label-primary); }\n.darask-workspace-sessions { display: grid; gap: 2px; margin-left: 28px; }\n.darask-session-row { display: flex; align-items: center; min-width: 0; gap: 2px; }\n.darask-session-status { width: 16px; height: 28px; flex: none; display: inline-flex; justify-content: center; align-items: center; position: relative; }\n.darask-session-error { display: flex; align-items: center; justify-content: center; width: 10px; height: 10px; font-size: 12px; font-weight: 700; line-height: 1; color: var(--dsw-alias-state-error-primary); }\n.darask-visually-hidden { clip: rect(0 0 0 0); white-space: nowrap; width: 1px; height: 1px; position: absolute; overflow: hidden; }\n.darask-session-navigation { position: fixed; right: max(14px, env(safe-area-inset-right)); top: 50%; z-index: 40; display: grid; gap: 3px; padding: 4px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 12px; background: var(--dsw-alias-bg-layer-2); box-shadow: 0 4px 18px #0002; transform: translateY(-50%); }\n.darask-session-navigation button { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 8px; color: var(--dsw-alias-label-secondary); background: transparent; font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }\n.darask-session-navigation button:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }\n.darask-session-navigation button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n@media (max-width: 600px) { .darask-session-navigation { right: max(6px, env(safe-area-inset-right)); } .darask-session-navigation button { width: 30px; height: 30px; } }\n.darask-session-title { flex: 1; }\n.darask-session-row .darask-workspace-action { flex: 0 0 28px; padding: 0; }\n.darask-workspace-sessions .darask-session-title { display: block; min-width: 0; padding: 7px 10px; font: inherit; font-size: 13px; text-align: left; color: var(--dsw-alias-label-secondary); background: transparent; border: 0; border-radius: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }\n.darask-workspace-sessions .darask-session-title:hover, .darask-workspace-sessions .darask-session-title[aria-current] { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-sessions .darask-session-title:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n.darask-main-stack { position: relative; width: 100%; height: 100%; flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; }\n.darask-workspace-pool { position: absolute; inset: 0; }\n.darask-workspace-pool[hidden] { display: block; visibility: hidden; pointer-events: none; }\n.darask-workspace-main { position: absolute; inset: 0; min-height: 0; display: flex; flex-direction: column; background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); }\n.darask-workspace-main[hidden] { display: flex; visibility: hidden; pointer-events: none; }\n.darask-workspace-main:not([hidden]) { z-index: 1; }\n.darask-workspace-main iframe { border: 0; width: 100%; flex: 1; min-height: 0; }\n.darask-workspace-status { padding: 24px; font: inherit; font-size: 14px; }\n.darask h2, .darask h3, .darask p { margin: 0; }\n.darask-heading, .darask-line, .darask-provider-header, .darask-routing, .darask-footer { display: flex; align-items: center; gap: 12px; }\n.darask-heading { justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }\n.darask-heading h2 { font-size: 20px; font-weight: 600; line-height: 1.5; }\n.darask-heading p, .darask-routing p, .darask-section-heading p { margin-top: 6px; font-size: 13px; line-height: 1.6; color: var(--dsw-alias-label-tertiary); }\n.darask-heading > button { flex: none; }\n.darask-routing { justify-content: space-between; padding: 16px; background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; margin-bottom: 24px; }\n.darask-routing strong { font-size: 14px; font-weight: 600; }\n.darask-section-heading { margin-bottom: 14px; }\n.darask-section-heading h3 { font-size: 15px; font-weight: 600; }\n.darask-provider-list { display: grid; gap: 12px; }\n.darask-integrations { display: grid; gap: 12px; margin-top: 24px; }\n.darask-provider { background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; overflow: hidden; }\n.darask-provider-header { padding: 14px 16px; flex-wrap: wrap; }\n.darask-rank { width: 24px; height: 24px; display: grid; place-items: center; flex: none; border: .5px solid var(--dsw-alias-border-l4); border-radius: 8px; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--dsw-alias-label-tertiary); }\n.darask-provider-name { flex: 1; min-width: 100px; overflow-wrap: anywhere; }\n.darask-provider-name h3 { font-size: 15px; font-weight: 600; line-height: 1.4; }\n.darask-provider-name .darask-meta { display: block; margin-top: 4px; }\n.darask-move { display: flex; gap: 2px; }\n.darask-move button { min-width: 28px; padding-inline: 6px; }\n.darask-usage { margin: 0 16px; padding: 0 0 14px; display: grid; gap: 12px; }\n.darask-window { display: grid; gap: 6px; }\n.darask-line { justify-content: space-between; font-size: 13px; line-height: 1.5; }\n.darask-line strong { font-weight: 500; font-variant-numeric: tabular-nums; }\n.darask-progress { display: block; border: none; width: 100%; height: 5px; border-radius: 3px; overflow: hidden; appearance: none; background: var(--dsw-alias-border-l2); accent-color: var(--dsw-alias-brand-primary); }\n.darask-progress::-webkit-progress-bar { background: var(--dsw-alias-border-l2); border-radius: 3px; }\n.darask-progress::-webkit-progress-value { background: var(--dsw-alias-brand-primary); border-radius: 3px; }\n.darask-progress::-moz-progress-bar { background: var(--dsw-alias-brand-primary); border-radius: 3px; }\n.darask-progress-low { accent-color: var(--dsw-alias-label-error); }\n.darask-progress-low::-webkit-progress-value, .darask-progress-low::-moz-progress-bar { background: var(--dsw-alias-label-error); }\n.darask-meta, .darask-muted, .darask-credit-hint { color: var(--dsw-alias-label-tertiary); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }\n.darask-sources { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap; }\n.darask-credit { padding-block: 4px; }\n.darask-details { border-top: .5px solid var(--dsw-alias-border-l2); margin: 0 16px; }\n.darask-details summary { padding: 12px 0; cursor: pointer; color: var(--dsw-alias-label-secondary); font-size: 13px; }\n.darask-details summary:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: 2px; border-radius: 4px; }\n.darask-fields { padding: 0 0 16px; display: grid; gap: 16px; }\n.darask-model-visibility { display: grid; gap: 10px; padding: 12px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 10px; }\n.darask-model-visibility > strong { font-size: 13px; font-weight: 600; }\n.darask-model-visibility-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }\n.darask-model-visibility-row > span { min-width: 0; color: var(--dsw-alias-label-secondary); font-size: 13px; overflow-wrap: anywhere; }\n.darask-model-visibility-row > button { flex: none; }\n.darask-model-visibility > small { color: var(--dsw-alias-label-tertiary); font-size: 12px; line-height: 1.6; }\n.darask-actions { display: flex; flex-wrap: wrap; gap: 6px; }\n.darask-local-runtime { display: grid; gap: 10px; }\n.darask-field { display: grid; gap: 8px; font-size: 13px; }\n.darask-field > span:first-child { color: var(--dsw-alias-label-secondary); }\n.darask-field > span:not(:first-child) { width: 100%; }\n.darask-field input { width: 100%; min-width: 0; }\n.darask-field small { font-size: 12px; line-height: 1.6; color: var(--dsw-alias-label-tertiary); }\n.darask-key-row { grid-template-columns: auto 1fr; align-items: start; gap: 10px; }\n.darask-key-row input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--dsw-alias-brand-primary); }\n.darask-key-row > span { color: var(--dsw-alias-label-primary); display: grid; gap: 2px; overflow-wrap: anywhere; }\n.darask-login { padding: 12px; border: .5px solid var(--dsw-alias-border-l4); border-radius: 12px; background: var(--dsw-alias-bg-layer-2); display: grid; gap: 8px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }\n.darask-login code { font-size: 16px; user-select: all; }\n.darask-login a { color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; width: fit-content; }\n.darask-error { border: .5px solid var(--dsw-alias-label-error); color: var(--dsw-alias-label-error); border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; gap: 12px; justify-content: space-between; align-items: center; font-size: 13px; overflow-wrap: anywhere; }\n.darask-warning { border: .5px solid var(--dsw-alias-label-error); color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); border-radius: 12px; padding: 12px; display: grid; gap: 8px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }\n.darask-warning strong { color: var(--dsw-alias-label-error); font-weight: 600; }\n.darask-warning a { color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; width: fit-content; }\n.darask-credit-hint { margin-top: 14px !important; }\n.darask-compatibility { margin-top: 18px; padding: 14px 16px; border: .5px solid var(--dsw-alias-border-l4); border-radius: 12px; font-size: 12px; line-height: 1.6; color: var(--dsw-alias-label-secondary); }\n.darask-compatibility strong { font-weight: 600; }\n.darask-compatibility p { margin-top: 6px; overflow-wrap: anywhere; }\n.darask-footer { position: sticky; bottom: 0; justify-content: flex-end; margin-top: 20px; padding: 14px 0; background: var(--dsw-alias-bg-layer-2); border-top: .5px solid var(--dsw-alias-border-l2); z-index: 1; }\n.darask-footer > span { margin-right: auto; font-size: 12px; color: var(--dsw-alias-label-tertiary); }\n@media (max-width: 600px) {\n  .darask { padding-block: 16px; }\n  .darask-heading { flex-direction: column; gap: 12px; }\n  .darask-provider-header { gap: 8px; padding-inline: 12px; }\n  .darask-provider-name { min-width: 96px; }\n  .darask-usage, .darask-details { margin-inline: 12px; }\n  .darask-card-section { padding-inline: 12px; }\n  .darask-move { order: 5; margin-left: auto; }\n  .darask-move button { min-height: 36px; min-width: 36px; }\n  .darask-actions button { min-height: 36px; }\n  .darask-footer { gap: 6px; flex-wrap: wrap; }\n}\n.darask-json { width: 100%; box-sizing: border-box; font: inherit; color: inherit; background: transparent; border: 1px solid var(--dsh-border-color, #8885); border-radius: 8px; padding: 12px; resize: vertical; }\n.darask-account-actions { display: grid; gap: 12px; margin: 0 16px 14px; }\n.darask-provider-sections { display: grid; }\n.darask-card-section { padding: 14px 16px 16px; }\n.darask-card-section:first-child { padding-top: 0; }\n.darask-card-section + .darask-card-section { border-top: .5px solid var(--dsw-alias-border-l2); }\n.darask-card-section-title { margin: 0 0 12px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--dsw-alias-label-tertiary); }\n.darask-card-section-body { display: grid; gap: 12px; }\n.darask-usage-sidebar { width: 100%; min-width: 0; color: var(--dsw-alias-label-primary); }\n.darask-usage-trigger { width: 100%; display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: transparent; color: var(--dsw-alias-label-primary); font: inherit; font-size: 12px; border: 0; border-radius: 8px; cursor: pointer; text-align: left; }\n.darask-usage-trigger:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-usage-trigger:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: -2px; }\n.darask-usage-sidebar[data-wide="false"] .darask-usage-trigger { width: 28px; height: 28px; padding: 6px; }\n.darask-usage-summary { display: grid; gap: 5px; padding: 0 2px 6px; max-height: min(32vh, 280px); overflow-y: auto; scrollbar-width: thin; }\n.darask-usage-summary .darask-provider { border-radius: 8px; }\n.darask-usage-summary .darask-provider-header { padding: 5px 8px 3px; gap: 4px; }\n.darask-usage-summary .darask-provider-header h3 { font-size: 11px; font-weight: 600; line-height: 1.25; }\n.darask-usage-summary .dsw-tag, .darask-usage-summary [class*="Tag"] { font-size: 9px; padding: 0 5px; min-height: 16px; }\n.darask-usage-summary .darask-usage { margin: 0 8px; padding-bottom: 6px; gap: 4px; }\n.darask-usage-summary .darask-window { gap: 2px; }\n.darask-usage-summary .darask-progress { height: 3px; }\n.darask-usage-summary .darask-line { font-size: 10px; line-height: 1.3; gap: 4px; align-items: baseline; }\n.darask-usage-summary .darask-line strong { text-align: right; overflow-wrap: anywhere; }\n.darask-usage-summary .darask-meta, .darask-usage-summary .darask-muted { font-size: 9px; line-height: 1.35; }\n.darask-usage-full { display: grid; gap: 10px; padding: 0; }\n.darask-usage-full > button { justify-self: end; }\n.darask-usage-modal { width: min(700px, 94vw); max-height: 88dvh; overflow-y: auto; }\n.darask select { width: 100%; padding: 9px 12px; border: 1px solid var(--dsw-alias-border-l3); border-radius: 8px; background: var(--dsw-alias-bg-layer-2); color: var(--dsw-alias-label-primary); font: inherit; }\n.darask select option { background: var(--dsw-alias-bg-layer-2); color: var(--dsw-alias-label-primary); }\n.darask-pc-form { display: grid; gap: 16px; padding: 16px; }\n.darask-folder-list { display: grid; max-height: 220px; overflow-y: auto; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; padding: 6px; }\n.darask-folder-list button { font: inherit; font-size: 13px; text-align: left; color: var(--dsw-alias-label-primary); background: transparent; border: 0; border-radius: 6px; padding: 8px; cursor: pointer; overflow-wrap: anywhere; }\n.darask-folder-list button:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-qr-actions { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 14px; margin-block: 16px; background: var(--dsw-alias-bg-layer-2); }\n.darask-qr-panel { display: grid; gap: 18px; padding: 0; }\n.darask-qr-heading { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }\n.darask-qr-card { margin: 0 auto; width: min(100%, 384px); box-sizing: border-box; padding: 12px 12px 20px; border: 1px solid #e4e8ec; border-radius: 18px; background: #fff; color: #12202c; text-align: center; }\n.darask-qr-card img { display: block; width: 100%; height: auto; border-radius: 0; }\n.darask-qr-card figcaption { font-size: 12px; font-weight: 500; overflow-wrap: anywhere; color: #12202c; }\n.darask-qr-download { display: inline-flex; align-items: center; padding: 6px 12px; color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; font-size: 13px; }\n.darask-qr-camera { display: block; width: 100%; max-height: 360px; background: #12202c; border-radius: 14px; object-fit: contain; }\n.darask-account-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding-block: 4px 18px; border-bottom: 1px solid var(--dsw-alias-border-l2); margin-bottom: 20px; }\n.darask-account-panel[hidden] { display: none; }\n.darask textarea { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); border: 1px solid var(--dsw-alias-border-l2); border-radius: 8px; padding: 10px; font: inherit; width: 100%; resize: vertical; }\n.darask textarea:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }\n.darask-account-panel .darask-integrations { display: grid; gap: 14px; }\n.darask-account-panel .darask-integrations > h3 { margin-top: 20px; }\n.darask-pc-manual > summary { padding: 14px 16px; cursor: pointer; color: var(--dsw-alias-label-secondary); font-size: 13px; }\n.darask-source-path { overflow-wrap: anywhere; user-select: all; }\n.darask-codex-accounts { display: grid; gap: 12px; }\n.darask-codex-account { border: 1px solid var(--dsw-alias-border-l2); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }\n.darask-codex-heading { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }\n.darask-codex-account .darask-usage { margin: 0; }\n.darask-codex-callback summary { cursor: pointer; padding-block: 8px; }\n.darask-codex-callback form { display: grid; gap: 10px; }\n.darask-git-diff { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 26rem; overflow: auto; font-size: .8rem; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-3); padding: 1rem; }\n.darask-kanban { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 12px 0 20px; }\n.darask-kanban-column { background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 12px; padding: 12px; display: grid; gap: 8px; align-content: start; }\n.darask-kanban-column h3 { font-size: 13px; font-weight: 600; }\n.darask-kanban-card { margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--dsw-alias-bg-layer-2); font-size: 13px; display: grid; gap: 4px; }\n.darask-kanban-card small { color: var(--dsw-alias-label-tertiary); font-size: 11px; }\n.darask-addon-extra { display: grid; gap: 12px; margin-top: 24px; }\n.darask-addon-extra h3 { font-size: 15px; font-weight: 600; }\n.darask-restart-row { border-bottom: .5px solid var(--dsw-alias-border-l2); align-items: center; gap: 12px; padding: 16px 0; display: flex; }\n.darask-restart-row > div { flex-direction: column; flex: 1; gap: 4px; min-width: 0; display: flex; }\n.darask-restart-row strong { color: var(--dsw-alias-label-primary); font-size: 14px; font-weight: 400; line-height: 22px; }\n.darask-restart-row p { color: var(--dsw-alias-label-tertiary); font-size: 12px; font-weight: 400; line-height: 18px; margin: 0; }\n\n.darask-archive-list { display: grid; gap: 12px; }\n.darask-archive-list .darask-actions { flex: none; }\n.darask-set-root { border: 1px solid var(--border-color, currentColor); border-radius: 8px; padding: 12px; display: grid; gap: 8px; }\n.darask-set-preview { color: inherit; background: transparent; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 440px; overflow: auto; padding: 8px; border: 1px solid var(--border-color, currentColor); }\n.darask-set-tab { padding: 12px; overflow: auto; height: 100%; }\n.darask-set-browser { padding: 8px 0; }\n\n.darask-auto-permission-icon {\n  display: inline-flex;\n  flex: none;\n  width: 16px;\n  height: 16px;\n  align-items: center;\n  justify-content: center;\n  color: var(--dsw-alias-label-tertiary, currentColor);\n}\n.darask-auto-permission-icon svg { width: 16px; height: 16px; display: block; }\nbutton[aria-label*="\u81EA\u52D5"] > .darask-auto-permission-icon {\n  width: 14px;\n  height: 14px;\n  color: inherit;\n}\nbutton[aria-label*="\u81EA\u52D5"] > .darask-auto-permission-icon svg { width: 14px; height: 14px; }\n';
+var client_default = '.darask {\n  color: var(--dsw-alias-label-primary);\n  font: inherit;\n  padding: 20px 0;\n  max-width: 920px;\n  margin: 0 auto;\n}\n.darask *, .darask *::before, .darask *::after { box-sizing: border-box; }\n.darask-workspace-groups { display: grid; gap: 16px; margin-bottom: 24px; }\n.darask-workspace-group { min-width: 0; }\n.darask .darask-workspace-group h3 { margin-bottom: 8px; font-size: 13px; font-weight: 600; }\n.darask-workspace-group h3 span { font-size: 11px; font-weight: 400; }\n.darask-workspace-entry button { display: grid; justify-items: start; gap: 3px; width: 100%; padding: 8px 10px; text-align: left; border: .5px solid var(--dsw-alias-border-l2); border-radius: 8px; margin-top: 4px; font: inherit; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); cursor: pointer; }\n.darask-workspace-entry button:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-entry button:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: 2px; }\n.darask-workspace-entry button:disabled { cursor: default; }\n.darask-workspace-entry strong { font-size: 13px; overflow-wrap: anywhere; display: inline-flex; align-items: center; gap: 6px; }\n.darask-workspace-entry small { font-size: 11px; color: var(--dsw-alias-label-secondary); overflow-wrap: anywhere; }\n.darask-unified-workspace-list { overflow-y: auto !important; scrollbar-gutter: stable; }\n.darask-local-workspaces { flex: none; min-width: 0; }\n.darask-local-workspaces .darask-native-workspace-tree, .darask-local-workspaces .darask-native-workspace-list { flex: none; overflow: visible; }\n.darask-local-workspaces .darask-native-workspace-list { padding-bottom: 4px; scrollbar-gutter: auto; }\n.darask-local-workspaces .darask-native-workspace-fade { display: none; }\n.darask.darask-workspaces-sidebar { padding: 0 var(--dsh-sidebar-inline-padding, 12px) 12px 0; margin: 0; width: 100%; flex: none; }\n.darask-remote-workspaces { display: grid; gap: 4px; min-width: 0; }\n.darask-remote-workspaces:empty { display: none; }\n.darask-workspace-row { display: flex; align-items: center; min-width: 0; border-radius: 8px; min-height: 36px; }\n.darask-workspace-row:hover, .darask-workspace-row[data-active] { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-row button { border: 0; color: var(--dsw-alias-label-primary); background: transparent; font: inherit; cursor: pointer; border-radius: 8px; }\n.darask-workspace-row button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n.darask-workspace-globe { width: 34px; height: 34px; padding: 0; flex: none; }\n.darask-workspace-globe:hover, .darask-workspace-globe[aria-expanded=true] { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-action { flex: none; width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; line-height: 1; color: var(--dsw-alias-label-secondary) !important; }\n.darask-workspace-action:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-row > span, .darask-session-row > span { display: inline-flex; align-items: center; align-self: center; }\n.darask-workspace-dialog { padding: 4px 0; display: grid; gap: 16px; }\n.darask-workspace-title { flex: 1; min-width: 0; padding: 8px 8px 8px 0; text-align: left; font-size: 13px !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.darask-workspace-info { display: grid; gap: 4px; margin: 2px 4px 6px 32px; padding: 10px; background: var(--dsw-alias-bg-layer-2); border: .5px solid var(--dsw-alias-border-l2); border-radius: 8px; color: var(--dsw-alias-label-secondary); font-size: 12px; overflow-wrap: anywhere; }\n.darask-workspace-info strong { color: var(--dsw-alias-label-primary); }\n.darask-workspace-sessions { display: grid; gap: 2px; margin-left: 28px; }\n.darask-session-row { display: flex; align-items: center; min-width: 0; gap: 2px; }\n.darask-session-status { width: 16px; height: 28px; flex: none; display: inline-flex; justify-content: center; align-items: center; position: relative; }\n.darask-session-error { display: flex; align-items: center; justify-content: center; width: 10px; height: 10px; font-size: 12px; font-weight: 700; line-height: 1; color: var(--dsw-alias-state-error-primary); }\n.darask-visually-hidden { clip: rect(0 0 0 0); white-space: nowrap; width: 1px; height: 1px; position: absolute; overflow: hidden; }\n.darask-session-navigation { position: fixed; right: max(14px, env(safe-area-inset-right)); top: 50%; z-index: 40; display: grid; gap: 3px; padding: 4px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 12px; background: var(--dsw-alias-bg-layer-2); box-shadow: 0 4px 18px #0002; transform: translateY(-50%); }\n.darask-session-navigation button { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 8px; color: var(--dsw-alias-label-secondary); background: transparent; font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }\n.darask-session-navigation button:hover { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }\n.darask-session-navigation button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n@media (max-width: 600px) { .darask-session-navigation { right: max(6px, env(safe-area-inset-right)); } .darask-session-navigation button { width: 30px; height: 30px; } }\n.darask-session-title { flex: 1; }\n.darask-session-row .darask-workspace-action { flex: 0 0 28px; padding: 0; }\n.darask-workspace-sessions .darask-session-title { display: block; min-width: 0; padding: 7px 10px; font: inherit; font-size: 13px; text-align: left; color: var(--dsw-alias-label-secondary); background: transparent; border: 0; border-radius: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }\n.darask-workspace-sessions .darask-session-title:hover, .darask-workspace-sessions .darask-session-title[aria-current] { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-interactive-bg-hover); }\n.darask-workspace-sessions .darask-session-title:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n.darask-main-stack { position: relative; width: 100%; height: 100%; flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; }\n.darask-workspace-pool { position: absolute; inset: 0; }\n.darask-workspace-pool[hidden] { display: block; visibility: hidden; pointer-events: none; }\n.darask-workspace-main { position: absolute; inset: 0; min-height: 0; display: flex; flex-direction: column; background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); }\n.darask-workspace-main[hidden] { display: flex; visibility: hidden; pointer-events: none; }\n.darask-workspace-main:not([hidden]) { z-index: 1; }\n.darask-workspace-main iframe { border: 0; width: 100%; flex: 1; min-height: 0; }\n.darask-workspace-status { padding: 24px; font: inherit; font-size: 14px; }\n.darask h2, .darask h3, .darask p { margin: 0; }\n.darask-heading, .darask-line, .darask-provider-header, .darask-routing, .darask-footer { display: flex; align-items: center; gap: 12px; }\n.darask-heading { justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }\n.darask-heading h2 { font-size: 20px; font-weight: 600; line-height: 1.5; }\n.darask-heading p, .darask-routing p, .darask-section-heading p { margin-top: 6px; font-size: 13px; line-height: 1.6; color: var(--dsw-alias-label-tertiary); }\n.darask-heading > button { flex: none; }\n.darask-routing { justify-content: space-between; padding: 16px; background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; margin-bottom: 24px; }\n.darask-routing strong { font-size: 14px; font-weight: 600; }\n.darask-section-heading { margin-bottom: 14px; }\n.darask-section-heading h3 { font-size: 15px; font-weight: 600; }\n.darask-provider-list { display: grid; gap: 12px; }\n.darask-integrations { display: grid; gap: 12px; margin-top: 24px; }\n.darask-provider { background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; overflow: hidden; }\n.darask-provider-header { padding: 14px 16px; flex-wrap: wrap; }\n.darask-rank { width: 24px; height: 24px; display: grid; place-items: center; flex: none; border: .5px solid var(--dsw-alias-border-l4); border-radius: 8px; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--dsw-alias-label-tertiary); }\n.darask-provider-name { flex: 1; min-width: 100px; overflow-wrap: anywhere; }\n.darask-provider-name h3 { font-size: 15px; font-weight: 600; line-height: 1.4; }\n.darask-provider-name .darask-meta { display: block; margin-top: 4px; }\n.darask-move { display: flex; gap: 2px; }\n.darask-move button { min-width: 28px; padding-inline: 6px; }\n.darask-usage { margin: 0 16px; padding: 0 0 14px; display: grid; gap: 12px; }\n.darask-window { display: grid; gap: 6px; }\n.darask-line { justify-content: space-between; font-size: 13px; line-height: 1.5; }\n.darask-line strong { font-weight: 500; font-variant-numeric: tabular-nums; }\n.darask-progress { display: block; border: none; width: 100%; height: 5px; border-radius: 3px; overflow: hidden; appearance: none; background: var(--dsw-alias-border-l2); accent-color: var(--dsw-alias-brand-primary); }\n.darask-progress::-webkit-progress-bar { background: var(--dsw-alias-border-l2); border-radius: 3px; }\n.darask-progress::-webkit-progress-value { background: var(--dsw-alias-brand-primary); border-radius: 3px; }\n.darask-progress::-moz-progress-bar { background: var(--dsw-alias-brand-primary); border-radius: 3px; }\n.darask-progress-low { accent-color: var(--dsw-alias-label-error); }\n.darask-progress-low::-webkit-progress-value, .darask-progress-low::-moz-progress-bar { background: var(--dsw-alias-label-error); }\n.darask-meta, .darask-muted, .darask-credit-hint { color: var(--dsw-alias-label-tertiary); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }\n.darask-sources { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap; }\n.darask-credit { padding-block: 4px; }\n.darask-details { border-top: .5px solid var(--dsw-alias-border-l2); margin: 0 16px; }\n.darask-details summary { padding: 12px 0; cursor: pointer; color: var(--dsw-alias-label-secondary); font-size: 13px; }\n.darask-details summary:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: 2px; border-radius: 4px; }\n.darask-fields { padding: 0 0 16px; display: grid; gap: 16px; }\n.darask-model-visibility { display: grid; gap: 10px; padding: 12px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 10px; }\n.darask-model-visibility > strong { font-size: 13px; font-weight: 600; }\n.darask-model-visibility-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }\n.darask-model-visibility-row > span { min-width: 0; color: var(--dsw-alias-label-secondary); font-size: 13px; overflow-wrap: anywhere; }\n.darask-model-visibility-row > button { flex: none; }\n.darask-model-visibility > small { color: var(--dsw-alias-label-tertiary); font-size: 12px; line-height: 1.6; }\n.darask-actions { display: flex; flex-wrap: wrap; gap: 6px; }\n.darask-local-runtime { display: grid; gap: 10px; }\n.darask-field { display: grid; gap: 8px; font-size: 13px; }\n.darask-field > span:first-child { color: var(--dsw-alias-label-secondary); }\n.darask-field > span:not(:first-child) { width: 100%; }\n.darask-field input { width: 100%; min-width: 0; }\n.darask-field small { font-size: 12px; line-height: 1.6; color: var(--dsw-alias-label-tertiary); }\n.darask-key-row { grid-template-columns: auto 1fr; align-items: start; gap: 10px; }\n.darask-key-row input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--dsw-alias-brand-primary); }\n.darask-key-row > span { color: var(--dsw-alias-label-primary); display: grid; gap: 2px; overflow-wrap: anywhere; }\n.darask-login { padding: 12px; border: .5px solid var(--dsw-alias-border-l4); border-radius: 12px; background: var(--dsw-alias-bg-layer-2); display: grid; gap: 8px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }\n.darask-login code { font-size: 16px; user-select: all; }\n.darask-login a { color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; width: fit-content; }\n.darask-error { border: .5px solid var(--dsw-alias-label-error); color: var(--dsw-alias-label-error); border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; gap: 12px; justify-content: space-between; align-items: center; font-size: 13px; overflow-wrap: anywhere; }\n.darask-warning { border: .5px solid var(--dsw-alias-label-error); color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); border-radius: 12px; padding: 12px; display: grid; gap: 8px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }\n.darask-warning strong { color: var(--dsw-alias-label-error); font-weight: 600; }\n.darask-warning a { color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; width: fit-content; }\n.darask-credit-hint { margin-top: 14px !important; }\n.darask-compatibility { margin-top: 18px; padding: 14px 16px; border: .5px solid var(--dsw-alias-border-l4); border-radius: 12px; font-size: 12px; line-height: 1.6; color: var(--dsw-alias-label-secondary); }\n.darask-compatibility strong { font-weight: 600; }\n.darask-compatibility p { margin-top: 6px; overflow-wrap: anywhere; }\n.darask-footer { position: sticky; bottom: 0; justify-content: flex-end; margin-top: 20px; padding: 14px 0; background: var(--dsw-alias-bg-layer-2); border-top: .5px solid var(--dsw-alias-border-l2); z-index: 1; }\n.darask-footer > span { margin-right: auto; font-size: 12px; color: var(--dsw-alias-label-tertiary); }\n@media (max-width: 600px) {\n  .darask { padding-block: 16px; }\n  .darask-heading { flex-direction: column; gap: 12px; }\n  .darask-provider-header { gap: 8px; padding-inline: 12px; }\n  .darask-provider-name { min-width: 96px; }\n  .darask-usage, .darask-details { margin-inline: 12px; }\n  .darask-card-section { padding-inline: 12px; }\n  .darask-move { order: 5; margin-left: auto; }\n  .darask-move button { min-height: 36px; min-width: 36px; }\n  .darask-actions button { min-height: 36px; }\n  .darask-footer { gap: 6px; flex-wrap: wrap; }\n}\n.darask-json { width: 100%; box-sizing: border-box; font: inherit; color: inherit; background: transparent; border: 1px solid var(--dsh-border-color, #8885); border-radius: 8px; padding: 12px; resize: vertical; }\n.darask-account-actions { display: grid; gap: 12px; margin: 0 16px 14px; }\n.darask-provider-sections { display: grid; }\n.darask-card-section { padding: 14px 16px 16px; }\n.darask-card-section:first-child { padding-top: 0; }\n.darask-card-section + .darask-card-section { border-top: .5px solid var(--dsw-alias-border-l2); }\n.darask-card-section-title { margin: 0 0 12px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--dsw-alias-label-tertiary); }\n.darask-card-section-body { display: grid; gap: 12px; }\n.darask-usage-sidebar { width: 100%; min-width: 0; color: var(--dsw-alias-label-primary); }\n.darask-usage-trigger { width: 100%; display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: transparent; color: var(--dsw-alias-label-primary); font: inherit; font-size: 12px; border: 0; border-radius: 8px; cursor: pointer; text-align: left; }\n.darask-usage-trigger:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-usage-trigger:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: -2px; }\n.darask-usage-sidebar[data-wide="false"] .darask-usage-trigger { width: 28px; height: 28px; padding: 6px; }\n.darask-usage-summary { display: grid; gap: 5px; padding: 0 2px 6px; max-height: min(32vh, 280px); overflow-y: auto; scrollbar-width: thin; }\n.darask-usage-summary .darask-provider { border-radius: 8px; }\n.darask-usage-summary .darask-provider-header { padding: 5px 8px 3px; gap: 4px; }\n.darask-usage-summary .darask-provider-header h3 { font-size: 11px; font-weight: 600; line-height: 1.25; }\n.darask-usage-summary .dsw-tag, .darask-usage-summary [class*="Tag"] { font-size: 9px; padding: 0 5px; min-height: 16px; }\n.darask-usage-summary .darask-usage { margin: 0 8px; padding-bottom: 6px; gap: 4px; }\n.darask-usage-summary .darask-window { gap: 2px; }\n.darask-usage-summary .darask-progress { height: 3px; }\n.darask-usage-summary .darask-line { font-size: 10px; line-height: 1.3; gap: 4px; align-items: baseline; }\n.darask-usage-summary .darask-line strong { text-align: right; overflow-wrap: anywhere; }\n.darask-usage-summary .darask-meta, .darask-usage-summary .darask-muted { font-size: 9px; line-height: 1.35; }\n.darask-usage-full { display: grid; gap: 10px; padding: 0; }\n.darask-usage-full > button { justify-self: end; }\n.darask-usage-modal { width: min(700px, 94vw); max-height: 88dvh; overflow-y: auto; }\n.darask select { width: 100%; padding: 9px 12px; border: 1px solid var(--dsw-alias-border-l3); border-radius: 8px; background: var(--dsw-alias-bg-layer-2); color: var(--dsw-alias-label-primary); font: inherit; }\n.darask select option { background: var(--dsw-alias-bg-layer-2); color: var(--dsw-alias-label-primary); }\n.darask-pc-form { display: grid; gap: 16px; padding: 16px; }\n.darask-folder-list { display: grid; max-height: 220px; overflow-y: auto; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; padding: 6px; }\n.darask-folder-list button { font: inherit; font-size: 13px; text-align: left; color: var(--dsw-alias-label-primary); background: transparent; border: 0; border-radius: 6px; padding: 8px; cursor: pointer; overflow-wrap: anywhere; }\n.darask-folder-list button:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-qr-actions { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 14px; margin-block: 16px; background: var(--dsw-alias-bg-layer-2); }\n.darask-qr-panel { display: grid; gap: 18px; padding: 0; }\n.darask-qr-heading { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }\n.darask-qr-card { margin: 0 auto; width: min(100%, 384px); box-sizing: border-box; padding: 12px 12px 20px; border: 1px solid #e4e8ec; border-radius: 18px; background: #fff; color: #12202c; text-align: center; }\n.darask-qr-card img { display: block; width: 100%; height: auto; border-radius: 0; }\n.darask-qr-card figcaption { font-size: 12px; font-weight: 500; overflow-wrap: anywhere; color: #12202c; }\n.darask-qr-download { display: inline-flex; align-items: center; padding: 6px 12px; color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; font-size: 13px; }\n.darask-qr-camera { display: block; width: 100%; max-height: 360px; background: #12202c; border-radius: 14px; object-fit: contain; }\n.darask-account-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding-block: 4px 18px; border-bottom: 1px solid var(--dsw-alias-border-l2); margin-bottom: 20px; }\n.darask-account-panel[hidden] { display: none; }\n.darask textarea { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); border: 1px solid var(--dsw-alias-border-l2); border-radius: 8px; padding: 10px; font: inherit; width: 100%; resize: vertical; }\n.darask textarea:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }\n.darask-account-panel .darask-integrations { display: grid; gap: 14px; }\n.darask-account-panel .darask-integrations > h3 { margin-top: 20px; }\n.darask-pc-manual > summary { padding: 14px 16px; cursor: pointer; color: var(--dsw-alias-label-secondary); font-size: 13px; }\n.darask-source-path { overflow-wrap: anywhere; user-select: all; }\n.darask-codex-accounts { display: grid; gap: 12px; }\n.darask-codex-account { border: 1px solid var(--dsw-alias-border-l2); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }\n.darask-codex-heading { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }\n.darask-codex-account .darask-usage { margin: 0; }\n.darask-codex-callback summary { cursor: pointer; padding-block: 8px; }\n.darask-codex-callback form { display: grid; gap: 10px; }\n.darask-git-diff { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 26rem; overflow: auto; font-size: .8rem; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-3); padding: 1rem; }\n.darask-kanban { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 12px 0 20px; }\n.darask-kanban-column { background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 12px; padding: 12px; display: grid; gap: 8px; align-content: start; }\n.darask-kanban-column h3 { font-size: 13px; font-weight: 600; }\n.darask-kanban-card { margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--dsw-alias-bg-layer-2); font-size: 13px; display: grid; gap: 4px; }\n.darask-kanban-card small { color: var(--dsw-alias-label-tertiary); font-size: 11px; }\n.darask-addon-extra { display: grid; gap: 12px; margin-top: 24px; }\n.darask-addon-extra h3 { font-size: 15px; font-weight: 600; }\n.darask-restart-row { border-bottom: .5px solid var(--dsw-alias-border-l2); align-items: center; gap: 12px; padding: 16px 0; display: flex; }\n.darask-restart-row > div { flex-direction: column; flex: 1; gap: 4px; min-width: 0; display: flex; }\n.darask-restart-row strong { color: var(--dsw-alias-label-primary); font-size: 14px; font-weight: 400; line-height: 22px; }\n.darask-restart-row p { color: var(--dsw-alias-label-tertiary); font-size: 12px; font-weight: 400; line-height: 18px; margin: 0; }\n\n.darask-archive-list { display: grid; gap: 12px; }\n.darask-archive-list .darask-actions { flex: none; }\n.darask-set-root { border: 1px solid var(--border-color, currentColor); border-radius: 8px; padding: 12px; display: grid; gap: 8px; }\n.darask-set-preview { color: inherit; background: transparent; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 440px; overflow: auto; padding: 8px; border: 1px solid var(--border-color, currentColor); }\n.darask-set-tab { padding: 12px; overflow: auto; height: 100%; }\n.darask-set-browser { padding: 8px 0; }\n\n.darask-auto-permission-icon {\n  display: inline-flex;\n  flex: none;\n  width: 16px;\n  height: 16px;\n  align-items: center;\n  justify-content: center;\n  color: var(--dsw-alias-label-tertiary, currentColor);\n}\n.darask-auto-permission-icon svg { width: 16px; height: 16px; display: block; }\nbutton[aria-label*="\u81EA\u52D5"] > .darask-auto-permission-icon {\n  width: 14px;\n  height: 14px;\n  color: inherit;\n}\nbutton[aria-label*="\u81EA\u52D5"] > .darask-auto-permission-icon svg { width: 14px; height: 14px; }\n\n/* Agent Dashboard (main panel) */\n.darask.darask-dashboard { max-width: none; height: 100%; margin: 0; padding: 0; display: flex; min-height: 0; overflow: hidden; background: var(--dsw-alias-bg-layer-1); }\n.darask-dashboard-list { flex: 1; min-width: 0; overflow-y: auto; padding: 20px 24px 32px; display: grid; gap: 14px; align-content: start; }\n.darask-dashboard-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }\n.darask-dashboard-header h2 { font-size: 18px; font-weight: 600; }\n.darask-dashboard-counts { display: flex; gap: 6px; flex-wrap: wrap; font-size: 12px; color: var(--dsw-alias-label-secondary); }\n.darask-dashboard-count { padding: 2px 8px; border-radius: 999px; border: .5px solid var(--dsw-alias-border-l2); font-variant-numeric: tabular-nums; }\n.darask-dashboard-count[data-state=attention] { color: var(--dsw-alias-state-warning-primary); border-color: currentColor; }\n.darask-dashboard-count[data-state=running] { color: var(--dsw-alias-state-business-primary); border-color: currentColor; }\n.darask-dashboard-count[data-state=done] { color: var(--dsw-alias-state-success-primary); border-color: currentColor; }\n.darask-dashboard-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }\n.darask-dashboard-toolbar > :first-child { flex: 1 1 220px; min-width: 160px; }\n.darask-dashboard-toolbar select { font: inherit; font-size: 13px; padding: 6px 8px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 8px; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); }\n.darask-dashboard-group { min-width: 0; }\n.darask .darask-dashboard-group h3 { margin-bottom: 4px; }\n.darask-dashboard-group h3 button { display: flex; align-items: center; gap: 6px; width: 100%; padding: 6px 4px; border: 0; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: var(--dsw-alias-label-primary); text-align: left; cursor: pointer; border-radius: 8px; }\n.darask-dashboard-group h3 button:hover { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-dashboard-group h3 button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n.darask-dashboard-group h3 small { font-weight: 400; color: var(--dsw-alias-label-tertiary); }\n.darask-dashboard-caret { width: 14px; color: var(--dsw-alias-label-tertiary); }\n.darask-dashboard-group-count { margin-left: auto; font-weight: 400; font-size: 12px; color: var(--dsw-alias-label-tertiary); font-variant-numeric: tabular-nums; }\n.darask-dashboard-row { display: flex; align-items: center; min-width: 0; gap: 4px; border-radius: 10px; padding-right: 4px; }\n.darask-dashboard-row:hover, .darask-dashboard-row[data-current], .darask-dashboard-row[data-peeking] { background: var(--dsw-alias-interactive-bg-hover); }\n.darask-dashboard-row[data-state=unobserved] .darask-dashboard-title strong { color: var(--dsw-alias-label-secondary); }\n.darask-dashboard-mark { margin-left: 6px; }\n.darask-dashboard-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--dsw-alias-label-tertiary); }\n.darask-dashboard-dot[data-state=running] { border-color: var(--dsw-alias-state-business-primary); background: var(--dsw-alias-state-business-primary); }\n.darask-dashboard-title { flex: 1; min-width: 0; display: grid; gap: 2px; padding: 8px 8px; border: 0; background: transparent; font: inherit; text-align: left; color: var(--dsw-alias-label-primary); cursor: pointer; border-radius: 8px; }\n.darask-dashboard-title:disabled { cursor: default; }\n.darask-dashboard-title:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }\n.darask-dashboard-title strong { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.darask-dashboard-title small { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 11px; color: var(--dsw-alias-label-tertiary); overflow-wrap: anywhere; }\n.darask-dashboard-chip { padding: 0 6px; border-radius: 999px; border: .5px solid var(--dsw-alias-border-l2); color: var(--dsw-alias-label-secondary); line-height: 1.6; }\n.darask-dashboard-empty { font-size: 13px; color: var(--dsw-alias-label-tertiary); padding: 12px 4px; }\n.darask-dashboard-peek { flex: 0 0 min(420px, 45%); min-width: 0; display: flex; flex-direction: column; border-left: .5px solid var(--dsw-alias-border-l2); background: var(--dsw-alias-bg-layer-2); }\n.darask-dashboard-peek header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 14px 16px 10px; border-bottom: .5px solid var(--dsw-alias-border-l2); }\n.darask-dashboard-peek header div { display: grid; gap: 2px; min-width: 0; }\n.darask-dashboard-peek header strong { font-size: 14px; overflow-wrap: anywhere; }\n.darask-dashboard-peek header small { font-size: 11px; color: var(--dsw-alias-label-tertiary); overflow-wrap: anywhere; }\n.darask-dashboard-notice { margin: 10px 16px 0; padding: 8px 10px; font-size: 11px; line-height: 1.5; color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-3); border-radius: 8px; }\n.darask-dashboard-messages { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 16px; display: grid; gap: 10px; align-content: start; }\n.darask-dashboard-message { display: grid; gap: 3px; padding: 8px 10px; border-radius: 10px; background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l2); }\n.darask-dashboard-message[data-role=user] { border-color: var(--dsw-alias-state-business-primary); }\n.darask-dashboard-message small { font-size: 11px; color: var(--dsw-alias-label-tertiary); }\n.darask-dashboard-message p { font-size: 13px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }\n.darask-dashboard-peek footer { padding: 10px 16px; font-size: 12px; color: var(--dsw-alias-label-tertiary); border-top: .5px solid var(--dsw-alias-border-l2); min-height: 40px; display: flex; align-items: center; }\n.darask-dashboard-peek .darask-error { margin: 0 16px 10px; }\n@media (max-width: 760px) { .darask.darask-dashboard[data-peek] .darask-dashboard-list { display: none; } .darask-dashboard-peek { flex: 1; border-left: 0; } }\r\n';
 
 // src/locales/grok-ja.mjs
 var grok_ja_default = {
@@ -10466,8 +10466,8 @@ var codex_ja_default = {
 };
 
 // src/workspaces-client.jsx
-var import_react4 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives4 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_react5 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives5 = require("@deepseek-ai/dsh-client-ui-primitives");
 
 // src/session-activity.mjs
 var PENDING = /* @__PURE__ */ new Set(["approval", "plan-review", "question"]);
@@ -11430,8 +11430,490 @@ function KeySharing({ nodes, secrets }) {
   ] });
 }
 
-// src/workspaces-client.jsx
+// src/dashboard-client.jsx
+var import_react4 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives4 = require("@deepseek-ai/dsh-client-ui-primitives");
+
+// src/dashboard.mjs
+var DASHBOARD_PANEL = "darask-dashboard";
+var DASHBOARD_PREFS_KEY = "darask-dashboard:prefs";
+var STATES = ["attention", "running", "done", "idle", "unobserved"];
+var STATE_RANK = Object.fromEntries(STATES.map((state, index) => [state, index]));
+var GROUPINGS = ["state", "host", "workspace"];
+var FILTERS = ["all", "attention", "active", "live", "top"];
+var SORTS = ["activity", "updated", "title"];
+var PENDING2 = /* @__PURE__ */ new Set(["approval", "plan-review", "question"]);
+var DEFAULT_PREFS = Object.freeze({ grouping: "state", filter: "all", sort: "activity", showSubagents: true, collapsed: [] });
+function stateLabel(state) {
+  return { attention: "\u8981\u5BFE\u5FDC", running: "\u4F5C\u696D\u4E2D", done: "\u5B8C\u4E86", idle: "\u5F85\u6A5F", unobserved: "\u672A\u63A5\u7D9A" }[state] ?? "";
+}
+function stateOf(row) {
+  if (!row) return "idle";
+  if (row.unobserved === true) return row.live === true ? "running" : "unobserved";
+  const activity = sessionActivity(row);
+  if (activity === "warning" || activity === "error") return "attention";
+  if (activity === "ongoing") return "running";
+  if (activity === "done") return "done";
+  return "idle";
+}
+var pendingKind = (kind) => PENDING2.has(kind) ? kind : void 0;
+var short = (id) => String(id ?? "").replace(/^session-/, "").slice(0, 8);
+var clampInt = (value, max) => Number.isInteger(value) && value > 0 ? Math.min(value, max) : 0;
+function localRows({ sessions, pending, workspaces, hostName = "\u3053\u306E PC", archived = [] }) {
+  if (!sessions || sessions.phase !== "ready") return [];
+  const byId = sessions.byId ?? {};
+  const workspaceOf = /* @__PURE__ */ new Map();
+  for (const workspace of workspaces?.items ?? []) for (const id of workspace.sessionIds ?? []) workspaceOf.set(id, workspace);
+  const subagents = /* @__PURE__ */ new Map();
+  for (const summary of Object.values(byId)) if (summary?.parentId && summary.running) subagents.set(summary.parentId, (subagents.get(summary.parentId) ?? 0) + 1);
+  const hidden = new Set(Array.isArray(archived) ? archived : []);
+  const rows = [];
+  for (const id of sessions.ids ?? []) {
+    const summary = byId[id];
+    if (!summary || hidden.has(id) || summary.blank === true) continue;
+    const workspace = workspaceOf.get(id);
+    const jobs = sessions.jobsBySession?.[id] ?? [];
+    const kind = pendingKind(pending?.get?.(id)?.kind);
+    const selection = summary.projectionValues?.modelSelection;
+    const model = selection?.next?.model ?? selection?.lastUsed?.model;
+    rows.push({
+      key: `local:${id}`,
+      id,
+      node: "local",
+      hostName,
+      hostStatus: "online",
+      workspaceId: workspace?.workspaceId,
+      workspaceTitle: workspace?.title ?? summary.cwd ?? "",
+      cwd: summary.cwd ?? workspace?.path ?? "",
+      title: summary.displayTitle || summary.title || "\u65B0\u3057\u3044\u4F1A\u8A71",
+      subagent: summary.origin === "subagent" || Boolean(summary.parentId),
+      parentId: summary.parentId,
+      running: summary.running === true,
+      completed: summary.completed === true,
+      error: jobs.some((job) => job.status === "failed"),
+      runningSubagentCount: clampInt(subagents.get(id), 99),
+      runningJobs: jobs.filter((job) => job.status === "running" || job.status === "stopping").length,
+      failedJobs: jobs.filter((job) => job.status === "failed").length,
+      ...kind ? { pendingInteraction: kind } : {},
+      model: typeof model === "string" ? model : void 0,
+      updatedAt: Number.isFinite(summary.updatedAt) ? summary.updatedAt : 0,
+      current: sessions.current === id,
+      observed: true
+    });
+  }
+  return rows;
+}
+function remoteRows({ groups: groups2 = [], opened = [], cold = {} }) {
+  const openedBy = new Map(opened.map((entry) => [`${entry.node}:${entry.workspace}`, entry]));
+  const rows = [];
+  for (const group of groups2) {
+    if (!group || group.node === "local") continue;
+    if (group.status !== "online" && !(group.workspaces ?? []).some((workspace) => openedBy.has(`${group.node}:${workspace.id}`) || cold[`${group.node}:${workspace.id}`])) {
+      rows.push({ key: `${group.node}:offline`, id: null, node: group.node, hostName: group.name, hostStatus: group.status, workspaceId: void 0, workspaceTitle: "", cwd: "", title: group.status === "connecting" ? "\u63A5\u7D9A\u4E2D\u2026" : "\u30AA\u30D5\u30E9\u30A4\u30F3", unobserved: true, observed: false, updatedAt: 0, placeholder: true });
+      continue;
+    }
+    for (const workspace of group.workspaces ?? []) {
+      const key = `${group.node}:${workspace.id}`, entry = openedBy.get(key);
+      const base = { node: group.node, hostName: group.name, hostStatus: group.status, workspaceId: workspace.id, workspaceTitle: workspace.title ?? workspace.path ?? "", cwd: workspace.path ?? "" };
+      if (entry?.sessions?.length) {
+        for (const session of entry.sessions) rows.push({
+          ...base,
+          key: `${key}:${session.id}`,
+          id: session.id,
+          title: session.title,
+          running: session.running,
+          completed: session.completed,
+          error: session.error,
+          runningSubagentCount: clampInt(session.runningSubagentCount, 99),
+          ...session.pendingInteraction ? { pendingInteraction: session.pendingInteraction } : {},
+          current: entry.current === session.id,
+          observed: true,
+          updatedAt: 0
+        });
+        continue;
+      }
+      const list = cold[key];
+      if (!Array.isArray(list?.items)) {
+        if (entry) rows.push({ ...base, key: `${key}:connecting`, id: null, title: entry.error || (entry.loading ? "\u63A5\u7D9A\u4E2D\u2026" : "\u30BB\u30C3\u30B7\u30E7\u30F3\u306A\u3057"), unobserved: true, observed: false, updatedAt: 0, placeholder: true });
+        continue;
+      }
+      for (const item of list.items) {
+        const createdAt = Date.parse(item.createdAt ?? "");
+        rows.push({
+          ...base,
+          key: `${key}:${item.sessionId}`,
+          id: item.sessionId,
+          title: `\u30BB\u30C3\u30B7\u30E7\u30F3 ${short(item.sessionId)}`,
+          live: item.live === true,
+          persisted: item.persisted === true,
+          unobserved: true,
+          observed: false,
+          updatedAt: Number.isFinite(createdAt) ? createdAt : 0
+        });
+      }
+    }
+  }
+  return rows;
+}
+function matchesQuery(row, query) {
+  const needle = String(query ?? "").trim().toLocaleLowerCase();
+  if (!needle) return true;
+  return [row.title, row.hostName, row.workspaceTitle, row.cwd, row.id, row.model].some((value) => typeof value === "string" && value.toLocaleLowerCase().includes(needle));
+}
+function matchesFilter(row, filter, state = stateOf(row)) {
+  switch (filter) {
+    case "attention":
+      return state === "attention";
+    case "active":
+      return state === "attention" || state === "running";
+    case "live":
+      return row.observed === true || row.live === true;
+    case "top":
+      return !row.subagent;
+    default:
+      return true;
+  }
+}
+function compareRows(a, b, sort) {
+  if (sort === "title") return String(a.title).localeCompare(String(b.title), "ja") || String(a.key).localeCompare(String(b.key));
+  if (sort === "updated") return b.updatedAt - a.updatedAt || String(a.key).localeCompare(String(b.key));
+  const rank = STATE_RANK[stateOf(a)] - STATE_RANK[stateOf(b)];
+  if (rank) return rank;
+  if (Boolean(b.current) !== Boolean(a.current)) return b.current ? 1 : -1;
+  return b.updatedAt - a.updatedAt || String(a.key).localeCompare(String(b.key));
+}
+function groupKey(row, grouping) {
+  if (grouping === "host") return { id: `host:${row.node}`, label: row.hostName || row.node, hint: row.hostStatus === "offline" ? "\u30AA\u30D5\u30E9\u30A4\u30F3" : "" };
+  if (grouping === "workspace") return { id: `ws:${row.node}:${row.workspaceId ?? row.cwd}`, label: `${row.hostName || row.node} \xB7 ${row.workspaceTitle || row.cwd || "\uFF08\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306A\u3057\uFF09"}`, hint: "" };
+  const state = stateOf(row);
+  return { id: `state:${state}`, label: stateLabel(state), hint: "" };
+}
+function buildDashboard(rows, prefs = DEFAULT_PREFS, query = "") {
+  const settings = sanitizePrefs(prefs);
+  const counts = Object.fromEntries(STATES.map((state) => [state, 0]));
+  const grouped = /* @__PURE__ */ new Map();
+  let shown = 0;
+  for (const row of rows) {
+    if (!row) continue;
+    const state = stateOf(row);
+    counts[state]++;
+    if (!settings.showSubagents && row.subagent) continue;
+    if (!matchesQuery(row, query) || !matchesFilter(row, settings.filter, state)) continue;
+    const group = groupKey(row, settings.grouping);
+    if (!grouped.has(group.id)) grouped.set(group.id, { ...group, rows: [] });
+    grouped.get(group.id).rows.push(row);
+    shown++;
+  }
+  const groups2 = [...grouped.values()].map((group) => ({ ...group, rows: group.rows.slice().sort((a, b) => compareRows(a, b, settings.sort)), collapsed: settings.collapsed.includes(group.id) }));
+  if (settings.grouping === "state") groups2.sort((a, b) => STATE_RANK[a.id.slice(6)] - STATE_RANK[b.id.slice(6)]);
+  else groups2.sort((a, b) => (a.id.startsWith("host:local") || a.id.startsWith("ws:local:") ? -1 : 0) - (b.id.startsWith("host:local") || b.id.startsWith("ws:local:") ? -1 : 0) || a.label.localeCompare(b.label, "ja"));
+  return { groups: groups2, counts, total: rows.length, shown };
+}
+function rowChips(row) {
+  const chips = [];
+  if (row.subagent) chips.push("\u30B5\u30D6\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8");
+  if (row.runningSubagentCount > 0) chips.push(`\u30B5\u30D6 ${row.runningSubagentCount}`);
+  if (row.runningJobs > 0) chips.push(`\u30B8\u30E7\u30D6 ${row.runningJobs}`);
+  if (row.failedJobs > 0) chips.push(`\u30B8\u30E7\u30D6\u5931\u6557 ${row.failedJobs}`);
+  if (row.pendingInteraction) chips.push({ approval: "\u8A31\u53EF\u5F85\u3061", "plan-review": "\u8A08\u753B\u30EC\u30D3\u30E5\u30FC", question: "\u8CEA\u554F" }[row.pendingInteraction]);
+  if (row.model) chips.push(row.model);
+  if (row.unobserved && row.live) chips.push("\u7A3C\u50CD\u4E2D");
+  if (row.unobserved && !row.live && row.persisted) chips.push("\u4FDD\u5B58\u6E08\u307F");
+  if (row.hostStatus === "offline") chips.push("\u30AA\u30D5\u30E9\u30A4\u30F3");
+  return chips;
+}
+function rowStatusLabel(row) {
+  const state = stateOf(row);
+  if (state === "unobserved") return row.placeholder ? row.title : "\u672A\u63A5\u7D9A\uFF08\u8AAD\u307F\u53D6\u308A\u5C02\u7528\uFF09";
+  const activity = sessionActivity(row);
+  return activity ? sessionActivityLabel(activity) : stateLabel(state);
+}
+function sanitizePrefs(value) {
+  const input = value && typeof value === "object" ? value : {};
+  return {
+    grouping: GROUPINGS.includes(input.grouping) ? input.grouping : DEFAULT_PREFS.grouping,
+    filter: FILTERS.includes(input.filter) ? input.filter : DEFAULT_PREFS.filter,
+    sort: SORTS.includes(input.sort) ? input.sort : DEFAULT_PREFS.sort,
+    showSubagents: input.showSubagents !== false,
+    collapsed: Array.isArray(input.collapsed) ? [...new Set(input.collapsed.filter((id) => typeof id === "string" && id.length <= 120))].slice(0, 200) : []
+  };
+}
+function loadPrefs(storage) {
+  try {
+    return sanitizePrefs(JSON.parse(storage?.getItem(DASHBOARD_PREFS_KEY) ?? "null"));
+  } catch {
+    return { ...DEFAULT_PREFS, collapsed: [] };
+  }
+}
+function savePrefs(storage, prefs) {
+  try {
+    storage?.setItem(DASHBOARD_PREFS_KEY, JSON.stringify(sanitizePrefs(prefs)));
+  } catch {
+  }
+}
+function toggleCollapsed(prefs, groupId) {
+  const settings = sanitizePrefs(prefs);
+  const collapsed = settings.collapsed.includes(groupId) ? settings.collapsed.filter((id) => id !== groupId) : [...settings.collapsed, groupId];
+  return { ...settings, collapsed };
+}
+
+// src/dashboard-client.jsx
 var import_jsx_runtime4 = require("react/jsx-runtime");
+var DASHBOARD_ENDPOINT = "/api/darask/sessions/dashboard";
+var REFRESH_MS = 3e4;
+var COLD_CONCURRENCY = 4;
+var GROUPING_LABEL = { state: "\u72B6\u614B\u5225", host: "PC \u5225", workspace: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u5225" };
+var FILTER_LABEL = { all: "\u3059\u3079\u3066", attention: "\u8981\u5BFE\u5FDC\u306E\u307F", active: "\u4F5C\u696D\u4E2D\u30FB\u8981\u5BFE\u5FDC", live: "\u63A5\u7D9A\u4E2D\u306E\u307F", top: "\u30C8\u30C3\u30D7\u30EC\u30D9\u30EB\u306E\u307F" };
+var SORT_LABEL = { activity: "\u72B6\u614B\u9806", updated: "\u66F4\u65B0\u9806", title: "\u30BF\u30A4\u30C8\u30EB\u9806" };
+async function post2(body, signal) {
+  const response = await fetch(DASHBOARD_ENDPOINT, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: signal ?? AbortSignal.timeout(2e4) });
+  const value = await response.json();
+  if (!response.ok || value.error) throw new Error(value.error || "\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u53D6\u5F97\u3067\u304D\u307E\u305B\u3093\u3002");
+  return value;
+}
+function DashboardIcon({ size = 18 }) {
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("rect", { x: "3", y: "3", width: "7", height: "9", rx: "1.5" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("rect", { x: "14", y: "3", width: "7", height: "5", rx: "1.5" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("rect", { x: "14", y: "12", width: "7", height: "9", rx: "1.5" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("rect", { x: "3", y: "16", width: "7", height: "5", rx: "1.5" })
+  ] });
+}
+function StatusMark({ row }) {
+  const state = stateOf(row), activity = sessionActivity(row), label2 = rowStatusLabel(row);
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "darask-session-status darask-dashboard-mark", title: label2, "data-state": state, children: [
+    activity === "error" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-session-error", "aria-hidden": "true", children: "\xD7" }) : activity ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.StateDot, { state: activity }) : /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-dashboard-dot", "data-state": state, "aria-hidden": "true" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-visually-hidden", children: label2 })
+  ] });
+}
+function useRemoteGroups(loadGroups) {
+  const [groups2, setGroups] = (0, import_react4.useState)([]), [error, setError] = (0, import_react4.useState)("");
+  (0, import_react4.useEffect)(() => {
+    const controller = new AbortController();
+    let reading = false, again = false;
+    const refresh = async () => {
+      if (reading) {
+        again = true;
+        return;
+      }
+      reading = true;
+      do {
+        again = false;
+        try {
+          const value = await loadGroups(controller.signal);
+          if (!controller.signal.aborted) {
+            setGroups(value?.groups ?? []);
+            setError("");
+          }
+        } catch (e) {
+          if (!controller.signal.aborted) setError(e.message);
+        }
+      } while (again && !controller.signal.aborted);
+      reading = false;
+    };
+    void refresh();
+    window.addEventListener("darask-workspaces-changed", refresh);
+    window.addEventListener("focus", refresh);
+    const timer = window.setInterval(refresh, REFRESH_MS);
+    return () => {
+      controller.abort();
+      window.clearInterval(timer);
+      window.removeEventListener("darask-workspaces-changed", refresh);
+      window.removeEventListener("focus", refresh);
+    };
+  }, [loadGroups]);
+  return { groups: groups2, error };
+}
+function useColdSessions(groups2, opened, tick) {
+  const [cold, setCold] = (0, import_react4.useState)({});
+  const targets = (0, import_react4.useMemo)(() => {
+    const live = new Set(opened.filter((entry) => entry.sessions?.length).map((entry) => `${entry.node}:${entry.workspace}`));
+    const list = [];
+    for (const group of groups2) if (group.node !== "local" && group.status === "online") for (const workspace of group.workspaces ?? []) {
+      const key = `${group.node}:${workspace.id}`;
+      if (!live.has(key) && typeof workspace.path === "string") list.push({ key, node: group.node, cwd: workspace.path });
+    }
+    return list;
+  }, [groups2, opened]);
+  (0, import_react4.useEffect)(() => {
+    if (!targets.length) return;
+    const controller = new AbortController();
+    const queue = targets.slice();
+    const worker = async () => {
+      for (let target = queue.shift(); target && !controller.signal.aborted; target = queue.shift()) {
+        try {
+          const value = await post2({ action: "list", node: target.node, cwd: target.cwd, limit: 50 }, controller.signal);
+          if (!controller.signal.aborted) setCold((current) => ({ ...current, [target.key]: { items: value.items, at: Date.now() } }));
+        } catch (e) {
+          if (!controller.signal.aborted) setCold((current) => ({ ...current, [target.key]: { items: current[target.key]?.items ?? [], error: e.message, at: Date.now() } }));
+        }
+      }
+    };
+    void Promise.all(Array.from({ length: Math.min(COLD_CONCURRENCY, targets.length) }, worker));
+    return () => controller.abort();
+  }, [targets, tick]);
+  return cold;
+}
+function PeekPane({ target, onClose }) {
+  const [state, setState] = (0, import_react4.useState)({ items: [], loading: true, error: "", nextOffset: null, notice: "" });
+  const read = async (offset, append) => {
+    setState((current) => ({ ...current, loading: true, error: "" }));
+    try {
+      const value = await post2({ action: "read", node: target.node, cwd: target.cwd, sessionId: target.id, offset, limit: 50 });
+      setState((current) => ({ items: append ? [...current.items, ...value.items] : value.items, loading: false, error: "", nextOffset: value.nextOffset ?? null, notice: value.notice ?? "" }));
+    } catch (e) {
+      setState((current) => ({ ...current, loading: false, error: e.message }));
+    }
+  };
+  (0, import_react4.useEffect)(() => {
+    setState({ items: [], loading: true, error: "", nextOffset: null, notice: "" });
+    void read(0, false);
+  }, [target.key]);
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("aside", { className: "darask-dashboard-peek", "aria-label": "\u30BB\u30C3\u30B7\u30E7\u30F3\u5185\u5BB9\uFF08\u8AAD\u307F\u53D6\u308A\u5C02\u7528\uFF09", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("header", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: target.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("small", { children: [
+          target.hostName,
+          " \xB7 ",
+          target.workspaceTitle || target.cwd
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "ghost", size: "sm", onClick: onClose, "aria-label": "\u9589\u3058\u308B", children: "\xD7" })
+    ] }),
+    state.notice && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-dashboard-notice", children: state.notice }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-dashboard-messages", children: [
+      state.items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-dashboard-message", "data-role": item.role, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("small", { children: [
+          item.role === "user" ? "\u30E6\u30FC\u30B6\u30FC" : "\u30A2\u30B7\u30B9\u30BF\u30F3\u30C8",
+          " \xB7 #",
+          item.seq
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+          item.text,
+          item.truncated ? " \u2026" : ""
+        ] })
+      ] }, item.seq)),
+      !state.loading && !state.items.length && !state.error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-dashboard-empty", children: "\u8868\u793A\u3067\u304D\u308B\u672C\u6587\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
+    ] }),
+    state.error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-error", role: "alert", children: state.error }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("footer", { children: state.loading ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026" }) : state.nextOffset !== null && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "outline", size: "sm", onClick: () => read(state.nextOffset, true), children: "\u3055\u3089\u306B\u8AAD\u3080" }) })
+  ] });
+}
+function DashboardRow({ row, onAttach, onPeek, peeking }) {
+  const chips = rowChips(row);
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-dashboard-row", "data-state": stateOf(row), "data-current": row.current || void 0, "data-peeking": peeking || void 0, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(StatusMark, { row }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { type: "button", className: "darask-dashboard-title", onClick: () => onAttach(row), disabled: row.placeholder || void 0, "aria-current": row.current ? "page" : void 0, title: row.node === "local" ? "\u3053\u306E\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u958B\u304F" : row.observed ? "\u30EA\u30E2\u30FC\u30C8\u306E\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u958B\u304F" : "\u30EA\u30E2\u30FC\u30C8\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306B\u63A5\u7D9A\u3057\u3066\u958B\u304F", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: row.title }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("small", { children: [
+        row.hostName,
+        row.workspaceTitle ? ` \xB7 ${row.workspaceTitle}` : "",
+        chips.map((chip) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-dashboard-chip", children: chip }, chip))
+      ] })
+    ] }),
+    row.id && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "ghost", size: "sm", className: "darask-workspace-action", onClick: () => onPeek(row), "aria-label": "\u5185\u5BB9\u3092\u78BA\u8A8D\uFF08\u8AAD\u307F\u53D6\u308A\u5C02\u7528\uFF09", "aria-pressed": peeking, children: "\u2261" })
+  ] });
+}
+function DashboardPanel({ navigation, openLocal, loadGroups, hostName, useSessions, useSessionPendingInteraction, useWorkspaces }) {
+  const sessions = useSessions((snapshot) => snapshot);
+  const pending = useSessionPendingInteraction((snapshot) => snapshot);
+  const workspaces = useWorkspaces((snapshot) => snapshot);
+  const opened = (0, import_react4.useSyncExternalStore)(navigation.subscribe, navigation.getOpenedSnapshot, navigation.getOpenedSnapshot);
+  const { groups: groups2, error } = useRemoteGroups(loadGroups);
+  const [tick, setTick] = (0, import_react4.useState)(0);
+  const cold = useColdSessions(groups2, opened, tick);
+  const [prefs, setPrefs] = (0, import_react4.useState)(() => loadPrefs(window.localStorage));
+  const [query, setQuery] = (0, import_react4.useState)(""), [peek, setPeek] = (0, import_react4.useState)(null);
+  const pendingOpen = (0, import_react4.useRef)(null);
+  (0, import_react4.useEffect)(() => savePrefs(window.localStorage, prefs), [prefs]);
+  (0, import_react4.useEffect)(() => {
+    const target = pendingOpen.current;
+    if (!target) return;
+    const entry = opened.find((item) => item.node === target.node && item.workspace === target.workspaceId);
+    if (entry?.sessions?.some((session) => session.id === target.id)) {
+      pendingOpen.current = null;
+      navigation.openSession(target.id, target.node, target.workspaceId);
+    } else if (entry && !entry.loading && (entry.error || entry.sessions)) pendingOpen.current = null;
+  }, [opened, navigation]);
+  const rows = (0, import_react4.useMemo)(() => [...localRows({ sessions, pending, workspaces, hostName, archived: workspaces?.archivedSessionIds }), ...remoteRows({ groups: groups2, opened, cold })], [sessions, pending, workspaces, hostName, groups2, opened, cold]);
+  const view = (0, import_react4.useMemo)(() => buildDashboard(rows, prefs, query), [rows, prefs, query]);
+  const update = (patch) => setPrefs((current) => ({ ...current, ...patch }));
+  const attach = (row) => {
+    if (row.placeholder) return;
+    if (row.node === "local") {
+      openLocal(row.id);
+      return;
+    }
+    if (row.observed) {
+      navigation.openSession(row.id, row.node, row.workspaceId);
+      return;
+    }
+    pendingOpen.current = row;
+    void navigation.open(row.node, row.workspaceId);
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask darask-dashboard", "data-peek": peek ? "" : void 0, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-dashboard-list", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("header", { className: "darask-dashboard-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { children: "\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8 \u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "darask-dashboard-counts", children: [
+          ["attention", "running", "done", "idle", "unobserved"].filter((state) => view.counts[state]).map((state) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "darask-dashboard-count", "data-state": state, children: [
+            stateLabel(state),
+            " ",
+            view.counts[state]
+          ] }, state)),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "darask-dashboard-count", children: [
+            "\u5168 ",
+            view.total,
+            " \u4EF6"
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-dashboard-toolbar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "\u30BF\u30A4\u30C8\u30EB\u30FBPC\u30FB\u30D5\u30A9\u30EB\u30C0\u30FC\u30FB\u30E2\u30C7\u30EB\u3067\u7D5E\u308A\u8FBC\u307F", "aria-label": "\u7D5E\u308A\u8FBC\u307F" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("select", { value: prefs.grouping, onChange: (event) => update({ grouping: event.target.value }), "aria-label": "\u30B0\u30EB\u30FC\u30D7\u5316", children: GROUPINGS.map((value) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("option", { value, children: GROUPING_LABEL[value] }, value)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("select", { value: prefs.filter, onChange: (event) => update({ filter: event.target.value }), "aria-label": "\u30D5\u30A3\u30EB\u30BF\u30FC", children: FILTERS.map((value) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("option", { value, children: FILTER_LABEL[value] }, value)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("select", { value: prefs.sort, onChange: (event) => update({ sort: event.target.value }), "aria-label": "\u4E26\u3079\u66FF\u3048", children: SORTS.map((value) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("option", { value, children: SORT_LABEL[value] }, value)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Switch, { checked: prefs.showSubagents, onChange: (checked) => update({ showSubagents: checked }), label: "\u30B5\u30D6\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8\u3092\u8868\u793A" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "outline", size: "sm", onClick: () => {
+          setTick((value) => value + 1);
+          window.dispatchEvent(new Event("darask-workspaces-changed"));
+        }, children: "\u66F4\u65B0" })
+      ] }),
+      error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-error", role: "alert", children: error }),
+      view.groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "darask-dashboard-group", "data-collapsed": group.collapsed || void 0, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { type: "button", onClick: () => setPrefs((current) => toggleCollapsed(current, group.id)), "aria-expanded": !group.collapsed, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-dashboard-caret", "aria-hidden": "true", children: group.collapsed ? "\u25B8" : "\u25BE" }),
+          group.label,
+          group.hint && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("small", { children: [
+            " ",
+            group.hint
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-dashboard-group-count", children: group.rows.length })
+        ] }) }),
+        !group.collapsed && group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DashboardRow, { row, onAttach: attach, onPeek: (target) => setPeek((current) => current?.key === target.key ? null : target), peeking: peek?.key === row.key }, row.key))
+      ] }, group.id)),
+      !view.groups.length && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-dashboard-empty", children: sessions?.phase === "ready" ? "\u6761\u4EF6\u306B\u5408\u3046\u30BB\u30C3\u30B7\u30E7\u30F3\u306F\u3042\u308A\u307E\u305B\u3093\u3002" : "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026" })
+    ] }),
+    peek && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PeekPane, { target: peek, onClose: () => setPeek(null) })
+  ] });
+}
+function registerDashboardUi(ctx, { navigation, loadGroups }) {
+  const inject2 = () => ({
+    navigation,
+    loadGroups,
+    hostName: "\u3053\u306E PC",
+    openLocal: (id) => {
+      ctx.sessions.open(id);
+      ctx.layout.selectPanel(null);
+    }
+  });
+  ctx.slots.inject("main", () => ctx.slots.register({ name: "main", key: DASHBOARD_PANEL, inject: inject2 }, DashboardPanel));
+  ctx.slots.inject("sidebar.panellist", () => ctx.slots.register({ name: "sidebar.panellist", id: DASHBOARD_PANEL, order: 20, label: () => "\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9" }, DashboardIcon));
+}
+
+// src/workspaces-client.jsx
+var import_jsx_runtime5 = require("react/jsx-runtime");
 var endpoint2 = "/api/darask/workspaces";
 async function call(body, signal) {
   const response = await fetch(endpoint2, {
@@ -11446,12 +11928,12 @@ async function call(body, signal) {
   return value;
 }
 function PcConnections() {
-  const [editingId, setEditingId] = (0, import_react4.useState)(null);
-  const [data, setData] = (0, import_react4.useState)(null), [name2, setName] = (0, import_react4.useState)(""), [url, setUrl] = (0, import_react4.useState)(""), [token, setToken] = (0, import_react4.useState)("");
-  const [pending, setPending] = (0, import_react4.useState)(false), [error, setError] = (0, import_react4.useState)(""), [saved, setSaved] = (0, import_react4.useState)(false);
-  const [imported, setImported] = (0, import_react4.useState)(false);
-  const [formOpen, setFormOpen] = (0, import_react4.useState)(false);
-  (0, import_react4.useEffect)(() => {
+  const [editingId, setEditingId] = (0, import_react5.useState)(null);
+  const [data, setData] = (0, import_react5.useState)(null), [name2, setName] = (0, import_react5.useState)(""), [url, setUrl] = (0, import_react5.useState)(""), [token, setToken] = (0, import_react5.useState)("");
+  const [pending, setPending] = (0, import_react5.useState)(false), [error, setError] = (0, import_react5.useState)(""), [saved, setSaved] = (0, import_react5.useState)(false);
+  const [imported, setImported] = (0, import_react5.useState)(false);
+  const [formOpen, setFormOpen] = (0, import_react5.useState)(false);
+  (0, import_react5.useEffect)(() => {
     const controller = new AbortController();
     call(null, controller.signal).then(setData).catch((e) => {
       if (!controller.signal.aborted) setError(e.message);
@@ -11492,10 +11974,10 @@ function PcConnections() {
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-integrations", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: "PC \u306E\u63A5\u7D9A" }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: "\u63A5\u7D9A\u5148\u306E PC \u306B DSH \u3068 DARASK \u3092\u5C0E\u5165\u3057\u3001QR \u3067\u767B\u9332\u3057\u307E\u3059\u3002\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306F\u305D\u306E PC \u306B\u4F5C\u6210\u3055\u308C\u307E\u3059\u3002" }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ConnectionQrTools, { call, disabled: pending, onImport: (value) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-integrations", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "PC \u306E\u63A5\u7D9A" }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "\u63A5\u7D9A\u5148\u306E PC \u306B DSH \u3068 DARASK \u3092\u5C0E\u5165\u3057\u3001QR \u3067\u767B\u9332\u3057\u307E\u3059\u3002\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306F\u305D\u306E PC \u306B\u4F5C\u6210\u3055\u308C\u307E\u3059\u3002" }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ConnectionQrTools, { call, disabled: pending, onImport: (value) => {
       const existing = data?.nodes?.find((node) => node.url === value.url);
       setEditingId(existing?.id ?? null);
       setName(existing?.name ?? value.name);
@@ -11506,17 +11988,17 @@ function PcConnections() {
       setError("");
       setFormOpen(true);
     } }),
-    imported && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { role: "status", className: "darask-login", children: [
+    imported && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { role: "status", className: "darask-login", children: [
       name2,
       " \u306E\u63A5\u7D9A\u60C5\u5831\u3092\u8AAD\u307F\u53D6\u308A\u307E\u3057\u305F\u3002\u4E0B\u306E\u300C\u63A5\u7D9A\u3092\u78BA\u8A8D\u3057\u3066\u4FDD\u5B58\u300D\u3067\u767B\u9332\u3067\u304D\u307E\u3059\u3002"
     ] }),
-    data?.nodes?.map((node) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("article", { className: "darask-provider", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("header", { className: "darask-provider-header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-provider-name", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: node.name }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-meta", children: node.url })
+    data?.nodes?.map((node) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("article", { className: "darask-provider", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("header", { className: "darask-provider-header", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-provider-name", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: node.name }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "darask-meta", children: node.url })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Tag, { children: "\u767B\u9332\u6E08\u307F" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { size: "sm", disabled: pending, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Tag, { children: "\u767B\u9332\u6E08\u307F" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { size: "sm", disabled: pending, onClick: () => {
         setEditingId(node.id);
         setName(node.name);
         setUrl(node.url);
@@ -11525,17 +12007,17 @@ function PcConnections() {
         setImported(false);
         setFormOpen(true);
       }, children: "\u63A5\u7D9A\u3092\u5909\u66F4" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { size: "sm", disabled: pending, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { size: "sm", disabled: pending, onClick: () => {
         void remove(node.id);
       }, children: "\u63A5\u7D9A\u3092\u89E3\u9664" })
     ] }) }, node.id)),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("details", { className: "darask-provider darask-pc-manual", open: formOpen, onToggle: (event) => setFormOpen(event.currentTarget.open), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("summary", { children: imported ? "\u8AAD\u307F\u53D6\u3063\u305F\u63A5\u7D9A\u60C5\u5831" : editingId ? "\u63A5\u7D9A\u60C5\u5831\u3092\u5909\u66F4" : "URL\u30FB\u30C8\u30FC\u30AF\u30F3\u3092\u624B\u5165\u529B\u3059\u308B" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-pc-form", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: editingId ? "PC \u306E\u63A5\u7D9A\u3092\u5909\u66F4" : "PC \u3092\u8FFD\u52A0" }),
-        data?.peers?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "Tailscale \u306E PC" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("select", { disabled: pending, value: "", onChange: (e) => {
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "darask-provider darask-pc-manual", open: formOpen, onToggle: (event) => setFormOpen(event.currentTarget.open), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("summary", { children: imported ? "\u8AAD\u307F\u53D6\u3063\u305F\u63A5\u7D9A\u60C5\u5831" : editingId ? "\u63A5\u7D9A\u60C5\u5831\u3092\u5909\u66F4" : "URL\u30FB\u30C8\u30FC\u30AF\u30F3\u3092\u624B\u5165\u529B\u3059\u308B" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-pc-form", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: editingId ? "PC \u306E\u63A5\u7D9A\u3092\u5909\u66F4" : "PC \u3092\u8FFD\u52A0" }),
+        data?.peers?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "Tailscale \u306E PC" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("select", { disabled: pending, value: "", onChange: (e) => {
             const peer = data.peers.find((p) => p.dnsName === e.target.value);
             if (peer) {
               setName(peer.name);
@@ -11543,8 +12025,8 @@ function PcConnections() {
               setToken("");
             }
           }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("option", { value: "", children: "\u4E00\u89A7\u304B\u3089\u63A5\u7D9A\u5148\u3092\u9078\u629E" }),
-            data.peers.map((peer) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("option", { value: peer.dnsName, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "", children: "\u4E00\u89A7\u304B\u3089\u63A5\u7D9A\u5148\u3092\u9078\u629E" }),
+            data.peers.map((peer) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("option", { value: peer.dnsName, children: [
               peer.name,
               "\uFF08",
               peer.online ? "\u30AA\u30F3\u30E9\u30A4\u30F3" : "\u30AA\u30D5\u30E9\u30A4\u30F3",
@@ -11552,37 +12034,37 @@ function PcConnections() {
             ] }, peer.dnsName))
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "PC \u306E\u8868\u793A\u540D" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { value: name2, onChange: (e) => setName(e.target.value), disabled: pending, placeholder: "win / MacBook Air" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "PC \u306E\u8868\u793A\u540D" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Input, { value: name2, onChange: (e) => setName(e.target.value), disabled: pending, placeholder: "win / MacBook Air" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u305D\u306E PC \u306E DSH \u306E URL" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { value: url, onChange: (e) => {
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u305D\u306E PC \u306E DSH \u306E URL" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Input, { value: url, onChange: (e) => {
             setUrl(e.target.value);
             setToken("");
           }, disabled: pending, placeholder: "https://win.\u2026.ts.net:8443", autoComplete: "off" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "DSH \u30C8\u30FC\u30AF\u30F3" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { type: "password", value: token, onChange: (e) => setToken(e.target.value.trim()), disabled: pending, autoComplete: "new-password" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: "\u8D77\u52D5 URL \u306E token= \u306E\u5F8C\u306E\u5024\u3067\u3059\u3002\u4FDD\u5B58\u6E08\u307F\u306E\u30C8\u30FC\u30AF\u30F3\u306F\u753B\u9762\u306B\u8868\u793A\u3057\u307E\u305B\u3093\u3002" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "DSH \u30C8\u30FC\u30AF\u30F3" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Input, { type: "password", value: token, onChange: (e) => setToken(e.target.value.trim()), disabled: pending, autoComplete: "new-password" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u8D77\u52D5 URL \u306E token= \u306E\u5F8C\u306E\u5024\u3067\u3059\u3002\u4FDD\u5B58\u6E08\u307F\u306E\u30C8\u30FC\u30AF\u30F3\u306F\u753B\u9762\u306B\u8868\u793A\u3057\u307E\u305B\u3093\u3002" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "primary", disabled: pending || !name2 || !url || !token, onClick: () => {
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: pending || !name2 || !url || !token, onClick: () => {
           void save();
         }, children: pending ? "\u63A5\u7D9A\u3092\u78BA\u8A8D\u4E2D\u2026" : "\u63A5\u7D9A\u3092\u78BA\u8A8D\u3057\u3066\u4FDD\u5B58" })
       ] })
     ] }),
-    saved && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { role: "status", children: "PC \u306E\u63A5\u7D9A\u3092\u4FDD\u5B58\u3057\u307E\u3057\u305F\u3002" }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-error", role: "alert", children: error }),
-    data?.nodes?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(KeySharing, { nodes: data.nodes, secrets: data.secrets })
+    saved && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "status", children: "PC \u306E\u63A5\u7D9A\u3092\u4FDD\u5B58\u3057\u307E\u3057\u305F\u3002" }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-error", role: "alert", children: error }),
+    data?.nodes?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(KeySharing, { nodes: data.nodes, secrets: data.secrets })
   ] });
 }
 function WorkspacePanel({ onPicked, navigation }) {
-  const [data, setData] = (0, import_react4.useState)(null), [node, setNode] = (0, import_react4.useState)("local"), [inputPath, setInputPath] = (0, import_react4.useState)(""), [name2, setName] = (0, import_react4.useState)("");
-  const [listing, setListing] = (0, import_react4.useState)(null), [pending, setPending] = (0, import_react4.useState)(false), [error, setError] = (0, import_react4.useState)(""), [result, setResult] = (0, import_react4.useState)(null);
-  const generation = (0, import_react4.useRef)(0);
-  (0, import_react4.useEffect)(() => {
+  const [data, setData] = (0, import_react5.useState)(null), [node, setNode] = (0, import_react5.useState)("local"), [inputPath, setInputPath] = (0, import_react5.useState)(""), [name2, setName] = (0, import_react5.useState)("");
+  const [listing, setListing] = (0, import_react5.useState)(null), [pending, setPending] = (0, import_react5.useState)(false), [error, setError] = (0, import_react5.useState)(""), [result, setResult] = (0, import_react5.useState)(null);
+  const generation = (0, import_react5.useRef)(0);
+  (0, import_react5.useEffect)(() => {
     const controller = new AbortController();
     call(null, controller.signal).then(setData).catch((e) => {
       if (!controller.signal.aborted) setError(e.message);
@@ -11641,13 +12123,13 @@ function WorkspacePanel({ onPicked, navigation }) {
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "darask darask-workspaces", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("header", { className: "darask-heading", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { children: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u4F5C\u6210\u5148\u306E PC \u3068\u4FDD\u5B58\u5148\u3092\u9078\u3073\u307E\u3059\u3002\u305D\u306E PC \u306E\u30A2\u30AF\u30BB\u30B9\u6A29\u3067\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u4F5C\u6210\u3057\u307E\u3059\u3002" })
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "darask darask-workspaces", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("header", { className: "darask-heading", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u4F5C\u6210\u5148\u306E PC \u3068\u4FDD\u5B58\u5148\u3092\u9078\u3073\u307E\u3059\u3002\u305D\u306E PC \u306E\u30A2\u30AF\u30BB\u30B9\u6A29\u3067\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u4F5C\u6210\u3057\u307E\u3059\u3002" })
     ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(WorkspaceSetsEditor, { data, onPicked }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(WorkspaceGroups, { groups: data?.groups ?? [], pending, onOpen: async (group, workspace) => {
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(WorkspaceSetsEditor, { data, onPicked }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(WorkspaceGroups, { groups: data?.groups ?? [], pending, onOpen: async (group, workspace) => {
       if (group.node === "local") {
         onPicked?.(workspace.path);
         return;
@@ -11662,10 +12144,10 @@ function WorkspacePanel({ onPicked, navigation }) {
         setPending(false);
       }
     }, localCanOpen: Boolean(onPicked) }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-fields", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u4F5C\u6210\u5148\u306E PC" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("select", { value: node, disabled: pending, onChange: (e) => {
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-fields", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u4F5C\u6210\u5148\u306E PC" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("select", { value: node, disabled: pending, onChange: (e) => {
           const value = e.target.value;
           setNode(value);
           setInputPath("");
@@ -11673,80 +12155,80 @@ function WorkspacePanel({ onPicked, navigation }) {
           setResult(null);
           void browse(value, "");
         }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("option", { value: "local", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("option", { value: "local", children: [
             data?.host?.name ?? "\u3053\u306E PC",
             "\uFF08\u3053\u306E DSH \u306E PC\uFF09"
           ] }),
-          data?.nodes?.map((pc) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("option", { value: pc.id, children: pc.name }, pc.id))
+          data?.nodes?.map((pc) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: pc.id, children: pc.name }, pc.id))
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: "\u5225\u306E PC \u306F\u300C\u8A2D\u5B9A \u2192 \u30A2\u30AB\u30A6\u30F3\u30C8 \u2192 PC\u30FBTailscale \u2192 PC \u306E\u63A5\u7D9A\u300D\u3067\u8FFD\u52A0\u3067\u304D\u307E\u3059\u3002" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u4FDD\u5B58\u5148\u306E\u30D5\u30A9\u30EB\u30C0\u30FC" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { value: inputPath, onChange: (e) => setInputPath(e.target.value), disabled: pending, placeholder: node === "local" ? data?.host?.home : "C:\\Projects \u307E\u305F\u306F /Users/\u540D\u524D/Projects", autoComplete: "off" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: "\u7D76\u5BFE\u30D1\u30B9\u3092\u76F4\u63A5\u5165\u529B\u3059\u308B\u304B\u3001\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u53C2\u7167\u3057\u3066\u304F\u3060\u3055\u3044\u3002" })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "\u5225\u306E PC \u306F\u300C\u8A2D\u5B9A \u2192 \u30A2\u30AB\u30A6\u30F3\u30C8 \u2192 PC\u30FBTailscale \u2192 PC \u306E\u63A5\u7D9A\u300D\u3067\u8FFD\u52A0\u3067\u304D\u307E\u3059\u3002" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u4FDD\u5B58\u5148\u306E\u30D5\u30A9\u30EB\u30C0\u30FC" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Input, { value: inputPath, onChange: (e) => setInputPath(e.target.value), disabled: pending, placeholder: node === "local" ? data?.host?.home : "C:\\Projects \u307E\u305F\u306F /Users/\u540D\u524D/Projects", autoComplete: "off" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u7D76\u5BFE\u30D1\u30B9\u3092\u76F4\u63A5\u5165\u529B\u3059\u308B\u304B\u3001\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u53C2\u7167\u3057\u3066\u304F\u3060\u3055\u3044\u3002" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "outline", disabled: pending, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "outline", disabled: pending, onClick: () => {
           void browse();
         }, children: pending ? "\u51E6\u7406\u4E2D\u2026" : "\u3053\u306E\u5834\u6240\u3092\u53C2\u7167" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => {
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => {
           void browse(node, "");
         }, children: "\u30DB\u30FC\u30E0" }),
-        listing?.directory?.parent && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => {
+        listing?.directory?.parent && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => {
           void browse(node, listing.directory.parent);
         }, children: "\u4E0A\u306E\u968E\u5C64" }),
-        listing?.directory?.roots?.map((root) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => {
+        listing?.directory?.roots?.map((root) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => {
           void browse(node, root);
         }, children: root }, root))
       ] }),
-      listing && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "darask-meta", children: [
+      listing && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "darask-meta", children: [
           "\u63A5\u7D9A\u5148: ",
           listing.host.name,
           " \xB7 ",
           listing.directory.path
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-folder-list", children: [
-          listing.directory.folders.map((folder) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { type: "button", disabled: pending, onClick: () => {
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-folder-list", children: [
+          listing.directory.folders.map((folder) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("button", { type: "button", disabled: pending, onClick: () => {
             void browse(node, folder.path);
           }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { "aria-hidden": "true", children: "\u25B8" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { "aria-hidden": "true", children: "\u25B8" }),
             " ",
             folder.name
           ] }, folder.path)),
-          !listing.directory.folders.length && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: "\u5B50\u30D5\u30A9\u30EB\u30C0\u30FC\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
+          !listing.directory.folders.length && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "\u5B50\u30D5\u30A9\u30EB\u30C0\u30FC\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
         ] }),
-        listing.directory.truncated && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: "\u5148\u982D\u306E 1,000 \u4EF6\u3092\u8868\u793A\u3057\u3066\u3044\u307E\u3059\u3002\u4FDD\u5B58\u5148\u306F\u76F4\u63A5\u5165\u529B\u3067\u304D\u307E\u3059\u3002" })
+        listing.directory.truncated && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "\u5148\u982D\u306E 1,000 \u4EF6\u3092\u8868\u793A\u3057\u3066\u3044\u307E\u3059\u3002\u4FDD\u5B58\u5148\u306F\u76F4\u63A5\u5165\u529B\u3067\u304D\u307E\u3059\u3002" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u65B0\u3057\u3044\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u540D" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { value: name2, onChange: (e) => setName(e.target.value), disabled: pending, placeholder: "my-project" })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u65B0\u3057\u3044\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u540D" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Input, { value: name2, onChange: (e) => setName(e.target.value), disabled: pending, placeholder: "my-project" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "primary", disabled: pending || !data || !name2 || !inputPath, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: pending || !data || !name2 || !inputPath, onClick: () => {
           void create("create");
         }, children: "\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u4F5C\u6210\u3057\u3066\u767B\u9332" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "outline", disabled: pending || !data || !inputPath, onClick: () => {
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "outline", disabled: pending || !data || !inputPath, onClick: () => {
           void create("register");
         }, children: "\u3053\u306E\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u767B\u9332" })
       ] }),
-      error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-error", role: "alert", children: error }),
-      result && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-login", role: "status", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: result.created ? "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F\u3002" : "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u767B\u9332\u3057\u307E\u3057\u305F\u3002" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
+      error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-error", role: "alert", children: error }),
+      result && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-login", role: "status", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: result.created ? "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F\u3002" : "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u767B\u9332\u3057\u307E\u3057\u305F\u3002" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
           result.host.name,
           " \xB7 ",
           result.workspace.path
         ] }),
-        node !== "local" && result.sameMachine && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u3053\u306E DSH \u306E\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u4E00\u89A7\u304B\u3089\u958B\u3051\u307E\u3059\u3002\u5225\u306E DSH \u3078\u79FB\u52D5\u3057\u307E\u305B\u3093\u3002" }),
-        node !== "local" && !result.sameMachine && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+        node !== "local" && result.sameMachine && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u3053\u306E DSH \u306E\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u4E00\u89A7\u304B\u3089\u958B\u3051\u307E\u3059\u3002\u5225\u306E DSH \u3078\u79FB\u52D5\u3057\u307E\u305B\u3093\u3002" }),
+        node !== "local" && !result.sameMachine && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { children: [
             "\u30EA\u30E2\u30FC\u30C8\u74B0\u5883\u3068\u3057\u3066\u3053\u306E\u30CF\u30D6\u304B\u3089\u64CD\u4F5C\u3067\u304D\u307E\u3059\u3002\u30D5\u30A1\u30A4\u30EB\u3068\u51E6\u7406\u306F ",
             result.host.name,
             " \u4E0A\u3067\u5B9F\u884C\u3055\u308C\u307E\u3059\u3002"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "primary", disabled: pending, onClick: () => {
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: pending, onClick: () => {
             void openPc();
           }, children: "\u3053\u306E\u753B\u9762\u3067\u958B\u304F" })
         ] })
@@ -11764,39 +12246,39 @@ function mergeWorkspaceGroup(data, node, host) {
 function ActivityMark({ state }) {
   if (!state) return null;
   const label2 = sessionActivityLabel(state);
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "darask-session-status", title: label2, "data-state": state, children: [
-    state === "error" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-session-error", "aria-hidden": "true", children: "\xD7" }) : /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.StateDot, { state }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "darask-visually-hidden", children: label2 })
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "darask-session-status", title: label2, "data-state": state, children: [
+    state === "error" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "darask-session-error", "aria-hidden": "true", children: "\xD7" }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.StateDot, { state }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "darask-visually-hidden", children: label2 })
   ] });
 }
 function WorkspaceGroups({ groups: groups2, onOpen, pending = false, localCanOpen = false, compact = false }) {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: compact ? "darask-remote-workspaces" : "darask-workspace-groups", children: groups2.map((group) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "darask-workspace-group", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("h3", { children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: compact ? "darask-remote-workspaces" : "darask-workspace-groups", children: groups2.map((group) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "darask-workspace-group", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("h3", { children: [
       group.name,
       " ",
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "darask-muted", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "darask-muted", children: [
         group.node === "local" ? "\u3053\u306E PC" : "\u30EA\u30E2\u30FC\u30C8\u74B0\u5883",
         group.status === "offline" ? " \xB7 \u30AA\u30D5\u30E9\u30A4\u30F3" : ""
       ] })
     ] }),
-    group.error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: group.error }),
-    group.workspaces.map((workspace) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "darask-workspace-entry", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { type: "button", disabled: pending || group.node === "local" && !localCanOpen, onClick: () => {
+    group.error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: group.error }),
+    group.workspaces.map((workspace) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "darask-workspace-entry", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("button", { type: "button", disabled: pending || group.node === "local" && !localCanOpen, onClick: () => {
       void onOpen(group, workspace);
     }, title: `${group.name} \xB7 ${workspace.path}`, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ActivityMark, { state: workspaceActivity(workspace.sessions) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ActivityMark, { state: workspaceActivity(workspace.sessions) }),
         group.node !== "local" && "\u{1F310} ",
         workspace.title
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: workspace.path })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: workspace.path })
     ] }) }, workspace.id)),
-    !group.workspaces.length && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: group.status === "offline" ? "\u4FDD\u5B58\u6E08\u307F\u306E\u4E00\u89A7\u306F\u3042\u308A\u307E\u305B\u3093\u3002" : "\u767B\u9332\u6E08\u307F\u306E\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
+    !group.workspaces.length && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: group.status === "offline" ? "\u4FDD\u5B58\u6E08\u307F\u306E\u4E00\u89A7\u306F\u3042\u308A\u307E\u305B\u3093\u3002" : "\u767B\u9332\u6E08\u307F\u306E\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
   ] }, group.node)) });
 }
 function RemoteWorkspaceRows({ groups: groups2, query = "", selected, opened = [], onOpen, onSession, onNew, onManage, onManageSession }) {
-  const [details, setDetails] = (0, import_react4.useState)(null);
-  const [menu, setMenu] = (0, import_react4.useState)(null), [target, setTarget] = (0, import_react4.useState)(null), [draft, setDraft] = (0, import_react4.useState)("");
-  const [pending, setPending] = (0, import_react4.useState)(false), [error, setError] = (0, import_react4.useState)("");
+  const [details, setDetails] = (0, import_react5.useState)(null);
+  const [menu, setMenu] = (0, import_react5.useState)(null), [target, setTarget] = (0, import_react5.useState)(null), [draft, setDraft] = (0, import_react5.useState)("");
+  const [pending, setPending] = (0, import_react5.useState)(false), [error, setError] = (0, import_react5.useState)("");
   const normalized = query.trim().toLocaleLowerCase();
   async function save() {
     setPending(true);
@@ -11811,41 +12293,41 @@ function RemoteWorkspaceRows({ groups: groups2, query = "", selected, opened = [
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "darask-remote-workspaces", children: groups2.filter((group) => group.node !== "local").flatMap((group) => group.workspaces.filter((workspace) => `${workspace.title} ${workspace.path} ${group.name}`.toLocaleLowerCase().includes(normalized)).map((workspace) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "darask-remote-workspaces", children: groups2.filter((group) => group.node !== "local").flatMap((group) => group.workspaces.filter((workspace) => `${workspace.title} ${workspace.path} ${group.name}`.toLocaleLowerCase().includes(normalized)).map((workspace) => {
       const key = `${group.node}:${workspace.id}`, expanded = details === key;
       const active = selected?.node === group.node && selected.workspace === workspace.id;
       const retained = opened.find((entry) => entry.node === group.node && entry.workspace === workspace.id) ?? (active ? selected : null);
-      return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-workspace-row-wrap", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-workspace-row", "data-active": active || void 0, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", className: "darask-workspace-globe", "aria-label": `${workspace.title} \u306E\u63A5\u7D9A\u60C5\u5831`, "aria-expanded": expanded, onClick: () => setDetails(expanded ? null : key), children: "\u{1F310}" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ActivityMark, { state: workspaceActivity(retained?.sessions) }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", className: "darask-workspace-title", "aria-current": active ? "page" : void 0, onClick: () => {
+      return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-workspace-row-wrap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-workspace-row", "data-active": active || void 0, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { type: "button", className: "darask-workspace-globe", "aria-label": `${workspace.title} \u306E\u63A5\u7D9A\u60C5\u5831`, "aria-expanded": expanded, onClick: () => setDetails(expanded ? null : key), children: "\u{1F310}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ActivityMark, { state: workspaceActivity(retained?.sessions) }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { type: "button", className: "darask-workspace-title", "aria-current": active ? "page" : void 0, onClick: () => {
             void onOpen(group, workspace);
           }, children: workspace.title }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Menu, { open: menu === key, onClose: () => setMenu(null), portal: true, items: [{ id: "rename", label: "\u540D\u524D\u3092\u5909\u66F4" }, { id: "delete", label: "\u4E00\u89A7\u304B\u3089\u524A\u9664", danger: true }], onSelect: (action) => {
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Menu, { open: menu === key, onClose: () => setMenu(null), portal: true, items: [{ id: "rename", label: "\u540D\u524D\u3092\u5909\u66F4" }, { id: "delete", label: "\u4E00\u89A7\u304B\u3089\u524A\u9664", danger: true }], onSelect: (action) => {
             if (!["rename", "delete"].includes(action)) return;
             setMenu(null);
             setTarget({ group, workspace, action });
             setDraft(workspace.title);
             setError("");
-          }, anchor: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", className: "darask-workspace-action", "aria-label": `${workspace.title} \u306E\u64CD\u4F5C`, "aria-haspopup": "menu", "aria-expanded": menu === key, onClick: () => setMenu(menu === key ? null : key), children: "\u2026" }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", className: "darask-workspace-action", "aria-label": `${workspace.title} \u306B\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u8FFD\u52A0`, onClick: () => {
+          }, anchor: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { type: "button", className: "darask-workspace-action", "aria-label": `${workspace.title} \u306E\u64CD\u4F5C`, "aria-haspopup": "menu", "aria-expanded": menu === key, onClick: () => setMenu(menu === key ? null : key), children: "\u2026" }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { type: "button", className: "darask-workspace-action", "aria-label": `${workspace.title} \u306B\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u8FFD\u52A0`, onClick: () => {
             void onNew?.(group, workspace);
           }, children: "\uFF0B" })
         ] }),
-        expanded && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-workspace-info", role: "region", "aria-label": `${workspace.title} \u306E\u63A5\u7D9A\u60C5\u5831`, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: group.name }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: workspace.path }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: group.status === "offline" ? "\u30AA\u30D5\u30E9\u30A4\u30F3 \xB7 \u4FDD\u5B58\u6E08\u307F\u306E\u4E00\u89A7" : "\u30AA\u30F3\u30E9\u30A4\u30F3" }),
-          group.error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: group.error })
+        expanded && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-workspace-info", role: "region", "aria-label": `${workspace.title} \u306E\u63A5\u7D9A\u60C5\u5831`, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: group.name }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: workspace.path }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: group.status === "offline" ? "\u30AA\u30D5\u30E9\u30A4\u30F3 \xB7 \u4FDD\u5B58\u6E08\u307F\u306E\u4E00\u89A7" : "\u30AA\u30F3\u30E9\u30A4\u30F3" }),
+          group.error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: group.error })
         ] }),
-        retained?.sessions?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "darask-workspace-sessions", children: retained.sessions.map((session) => {
+        retained?.sessions?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "darask-workspace-sessions", children: retained.sessions.map((session) => {
           const sessionKey = `${key}:${session.id}`;
-          return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-session-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ActivityMark, { state: sessionActivity(session) }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", className: "darask-session-title", "aria-current": active && retained.current === session.id ? "page" : void 0, onClick: () => onSession?.(session.id, group.node, workspace.id), children: session.title }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Menu, { open: menu === sessionKey, onClose: () => setMenu(null), portal: true, items: [{ id: "rename", label: "\u540D\u524D\u3092\u5909\u66F4" }, { id: "fork", label: "\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u30D5\u30A9\u30FC\u30AF" }, { id: "archive", label: "\u30A2\u30FC\u30AB\u30A4\u30D6" }], onSelect: (action) => {
+          return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-session-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ActivityMark, { state: sessionActivity(session) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { type: "button", className: "darask-session-title", "aria-current": active && retained.current === session.id ? "page" : void 0, onClick: () => onSession?.(session.id, group.node, workspace.id), children: session.title }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Menu, { open: menu === sessionKey, onClose: () => setMenu(null), portal: true, items: [{ id: "rename", label: "\u540D\u524D\u3092\u5909\u66F4" }, { id: "fork", label: "\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u30D5\u30A9\u30FC\u30AF" }, { id: "archive", label: "\u30A2\u30FC\u30AB\u30A4\u30D6" }], onSelect: (action) => {
               if (!["rename", "fork", "archive"].includes(action)) return;
               setMenu(null);
               if (action === "fork") {
@@ -11857,31 +12339,31 @@ function RemoteWorkspaceRows({ groups: groups2, query = "", selected, opened = [
               setTarget({ group, workspace, session, action });
               setDraft(session.title);
               setError("");
-            }, anchor: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", className: "darask-workspace-action", "aria-label": `${session.title} \u306E\u64CD\u4F5C`, "aria-haspopup": "menu", "aria-expanded": menu === sessionKey, onClick: () => setMenu(menu === sessionKey ? null : sessionKey), children: "\u2026" }) })
+            }, anchor: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { type: "button", className: "darask-workspace-action", "aria-label": `${session.title} \u306E\u64CD\u4F5C`, "aria-haspopup": "menu", "aria-expanded": menu === sessionKey, onClick: () => setMenu(menu === sessionKey ? null : sessionKey), children: "\u2026" }) })
           ] }, session.id);
         }) })
       ] }, key);
     })) }),
-    error && !target && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { role: "alert", className: "darask-error", children: error }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Modal, { open: target !== null, onClose: () => {
+    error && !target && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "alert", className: "darask-error", children: error }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Modal, { open: target !== null, onClose: () => {
       if (!pending) setTarget(null);
-    }, title: target?.session ? target.action === "rename" ? "\u30BB\u30C3\u30B7\u30E7\u30F3\u306E\u540D\u524D\u3092\u5909\u66F4" : "\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u30A2\u30FC\u30AB\u30A4\u30D6" : target?.action === "rename" ? "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306E\u540D\u524D\u3092\u5909\u66F4" : "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u4E00\u89A7\u304B\u3089\u524A\u9664", closeLabel: "\u9589\u3058\u308B", children: target && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask darask-workspace-dialog", children: [
-      target.action === "rename" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u8868\u793A\u540D" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Input, { value: draft, maxLength: 120, autoFocus: true, disabled: pending, onChange: (event) => setDraft(event.target.value) })
-      ] }) : target.session ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+    }, title: target?.session ? target.action === "rename" ? "\u30BB\u30C3\u30B7\u30E7\u30F3\u306E\u540D\u524D\u3092\u5909\u66F4" : "\u30BB\u30C3\u30B7\u30E7\u30F3\u3092\u30A2\u30FC\u30AB\u30A4\u30D6" : target?.action === "rename" ? "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306E\u540D\u524D\u3092\u5909\u66F4" : "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u4E00\u89A7\u304B\u3089\u524A\u9664", closeLabel: "\u9589\u3058\u308B", children: target && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask darask-workspace-dialog", children: [
+      target.action === "rename" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u8868\u793A\u540D" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Input, { value: draft, maxLength: 120, autoFocus: true, disabled: pending, onChange: (event) => setDraft(event.target.value) })
+      ] }) : target.session ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { children: [
         "\u300C",
         target.session.title,
         "\u300D\u3092\u30A2\u30FC\u30AB\u30A4\u30D6\u3057\u3066\u4E00\u89A7\u304B\u3089\u96A0\u3057\u307E\u3059\u3002\u4F1A\u8A71\u30C7\u30FC\u30BF\u306F\u4FDD\u6301\u3055\u308C\u307E\u3059\u3002"
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { children: [
         "\u300C",
         target.workspace.title,
         "\u300D\u3092\u4E00\u89A7\u304B\u3089\u524A\u9664\u3057\u307E\u3059\u3002\u30D5\u30A9\u30EB\u30C0\u30FC\u3068\u4F1A\u8A71\u30C7\u30FC\u30BF\u306F\u6B8B\u308A\u307E\u3059\u3002"
       ] }),
-      error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { role: "alert", className: "darask-error", children: error }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => setTarget(null), children: "\u30AD\u30E3\u30F3\u30BB\u30EB" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "primary", disabled: pending || target.action === "rename" && !draft.trim(), onClick: () => {
+      error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "alert", className: "darask-error", children: error }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => setTarget(null), children: "\u30AD\u30E3\u30F3\u30BB\u30EB" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: pending || target.action === "rename" && !draft.trim(), onClick: () => {
           void save();
         }, children: pending ? "\u4FDD\u5B58\u4E2D\u2026" : target.action === "rename" ? "\u540D\u524D\u3092\u5909\u66F4" : target.session ? "\u30A2\u30FC\u30AB\u30A4\u30D6" : "\u4E00\u89A7\u304B\u3089\u524A\u9664" })
       ] })
@@ -11889,10 +12371,10 @@ function RemoteWorkspaceRows({ groups: groups2, query = "", selected, opened = [
   ] });
 }
 function RemoteWorkspaceSidebar({ query, navigation }) {
-  const [data, setData] = (0, import_react4.useState)(null), [error, setError] = (0, import_react4.useState)("");
-  const selected = (0, import_react4.useSyncExternalStore)(navigation.subscribe, navigation.getSnapshot, navigation.getSnapshot);
-  const opened = (0, import_react4.useSyncExternalStore)(navigation.subscribe, navigation.getOpenedSnapshot, navigation.getOpenedSnapshot);
-  (0, import_react4.useEffect)(() => {
+  const [data, setData] = (0, import_react5.useState)(null), [error, setError] = (0, import_react5.useState)("");
+  const selected = (0, import_react5.useSyncExternalStore)(navigation.subscribe, navigation.getSnapshot, navigation.getSnapshot);
+  const opened = (0, import_react5.useSyncExternalStore)(navigation.subscribe, navigation.getOpenedSnapshot, navigation.getOpenedSnapshot);
+  (0, import_react5.useEffect)(() => {
     const controller = new AbortController();
     let reading = false, refreshAgain = false;
     const refresh = async () => {
@@ -11933,9 +12415,9 @@ function RemoteWorkspaceSidebar({ query, navigation }) {
     navigation.workspaceChanged(group.node, workspace.id, { deleted: action === "delete", title });
     window.dispatchEvent(new Event("darask-workspaces-changed"));
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask darask-workspaces-sidebar", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(RemoteWorkspaceRows, { groups: groups2, query, selected, opened, onOpen: (group, workspace) => navigation.open(group.node, workspace.id), onSession: navigation.openSession, onNew: (group, workspace) => navigation.startSession(group.node, workspace.id), onManage: manage, onManageSession: navigation.manageSession }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-error", role: "alert", children: error })
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask darask-workspaces-sidebar", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(RemoteWorkspaceRows, { groups: groups2, query, selected, opened, onOpen: (group, workspace) => navigation.open(group.node, workspace.id), onSession: navigation.openSession, onNew: (group, workspace) => navigation.startSession(group.node, workspace.id), onManage: manage, onManageSession: navigation.manageSession }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-error", role: "alert", children: error })
   ] });
 }
 function WorkspaceDirectoryFlow({ open, onCancel, onPicked, navigation }) {
@@ -11943,12 +12425,12 @@ function WorkspaceDirectoryFlow({ open, onCancel, onPicked, navigation }) {
     onCancel();
     return navigation.open(...args);
   } };
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Modal, { open, onClose: onCancel, title: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u9078\u629E", closeLabel: "\u9589\u3058\u308B", className: "darask-usage-modal", children: open && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(WorkspacePanel, { onPicked, navigation: openNavigation }) });
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Modal, { open, onClose: onCancel, title: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u9078\u629E", closeLabel: "\u9589\u3058\u308B", className: "darask-usage-modal", children: open && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(WorkspacePanel, { onPicked, navigation: openNavigation }) });
 }
 function WorkspaceNavigationBridge({ navigation, usePanelInfo }) {
   const panel = usePanelInfo((info) => info.activePanelId);
-  (0, import_react4.useEffect)(() => navigation.observePanel(panel), [navigation, panel]);
-  (0, import_react4.useEffect)(() => {
+  (0, import_react5.useEffect)(() => navigation.observePanel(panel), [navigation, panel]);
+  (0, import_react5.useEffect)(() => {
     const restore = () => {
       void navigation.restore();
     };
@@ -11959,10 +12441,10 @@ function WorkspaceNavigationBridge({ navigation, usePanelInfo }) {
   return null;
 }
 function RemoteWorkspaceFrame({ navigation, selected, visible }) {
-  const frame = (0, import_react4.useRef)(null);
-  const [frameError, setFrameError] = (0, import_react4.useState)("");
-  const themeObserver = (0, import_react4.useRef)(null);
-  (0, import_react4.useEffect)(() => {
+  const frame = (0, import_react5.useRef)(null);
+  const [frameError, setFrameError] = (0, import_react5.useState)("");
+  const themeObserver = (0, import_react5.useRef)(null);
+  (0, import_react5.useEffect)(() => {
     setFrameError("");
     const receive = (event) => {
       if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow || event.data?.node !== selected?.node) return;
@@ -12000,25 +12482,25 @@ function RemoteWorkspaceFrame({ navigation, selected, visible }) {
   }
   if (!selected) return null;
   const error = selected.error || frameError;
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-workspace-main", hidden: !visible, children: [
-    selected.loading && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-workspace-status", role: "status", children: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u958B\u3044\u3066\u3044\u307E\u3059\u2026" }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-workspace-status", role: "alert", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: error }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { onClick: () => {
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-workspace-main", hidden: !visible, children: [
+    selected.loading && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-workspace-status", role: "status", children: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3092\u958B\u3044\u3066\u3044\u307E\u3059\u2026" }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-workspace-status", role: "alert", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: error }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { onClick: () => {
         void navigation.open(selected.node, selected.workspace, { replace: true, force: true });
       }, children: "\u518D\u8A66\u884C" })
     ] }),
-    selected.src && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("iframe", { ref: frame, src: selected.src, title: selected.title || "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9", onLoad: loaded, allow: "clipboard-read; clipboard-write" }, selected.src)
+    selected.src && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("iframe", { ref: frame, src: selected.src, title: selected.title || "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9", onLoad: loaded, allow: "clipboard-read; clipboard-write" }, selected.src)
   ] });
 }
 function RemoteWorkspacePool({ navigation, usePanelInfo }) {
-  const selected = (0, import_react4.useSyncExternalStore)(navigation.subscribe, navigation.getSnapshot, navigation.getSnapshot);
-  const opened = (0, import_react4.useSyncExternalStore)(navigation.subscribe, navigation.getOpenedSnapshot, navigation.getOpenedSnapshot);
+  const selected = (0, import_react5.useSyncExternalStore)(navigation.subscribe, navigation.getSnapshot, navigation.getSnapshot);
+  const opened = (0, import_react5.useSyncExternalStore)(navigation.subscribe, navigation.getOpenedSnapshot, navigation.getOpenedSnapshot);
   const active = usePanelInfo((info) => info.activePanelId) === REMOTE_PANEL;
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "darask-workspace-pool", hidden: !active, children: opened.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(RemoteWorkspaceFrame, { navigation, selected: entry, visible: active && selected?.node === entry.node && selected.workspace === entry.workspace }, `${entry.node}:${entry.workspace}`)) });
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "darask-workspace-pool", hidden: !active, children: opened.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(RemoteWorkspaceFrame, { navigation, selected: entry, visible: active && selected?.node === entry.node && selected.workspace === entry.workspace }, `${entry.node}:${entry.workspace}`)) });
 }
 function ArchivePanel() {
-  const [data, setData] = (0, import_react4.useState)(null), [error, setError] = (0, import_react4.useState)(""), [pending, setPending] = (0, import_react4.useState)(false), [target, setTarget] = (0, import_react4.useState)(null);
+  const [data, setData] = (0, import_react5.useState)(null), [error, setError] = (0, import_react5.useState)(""), [pending, setPending] = (0, import_react5.useState)(false), [target, setTarget] = (0, import_react5.useState)(null);
   async function load(signal) {
     const response = await fetch("/api/darask/archives", { credentials: "same-origin", cache: "no-store", signal: signal ?? AbortSignal.timeout(2e4) });
     const value = await response.json();
@@ -12026,7 +12508,7 @@ function ArchivePanel() {
     setData(value);
     setError("");
   }
-  (0, import_react4.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     const controller = new AbortController();
     load(controller.signal).catch((e) => {
       if (!controller.signal.aborted) setError(e.message);
@@ -12049,40 +12531,40 @@ function ArchivePanel() {
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "darask", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("header", { className: "darask-heading", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { children: "\u30A2\u30FC\u30AB\u30A4\u30D6" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u4E00\u89A7\u304B\u3089\u96A0\u3057\u305F\u4F1A\u8A71\u3092\u623B\u3059\u304B\u3001\u4F1A\u8A71\u30C7\u30FC\u30BF\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u5FA9\u5143\u3059\u308B\u3068\u30B5\u30A4\u30C9\u30D0\u30FC\u306B\u518D\u8868\u793A\u3055\u308C\u307E\u3059\u3002" })
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "darask", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("header", { className: "darask-heading", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u30A2\u30FC\u30AB\u30A4\u30D6" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u4E00\u89A7\u304B\u3089\u96A0\u3057\u305F\u4F1A\u8A71\u3092\u623B\u3059\u304B\u3001\u4F1A\u8A71\u30C7\u30FC\u30BF\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u5FA9\u5143\u3059\u308B\u3068\u30B5\u30A4\u30C9\u30D0\u30FC\u306B\u518D\u8868\u793A\u3055\u308C\u307E\u3059\u3002" })
     ] }) }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { role: "alert", className: "darask-error", children: error }),
-    !data && !error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { role: "status", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026" }),
-    data && data.items.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-muted", children: "\u30A2\u30FC\u30AB\u30A4\u30D6\u3057\u305F\u4F1A\u8A71\u306F\u3042\u308A\u307E\u305B\u3093\u3002" }),
-    data?.items?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "darask-archive-list", children: data.items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("article", { className: "darask-provider", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("header", { className: "darask-provider-header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-provider-name", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: item.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "darask-meta", children: [
+    error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "alert", className: "darask-error", children: error }),
+    !data && !error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "status", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026" }),
+    data && data.items.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "\u30A2\u30FC\u30AB\u30A4\u30D6\u3057\u305F\u4F1A\u8A71\u306F\u3042\u308A\u307E\u305B\u3093\u3002" }),
+    data?.items?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "darask-archive-list", children: data.items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("article", { className: "darask-provider", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("header", { className: "darask-provider-header", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-provider-name", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: item.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "darask-meta", children: [
           item.workspaceTitle,
           item.path ? ` \xB7 ${item.path}` : ""
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => {
           void act("restore", item.id);
         }, children: "\u4E00\u89A7\u306B\u623B\u3059" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => setTarget(item), children: "\u524A\u9664" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => setTarget(item), children: "\u524A\u9664" })
       ] })
     ] }) }, item.id)) }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Modal, { open: target !== null, onClose: () => {
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Modal, { open: target !== null, onClose: () => {
       if (!pending) setTarget(null);
-    }, title: "\u30A2\u30FC\u30AB\u30A4\u30D6\u3092\u524A\u9664", closeLabel: "\u9589\u3058\u308B", children: target && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask darask-workspace-dialog", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+    }, title: "\u30A2\u30FC\u30AB\u30A4\u30D6\u3092\u524A\u9664", closeLabel: "\u9589\u3058\u308B", children: target && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask darask-workspace-dialog", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { children: [
         "\u300C",
         target.title,
         "\u300D\u306E\u4F1A\u8A71\u30C7\u30FC\u30BF\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u3053\u306E\u64CD\u4F5C\u306F\u53D6\u308A\u6D88\u305B\u307E\u305B\u3093\u3002"
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { disabled: pending, onClick: () => setTarget(null), children: "\u30AD\u30E3\u30F3\u30BB\u30EB" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "primary", disabled: pending, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: pending, onClick: () => setTarget(null), children: "\u30AD\u30E3\u30F3\u30BB\u30EB" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: pending, onClick: () => {
           void act("delete", target.id);
         }, children: pending ? "\u524A\u9664\u4E2D\u2026" : "\u524A\u9664" })
       ] })
@@ -12101,6 +12583,7 @@ function registerWorkspaceUi(ctx) {
   ctx.slots.inject("main.persistent", () => ctx.slots.register({ name: "main.persistent", inject: inject2 }, RemoteWorkspacePool));
   ctx.slots.inject("shell.overlay", () => ctx.slots.register({ name: "shell.overlay", id: "darask-workspace-navigation", inject: inject2 }, WorkspaceNavigationBridge));
   ctx.slots.inject("sidebar.workspaces.remote", () => ctx.slots.register({ name: "sidebar.workspaces.remote", inject: inject2 }, RemoteWorkspaceSidebar));
+  registerDashboardUi(ctx, { navigation, loadGroups: (signal) => call(null, signal) });
   ctx.slots.inject("settings.section", () => ctx.slots.register({ name: "settings.section", id: "darask-workspaces", order: 12, label: () => "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9", inject: inject2 }, WorkspacePanel));
   ctx.slots.inject("settings.section", () => ctx.slots.register({ name: "settings.section", id: "darask-archives", order: 13, label: () => "\u30A2\u30FC\u30AB\u30A4\u30D6" }, ArchivePanel));
   for (const slot of ["conversation.hero.workspace.directoryFlow", "sidebar.workspaces.directoryFlow"]) {
@@ -12109,12 +12592,12 @@ function registerWorkspaceUi(ctx) {
 }
 
 // src/development-client.jsx
-var import_react5 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives5 = require("@deepseek-ai/dsh-client-ui-primitives");
-var import_jsx_runtime5 = require("react/jsx-runtime");
+var import_react6 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives6 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_jsx_runtime6 = require("react/jsx-runtime");
 function RestartRow({ t }) {
-  const [busy, setBusy] = (0, import_react5.useState)(false);
-  const [status, setStatus] = (0, import_react5.useState)("");
+  const [busy, setBusy] = (0, import_react6.useState)(false);
+  const [status, setStatus] = (0, import_react6.useState)("");
   async function restart() {
     setBusy(true);
     setStatus(t("restarting"));
@@ -12142,12 +12625,12 @@ function RestartRow({ t }) {
       setBusy(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-restart-row", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: t("restartTitle") }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: status || t("restartDesc") })
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-restart-row", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: t("restartTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: status || t("restartDesc") })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: busy, onClick: () => {
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { disabled: busy, onClick: () => {
       void restart();
     }, children: t("restartNow") })
   ] });
@@ -12164,8 +12647,8 @@ async function call2(action, signal) {
   return value;
 }
 function DevelopmentPanel() {
-  const [data, setData] = (0, import_react5.useState)(null), [error, setError] = (0, import_react5.useState)(""), [pending, setPending] = (0, import_react5.useState)(false), [diff, setDiff] = (0, import_react5.useState)(null), [notice, setNotice] = (0, import_react5.useState)("");
-  (0, import_react5.useEffect)(() => {
+  const [data, setData] = (0, import_react6.useState)(null), [error, setError] = (0, import_react6.useState)(""), [pending, setPending] = (0, import_react6.useState)(false), [diff, setDiff] = (0, import_react6.useState)(null), [notice, setNotice] = (0, import_react6.useState)("");
+  (0, import_react6.useEffect)(() => {
     const controller = new AbortController();
     let timer;
     const load = async () => {
@@ -12213,112 +12696,112 @@ function DevelopmentPanel() {
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "darask", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("header", { className: "darask-heading", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u958B\u767A\u30FB\u66F4\u65B0" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "Git \u3067\u7BA1\u7406\u3057\u305F\u30BD\u30FC\u30B9\u3092\u7DE8\u96C6\u3057\u3001\u753B\u9762\u3092\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u53CD\u6620\u3057\u307E\u3059\u3002" })
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "darask", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("header", { className: "darask-heading", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u958B\u767A\u30FB\u66F4\u65B0" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "Git \u3067\u7BA1\u7406\u3057\u305F\u30BD\u30FC\u30B9\u3092\u7DE8\u96C6\u3057\u3001\u753B\u9762\u3092\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u53CD\u6620\u3057\u307E\u3059\u3002" })
     ] }) }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-error", role: "alert", children: error }),
-    !data && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "status", children: "Git \u306E\u72B6\u614B\u3092\u78BA\u8A8D\u3057\u3066\u3044\u307E\u3059\u2026" }),
-    data && !data.available && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: data.message }),
-    data?.available && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "darask-provider", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("header", { className: "darask-provider-header", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "dsh-darask" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Tag, { children: data.version }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Tag, { children: data.branch || "\u30D6\u30E9\u30F3\u30C1\u672A\u9078\u629E" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Tag, { children: data.dirty ? "\u672A\u30B3\u30DF\u30C3\u30C8\u306E\u7DE8\u96C6\u3042\u308A" : "\u5909\u66F4\u306A\u3057" })
+    error && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-error", role: "alert", children: error }),
+    !data && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { role: "status", children: "Git \u306E\u72B6\u614B\u3092\u78BA\u8A8D\u3057\u3066\u3044\u307E\u3059\u2026" }),
+    data && !data.available && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: data.message }),
+    data?.available && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "darask-provider", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("header", { className: "darask-provider-header", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "dsh-darask" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Tag, { children: data.version }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Tag, { children: data.branch || "\u30D6\u30E9\u30F3\u30C1\u672A\u9078\u629E" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Tag, { children: data.dirty ? "\u672A\u30B3\u30DF\u30C3\u30C8\u306E\u7DE8\u96C6\u3042\u308A" : "\u5909\u66F4\u306A\u3057" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-usage", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u3053\u306E PC \u306E\u7DE8\u96C6\u7528\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("code", { className: "darask-source-path", children: data.source })
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-usage", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u3053\u306E PC \u306E\u7DE8\u96C6\u7528\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("code", { className: "darask-source-path", children: data.source })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: busy, onClick: () => {
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { disabled: busy, onClick: () => {
               void register();
             }, children: "\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306B\u767B\u9332" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: busy, onClick: () => {
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { disabled: busy, onClick: () => {
               void perform("diff");
             }, children: "\u5DEE\u5206\u3092\u898B\u308B" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "src \u306E\u7DE8\u96C6\u306F\u4FDD\u5B58\u3059\u308B\u3068\u53CD\u6620\u3055\u308C\u307E\u3059\u3002\u8868\u793A\u304C\u5909\u308F\u3089\u306A\u3044\u5834\u5408\u306F\u300C\u7DE8\u96C6\u3092\u53CD\u6620\u300D\u3092\u62BC\u3057\u3066\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30B3\u30DF\u30C3\u30C8\u30FBpush \u306F\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3067\u884C\u3044\u307E\u3059\u3002" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: busy, onClick: () => {
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-muted", children: "src \u306E\u7DE8\u96C6\u306F\u4FDD\u5B58\u3059\u308B\u3068\u53CD\u6620\u3055\u308C\u307E\u3059\u3002\u8868\u793A\u304C\u5909\u308F\u3089\u306A\u3044\u5834\u5408\u306F\u300C\u7DE8\u96C6\u3092\u53CD\u6620\u300D\u3092\u62BC\u3057\u3066\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30B3\u30DF\u30C3\u30C8\u30FBpush \u306F\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u3067\u884C\u3044\u307E\u3059\u3002" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { variant: "primary", disabled: busy, onClick: () => {
               void perform("build");
             }, children: "\u7DE8\u96C6\u3092\u53CD\u6620" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: busy, onClick: () => window.location.reload(), children: "\u753B\u9762\u3092\u518D\u8AAD\u307F\u8FBC\u307F" })
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { disabled: busy, onClick: () => window.location.reload(), children: "\u753B\u9762\u3092\u518D\u8AAD\u307F\u8FBC\u307F" })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "darask-provider", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("header", { className: "darask-provider-header", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "GitHub \u304B\u3089\u66F4\u65B0" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Tag, { children: data.head.slice(0, 8) })
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "darask-provider", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("header", { className: "darask-provider-header", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "GitHub \u304B\u3089\u66F4\u65B0" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Tag, { children: data.head.slice(0, 8) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-usage", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: data.behind === null ? "\u300C\u66F4\u65B0\u3092\u78BA\u8A8D\u300D\u3067 GitHub \u306E\u6700\u65B0\u7248\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044\u3002" : `\u53D6\u5F97\u6E08\u307F\u306E main \u3068\u6BD4\u8F03: \u672A\u9069\u7528 ${data.behind} \u4EF6 / \u30ED\u30FC\u30AB\u30EB\u306E\u307F ${data.ahead} \u4EF6` }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "darask-muted", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-usage", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: data.behind === null ? "\u300C\u66F4\u65B0\u3092\u78BA\u8A8D\u300D\u3067 GitHub \u306E\u6700\u65B0\u7248\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044\u3002" : `\u53D6\u5F97\u6E08\u307F\u306E main \u3068\u6BD4\u8F03: \u672A\u9069\u7528 ${data.behind} \u4EF6 / \u30ED\u30FC\u30AB\u30EB\u306E\u307F ${data.ahead} \u4EF6` }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "darask-muted", children: [
             "\u66F4\u65B0\u6642\u306F DSH \u3092\u518D\u8D77\u52D5\u3057\u307E\u3059\u3002\u5B9F\u884C\u4E2D\u306E\u30BF\u30B9\u30AF\u3092\u7D42\u3048\u3066\u304B\u3089\u64CD\u4F5C\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u672A\u30B3\u30DF\u30C3\u30C8\u306E\u7DE8\u96C6\u3084\u5C65\u6B74\u306E\u5206\u5C90\u304C\u3042\u308B\u5834\u5408\u306F\u4E0A\u66F8\u304D\u305B\u305A\u505C\u6B62\u3057\u307E\u3059\u3002",
             data.distribute?.nodes > 0 && `\u9069\u7528\u5F8C\u3001\u767B\u9332\u6E08\u307F\u306E PC\uFF08${data.distribute.nodes} \u53F0\uFF09\u306B\u3082\u81EA\u52D5\u3067\u914D\u5E03\u3057\u307E\u3059\u3002`
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { disabled: busy || !data.remoteReady, onClick: () => {
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { disabled: busy || !data.remoteReady, onClick: () => {
               void perform("check");
             }, children: "\u66F4\u65B0\u3092\u78BA\u8A8D" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: busy || data.dirty || !data.remoteReady || data.branch !== "main", onClick: () => {
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { variant: "primary", disabled: busy || data.dirty || !data.remoteReady || data.branch !== "main", onClick: () => {
               void perform("update");
             }, children: "\u6700\u65B0\u7248\u3092\u9069\u7528\u3057\u3066\u518D\u8D77\u52D5" })
           ] }),
-          data.changes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "darask-details", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("summary", { children: [
+          data.changes.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("details", { className: "darask-details", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("summary", { children: [
               "\u5909\u66F4\u3057\u305F\u30D5\u30A1\u30A4\u30EB\uFF08",
               data.changes.length,
               "\uFF09"
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("pre", { className: "darask-git-diff", children: data.changes.join("\n") })
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("pre", { className: "darask-git-diff", children: data.changes.join("\n") })
           ] })
         ] })
       ] }),
-      data.job && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: data.job.phase === "error" ? "darask-error" : "darask-muted", role: "status", children: data.job.message })
+      data.job && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: data.job.phase === "error" ? "darask-error" : "darask-muted", role: "status", children: data.job.message })
     ] }),
-    data?.distribute && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "darask-provider", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("header", { className: "darask-provider-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u767B\u9332\u6E08\u307F\u306E PC \u306B\u914D\u5E03" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_dsh_client_ui_primitives5.Tag, { children: [
+    data?.distribute && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "darask-provider", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("header", { className: "darask-provider-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u767B\u9332\u6E08\u307F\u306E PC \u306B\u914D\u5E03" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_dsh_client_ui_primitives6.Tag, { children: [
           data.distribute.nodes,
           " \u53F0"
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "darask-usage", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", children: "\u3053\u306E PC \u306E dsh-darask \u3092\u767B\u9332\u6E08\u307F\u306E PC \u306B\u914D\u5E03\u3057\u307E\u3059\u3002\u5404 PC \u306F DSH \u3092\u518D\u8D77\u52D5\u3059\u308B\u305F\u3081\u3001\u5B9F\u884C\u4E2D\u306E\u4F5C\u696D\u3092\u4FDD\u5B58\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u958B\u767A\u30E2\u30FC\u30C9\u306E PC \u306F GitHub \u304B\u3089\u66F4\u65B0\u3057\u307E\u3059\u3002" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "darask-actions", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_dsh_client_ui_primitives5.Button, { variant: "primary", disabled: busy || !data.distribute.nodes, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-usage", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-muted", children: "\u3053\u306E PC \u306E dsh-darask \u3092\u767B\u9332\u6E08\u307F\u306E PC \u306B\u914D\u5E03\u3057\u307E\u3059\u3002\u5404 PC \u306F DSH \u3092\u518D\u8D77\u52D5\u3059\u308B\u305F\u3081\u3001\u5B9F\u884C\u4E2D\u306E\u4F5C\u696D\u3092\u4FDD\u5B58\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u958B\u767A\u30E2\u30FC\u30C9\u306E PC \u306F GitHub \u304B\u3089\u66F4\u65B0\u3057\u307E\u3059\u3002" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "darask-actions", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { variant: "primary", disabled: busy || !data.distribute.nodes, onClick: () => {
           void perform("distribute");
         }, children: "\u3053\u306E PC \u304B\u3089\u914D\u5E03" }) }),
-        data.distribute.pending && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-muted", role: "status", children: "\u518D\u8D77\u52D5\u5F8C\u306B\u914D\u5E03\u3092\u5B9F\u884C\u3059\u308B\u4E88\u5B9A\u3067\u3059\u3002" }),
-        data.distribute.job && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: data.distribute.job.phase === "error" ? "darask-error" : "darask-muted", role: "status", children: data.distribute.job.message }),
-        data.distribute.last?.error && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "darask-error", children: data.distribute.last.error }),
-        data.distribute.last?.results?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "darask-details", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("summary", { children: [
+        data.distribute.pending && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-muted", role: "status", children: "\u518D\u8D77\u52D5\u5F8C\u306B\u914D\u5E03\u3092\u5B9F\u884C\u3059\u308B\u4E88\u5B9A\u3067\u3059\u3002" }),
+        data.distribute.job && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: data.distribute.job.phase === "error" ? "darask-error" : "darask-muted", role: "status", children: data.distribute.job.message }),
+        data.distribute.last?.error && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-error", children: data.distribute.last.error }),
+        data.distribute.last?.results?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("details", { className: "darask-details", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("summary", { children: [
             "\u524D\u56DE\u306E\u7D50\u679C\uFF08",
             new Date(data.distribute.last.at).toLocaleString("ja-JP"),
             "\uFF09"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("pre", { className: "darask-git-diff", children: data.distribute.last.results.map((row) => `${row.name}: ${row.ok ? "OK" : "NG"} \u2014 ${row.message}`).join("\n") })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("pre", { className: "darask-git-diff", children: data.distribute.last.results.map((row) => `${row.name}: ${row.ok ? "OK" : "NG"} \u2014 ${row.message}`).join("\n") })
         ] })
       ] })
     ] }),
-    notice && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { role: "status", children: notice }),
-    diff !== null && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { open: true, className: "darask-details", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("summary", { children: "\u30BD\u30FC\u30B9\u306E\u5DEE\u5206\uFF08\u6700\u5927 10 \u4E07\u6587\u5B57\u30FB\u751F\u6210\u30D5\u30A1\u30A4\u30EB\u3068\u672A\u8FFD\u8DE1\u30D5\u30A1\u30A4\u30EB\u306E\u5185\u5BB9\u3092\u9664\u304F\uFF09" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("pre", { className: "darask-git-diff", children: diff || "\u8FFD\u8DE1\u4E2D\u306E\u30BD\u30FC\u30B9\u306B\u5DEE\u5206\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
+    notice && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { role: "status", children: notice }),
+    diff !== null && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("details", { open: true, className: "darask-details", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("summary", { children: "\u30BD\u30FC\u30B9\u306E\u5DEE\u5206\uFF08\u6700\u5927 10 \u4E07\u6587\u5B57\u30FB\u751F\u6210\u30D5\u30A1\u30A4\u30EB\u3068\u672A\u8FFD\u8DE1\u30D5\u30A1\u30A4\u30EB\u306E\u5185\u5BB9\u3092\u9664\u304F\uFF09" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("pre", { className: "darask-git-diff", children: diff || "\u8FFD\u8DE1\u4E2D\u306E\u30BD\u30FC\u30B9\u306B\u5DEE\u5206\u306F\u3042\u308A\u307E\u305B\u3093\u3002" })
     ] })
   ] });
 }
 
 // src/addons-client.jsx
-var import_react6 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives6 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_react7 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives7 = require("@deepseek-ai/dsh-client-ui-primitives");
 
 // src/addons/locale.mjs
 var addonsDictionaries = {
@@ -12395,7 +12878,7 @@ var addonsDictionaries = {
 };
 
 // src/addons-client.jsx
-var import_jsx_runtime6 = require("react/jsx-runtime");
+var import_jsx_runtime7 = require("react/jsx-runtime");
 function createAddonsResource() {
   let snapshot = { data: null, loading: true, error: null };
   const listeners = /* @__PURE__ */ new Set();
@@ -12432,66 +12915,66 @@ function createAddonsResource() {
   };
 }
 function PluginCard({ plugin, enabled, secrets, fields, pending, t, onToggle, onField, onSecret }) {
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "darask-provider", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("header", { className: "darask-provider-header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-provider-name", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: plugin.titleJa }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "darask-meta", children: plugin.summaryJa })
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("article", { className: "darask-provider", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("header", { className: "darask-provider-header", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "darask-provider-name", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: plugin.titleJa }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "darask-meta", children: plugin.summaryJa })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Tag, { tone: enabled ? "success" : "neutral", children: t(enabled ? "enabled" : "disabled") }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Switch, { checked: enabled, disabled: pending, label: plugin.titleJa, onChange: onToggle })
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Tag, { tone: enabled ? "success" : "neutral", children: t(enabled ? "enabled" : "disabled") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Switch, { checked: enabled, disabled: pending, label: plugin.titleJa, onChange: onToggle })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-usage", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "darask-muted", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "darask-usage", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "darask-muted", children: [
         t("origin"),
         ": ",
         plugin.origin
       ] }),
-      plugin.tools?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "darask-meta", children: [
+      plugin.tools?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "darask-meta", children: [
         t("tools"),
         ": ",
         plugin.tools.join(", ")
       ] }),
-      plugin.id === "security-guidance" && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: t("securityBlock") }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Switch, { checked: fields.securityBlock, disabled: pending, label: t("securityBlock"), onChange: (value) => onField("securityBlock", value) }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: t("securityBlockHint") })
+      plugin.id === "security-guidance" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("securityBlock") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Switch, { checked: fields.securityBlock, disabled: pending, label: t("securityBlock"), onChange: (value) => onField("securityBlock", value) }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: t("securityBlockHint") })
       ] }),
-      (plugin.fields ?? []).map((field) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: t(field) }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Input, { value: fields[field] ?? "", disabled: pending, onChange: (event) => onField(field, event.target.value), autoComplete: "off" })
+      (plugin.fields ?? []).map((field) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t(field) }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Input, { value: fields[field] ?? "", disabled: pending, onChange: (event) => onField(field, event.target.value), autoComplete: "off" })
       ] }, field)),
-      (plugin.secrets ?? []).map((key) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "darask-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+      (plugin.secrets ?? []).map((key) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "darask-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { children: [
           key.replace("DARASK_", ""),
           " \xB7 ",
           t(secrets[key] ? "configured" : "missing")
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Input, { type: "password", value: fields.secrets[key] ?? "", disabled: pending, onChange: (event) => onSecret(key, event.target.value), autoComplete: "new-password" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: t("secretHint") })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Input, { type: "password", value: fields.secrets[key] ?? "", disabled: pending, onChange: (event) => onSecret(key, event.target.value), autoComplete: "new-password" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: t("secretHint") })
       ] }, key))
     ] })
   ] });
 }
 function KanbanBoard({ board, t }) {
   if (!board) return null;
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "darask-kanban", "aria-label": t("kanban"), children: board.columns.map((column) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "darask-kanban-column", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: column }),
-    (board.cards ?? []).filter((card) => card.column === column).map((card) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "darask-kanban-card", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "darask-kanban", "aria-label": t("kanban"), children: board.columns.map((column) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "darask-kanban-column", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: column }),
+    (board.cards ?? []).filter((card) => card.column === column).map((card) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "darask-kanban-card", children: [
       card.title,
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: card.id })
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: card.id })
     ] }, card.id)),
-    (board.cards ?? []).every((card) => card.column !== column) && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-muted", children: t("empty") })
+    (board.cards ?? []).every((card) => card.column !== column) && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "darask-muted", children: t("empty") })
   ] }, column)) });
 }
 function AddonsPanel({ resource, t }) {
-  const [snap, setSnap] = (0, import_react6.useState)(resource.source.getSnapshot());
-  const [group, setGroup] = (0, import_react6.useState)("deepseek");
-  const [draft, setDraft] = (0, import_react6.useState)(null);
-  const [secrets, setSecrets] = (0, import_react6.useState)({});
-  const [saved, setSaved] = (0, import_react6.useState)(false);
-  (0, import_react6.useEffect)(() => resource.source.subscribe(() => setSnap(resource.source.getSnapshot())), [resource]);
-  (0, import_react6.useEffect)(() => {
+  const [snap, setSnap] = (0, import_react7.useState)(resource.source.getSnapshot());
+  const [group, setGroup] = (0, import_react7.useState)("deepseek");
+  const [draft, setDraft] = (0, import_react7.useState)(null);
+  const [secrets, setSecrets] = (0, import_react7.useState)({});
+  const [saved, setSaved] = (0, import_react7.useState)(false);
+  (0, import_react7.useEffect)(() => resource.source.subscribe(() => setSnap(resource.source.getSnapshot())), [resource]);
+  (0, import_react7.useEffect)(() => {
     void resource.load();
   }, [resource]);
   const data = snap.data;
@@ -12521,26 +13004,26 @@ function AddonsPanel({ resource, t }) {
   };
   const groups2 = data?.groups ?? [];
   const current = groups2.find((item) => item.id === group) ?? groups2[0];
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "darask", "aria-label": t("title"), children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("header", { className: "darask-heading", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: t("title") }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: t("description") })
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "darask", "aria-label": t("title"), children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("header", { className: "darask-heading", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { children: t("title") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: t("description") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { variant: "outline", disabled: snap.loading, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Button, { variant: "outline", disabled: snap.loading, onClick: () => {
         void resource.load();
       }, children: t("refresh") })
     ] }),
-    snap.error && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-error", role: "alert", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: snap.error || t("loadFailed") }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { size: "sm", onClick: () => {
+    snap.error && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "darask-error", role: "alert", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: snap.error || t("loadFailed") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Button, { size: "sm", onClick: () => {
         void resource.load();
       }, children: t("retry") })
     ] }),
-    pending && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "darask-muted", children: t("loading") }),
-    data && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "darask-account-tabs", role: "tablist", "aria-label": t("groups"), children: groups2.map((item) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { role: "tab", "aria-selected": current?.id === item.id, variant: current?.id === item.id ? "primary" : "outline", onClick: () => setGroup(item.id), children: item.titleJa }, item.id)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "darask-provider-list", children: (current?.plugins ?? []).map((plugin) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    pending && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "darask-muted", children: t("loading") }),
+    data && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "darask-account-tabs", role: "tablist", "aria-label": t("groups"), children: groups2.map((item) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Button, { role: "tab", "aria-selected": current?.id === item.id, variant: current?.id === item.id ? "primary" : "outline", onClick: () => setGroup(item.id), children: item.titleJa }, item.id)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "darask-provider-list", children: (current?.plugins ?? []).map((plugin) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
         PluginCard,
         {
           plugin,
@@ -12558,20 +13041,20 @@ function AddonsPanel({ resource, t }) {
         },
         plugin.id
       )) }),
-      current?.id === "ops" && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "darask-addon-extra", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: t("kanban") }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(KanbanBoard, { board: data.kanban, t }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: t("achievements") }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("pre", { className: "darask-git-diff", children: data.achievements })
+      current?.id === "ops" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "darask-addon-extra", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: t("kanban") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(KanbanBoard, { board: data.kanban, t }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: t("achievements") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("pre", { className: "darask-git-diff", children: data.achievements })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("footer", { className: "darask-footer", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { role: "status", children: dirty ? t("unsaved") : saved ? t("saved") : "" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { disabled: !dirty, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("footer", { className: "darask-footer", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { role: "status", children: dirty ? t("unsaved") : saved ? t("saved") : "" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Button, { disabled: !dirty, onClick: () => {
           setDraft(null);
           setSecrets({});
           setSaved(false);
         }, children: t("discard") }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_dsh_client_ui_primitives6.Button, { variant: "primary", disabled: !dirty || snap.loading, onClick: () => {
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_dsh_client_ui_primitives7.Button, { variant: "primary", disabled: !dirty || snap.loading, onClick: () => {
           void save();
         }, children: snap.loading ? t("saving") : t("save") })
       ] })
@@ -12588,12 +13071,12 @@ function registerAddonsUi(ctx) {
     order: 12,
     locale: "settings.darask-addons",
     label: () => t("title")
-  }, () => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AddonsPanel, { resource, t })));
+  }, () => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AddonsPanel, { resource, t })));
 }
 
 // src/session-navigation-client.jsx
-var import_react7 = __toESM(require("react"), 1);
-var import_jsx_runtime7 = require("react/jsx-runtime");
+var import_react8 = __toESM(require("react"), 1);
+var import_jsx_runtime8 = require("react/jsx-runtime");
 var USER_ROWS = '[data-chat-flow-kind="user"]:not([hidden])';
 function visibleScroller(root = document) {
   const candidates = [...root.querySelectorAll("[data-conversation-scroll]")];
@@ -12622,8 +13105,8 @@ function navigateSession(direction, root = document) {
   return true;
 }
 function SessionNavigation() {
-  const [available, setAvailable] = (0, import_react7.useState)(false);
-  (0, import_react7.useEffect)(() => {
+  const [available, setAvailable] = (0, import_react8.useState)(false);
+  (0, import_react8.useEffect)(() => {
     let frame = 0;
     const refresh = () => {
       cancelAnimationFrame(frame);
@@ -12643,11 +13126,11 @@ function SessionNavigation() {
   const move = (direction) => {
     navigateSession(direction);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("nav", { className: "darask-session-navigation", "aria-label": "\u4F1A\u8A71\u5185\u3092\u79FB\u52D5", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { type: "button", "aria-label": "\u4F1A\u8A71\u306E\u4E00\u756A\u4E0A\u3078", title: "\u4E00\u756A\u4E0A", onClick: () => move("top"), children: "\u21C8" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { type: "button", "aria-label": "\u524D\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00\u3078", title: "\u524D\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00", onClick: () => move("previous-user"), children: "\u2191" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { type: "button", "aria-label": "\u6B21\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00\u3078", title: "\u6B21\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00", onClick: () => move("next-user"), children: "\u2193" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { type: "button", "aria-label": "\u4F1A\u8A71\u306E\u4E00\u756A\u4E0B\u3078", title: "\u4E00\u756A\u4E0B", onClick: () => move("bottom"), children: "\u21CA" })
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("nav", { className: "darask-session-navigation", "aria-label": "\u4F1A\u8A71\u5185\u3092\u79FB\u52D5", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { type: "button", "aria-label": "\u4F1A\u8A71\u306E\u4E00\u756A\u4E0A\u3078", title: "\u4E00\u756A\u4E0A", onClick: () => move("top"), children: "\u21C8" }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { type: "button", "aria-label": "\u524D\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00\u3078", title: "\u524D\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00", onClick: () => move("previous-user"), children: "\u2191" }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { type: "button", "aria-label": "\u6B21\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00\u3078", title: "\u6B21\u306E\u30E6\u30FC\u30B6\u30FC\u767A\u8A00", onClick: () => move("next-user"), children: "\u2193" }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { type: "button", "aria-label": "\u4F1A\u8A71\u306E\u4E00\u756A\u4E0B\u3078", title: "\u4E00\u756A\u4E0B", onClick: () => move("bottom"), children: "\u21CA" })
   ] });
 }
 function registerSessionNavigation(ctx) {
@@ -13529,8 +14012,8 @@ function decorateAutoPermissionIcons(root) {
 }
 
 // src/settings/accounts.jsx
-var import_react12 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives11 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_react13 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives12 = require("@deepseek-ai/dsh-client-ui-primitives");
 
 // src/model-catalogs.mjs
 var MODEL_CATALOGS = Object.freeze({
@@ -13669,13 +14152,13 @@ function authentication(provider, t) {
 }
 
 // src/settings/providers.jsx
-var import_react10 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives9 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_react11 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives10 = require("@deepseek-ai/dsh-client-ui-primitives");
 
 // src/usage-client.jsx
-var import_react8 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives7 = require("@deepseek-ai/dsh-client-ui-primitives");
-var import_jsx_runtime8 = require("react/jsx-runtime");
+var import_react9 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives8 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_jsx_runtime9 = require("react/jsx-runtime");
 function hasUsage(usage) {
   if (!usage) return false;
   return (usage.windows ?? []).some((window2) => percentage(window2.remainingPercent) !== null || percentage(window2.usedPercent) !== null) || usage.credits?.unlimited === true || usage.credits?.balance !== null && usage.credits?.balance !== void 0 && /^-?\d+(?:\.\d+)?$/u.test(String(usage.credits.balance)) || usage.individualLimit?.remaining !== void 0 || Number.isFinite(usage.used?.amount) || ["promptTokens", "generatedTokens"].some((key) => Number.isFinite(usage.local?.[key]));
@@ -13688,44 +14171,44 @@ function Usage({ usage, t, compact = false }) {
   const individual = usage?.individualLimit;
   const spent = usage?.used;
   const status = usage?.stale === true && usage?.status === "available" ? "stale" : usage?.status;
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-usage", "aria-label": t("usage"), children: [
-    status && ["unavailable", "unsupported", "error", "stale"].includes(status) && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_dsh_client_ui_primitives7.Tag, { tone: status === "error" ? "warning" : "neutral", children: t(status === "unsupported" ? "unavailable" : status) }),
+  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-usage", "aria-label": t("usage"), children: [
+    status && ["unavailable", "unsupported", "error", "stale"].includes(status) && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Tag, { tone: status === "error" ? "warning" : "neutral", children: t(status === "unsupported" ? "unavailable" : status) }),
     windows.map((window2, index) => {
       const reportedRemaining = percentage(window2.remainingPercent);
       const reportedUsed = percentage(window2.usedPercent);
       const remaining = reportedRemaining ?? (reportedUsed === null ? null : 100 - reportedUsed);
       const reset = date(window2.resetsAt, t);
-      return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-window", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-line", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: label(window2.label ?? window2.id ?? t("usage"), t) }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: remaining === null ? t("unknown") : `${t("remaining")} ${number(remaining, t)}%` })
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-window", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-line", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: label(window2.label ?? window2.id ?? t("usage"), t) }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("strong", { children: remaining === null ? t("unknown") : `${t("remaining")} ${number(remaining, t)}%` })
         ] }),
-        remaining !== null && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("progress", { className: remaining <= 10 ? "darask-progress darask-progress-low" : "darask-progress", max: "100", value: remaining, "aria-label": `${label(window2.label ?? t("usage"), t)} ${t("remaining")}` }),
-        reset && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { className: "darask-meta", children: [
+        remaining !== null && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("progress", { className: remaining <= 10 ? "darask-progress darask-progress-low" : "darask-progress", max: "100", value: remaining, "aria-label": `${label(window2.label ?? t("usage"), t)} ${t("remaining")}` }),
+        reset && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { className: "darask-meta", children: [
           t("resets"),
           ": ",
           reset
         ] })
       ] }, window2.id ?? index);
     }),
-    hasCredit && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-line darask-credit", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: label(credits.label ?? t(credits.scope === "key-limit" ? "keyAllowance" : "credit"), t) }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("strong", { children: [
+    hasCredit && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-line darask-credit", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: label(credits.label ?? t(credits.scope === "key-limit" ? "keyAllowance" : "credit"), t) }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
         credits.unlimited === true ? t("unlimited") : creditValue,
         " ",
         credits.unit ?? ""
       ] })
     ] }),
-    individual && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-window", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-line", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: t("individualLimit") }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("strong", { children: [
+    individual && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-window", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-line", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: t("individualLimit") }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
           t("remaining"),
           " ",
           individual.remaining
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-meta", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-meta", children: [
         t("used"),
         ": ",
         individual.used,
@@ -13735,21 +14218,21 @@ function Usage({ usage, t, compact = false }) {
         individual.limit
       ] })
     ] }),
-    usage?.local && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "darask-meta darask-sources", children: ["promptTokens", "generatedTokens"].map((key) => typeof usage.local[key] === "number" && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+    usage?.local && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "darask-meta darask-sources", children: ["promptTokens", "generatedTokens"].map((key) => typeof usage.local[key] === "number" && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { children: [
       t(key === "promptTokens" ? "localPrompt" : "localGenerated"),
       ": ",
       number(usage.local[key], t)
     ] }, key)) }),
-    spent && typeof spent.amount === "number" && Number.isFinite(spent.amount) && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-spent", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-line", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: t(spent.scope === "complimentary-daily" ? "complimentaryUsage" : "keyUsage") }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("strong", { children: [
+    spent && typeof spent.amount === "number" && Number.isFinite(spent.amount) && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-spent", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-line", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: t(spent.scope === "complimentary-daily" ? "complimentaryUsage" : "keyUsage") }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
           number(spent.amount, t),
           " ",
           spent.unit ?? ""
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "darask-meta darask-sources", children: ["daily", "weekly", "monthly"].filter((period) => typeof spent[period] === "number" && Number.isFinite(spent[period])).map((period) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "darask-meta darask-sources", children: ["daily", "weekly", "monthly"].filter((period) => typeof spent[period] === "number" && Number.isFinite(spent[period])).map((period) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { children: [
         t(period),
         ": ",
         number(spent[period], t),
@@ -13757,15 +14240,15 @@ function Usage({ usage, t, compact = false }) {
         spent.unit ?? ""
       ] }, period)) })
     ] }),
-    !hasUsage(usage) && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-muted", children: usage?.message ? message(usage.message, t, t("unknownUsage")) : t("unknownUsage") }),
-    !compact && usage?.message && hasUsage(usage) && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-muted", children: message(usage.message, t, t("unknownUsage")) }),
-    !compact && (usage?.source || usage?.updatedAt) && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-meta darask-sources", children: [
-      usage.source && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+    !hasUsage(usage) && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: usage?.message ? message(usage.message, t, t("unknownUsage")) : t("unknownUsage") }),
+    !compact && usage?.message && hasUsage(usage) && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: message(usage.message, t, t("unknownUsage")) }),
+    !compact && (usage?.source || usage?.updatedAt) && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-meta darask-sources", children: [
+      usage.source && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { children: [
         t("source"),
         ": ",
         String(usage.source)
       ] }),
-      date(usage.updatedAt, t) && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+      date(usage.updatedAt, t) && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { children: [
         t("updated"),
         ": ",
         date(usage.updatedAt, t)
@@ -13777,65 +14260,65 @@ function UsageList({ data, t, compact }) {
   const providers = (data?.providers ?? []).flatMap((provider) => provider.id === "codex" && provider.accounts?.length ? provider.accounts.map((account) => ({ id: account.accountKey, name: `Codex \xB7 ${account.displayName}`, active: account.active, usage: account.usage })) : hasUsage(provider.usage) ? [provider] : []);
   const run = data?.browserRun;
   const browserUsage = run?.configured && Number.isFinite(run.observedMs);
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
-    providers.map((provider) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("article", { className: "darask-provider", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("header", { className: "darask-provider-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h3", { children: provider.id === "local" ? t("localTitle") : provider.name ?? provider.id }),
-        provider.active && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_dsh_client_ui_primitives7.Tag, { tone: "success", children: "\u4F7F\u7528\u4E2D" })
+  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+    providers.map((provider) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("article", { className: "darask-provider", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("header", { className: "darask-provider-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h3", { children: provider.id === "local" ? t("localTitle") : provider.name ?? provider.id }),
+        provider.active && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Tag, { tone: "success", children: "\u4F7F\u7528\u4E2D" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Usage, { usage: provider.usage, t, compact })
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Usage, { usage: provider.usage, t, compact })
     ] }, provider.id)),
-    browserUsage && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("article", { className: "darask-provider", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("header", { className: "darask-provider-header", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h3", { children: "Cloudflare Browser Run" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-usage", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-line", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: t("observedTime") }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("strong", { children: [
+    browserUsage && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("article", { className: "darask-provider", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("header", { className: "darask-provider-header", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h3", { children: "Cloudflare Browser Run" }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-usage", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-line", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: t("observedTime") }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
             number(run.observedMs / 1e3, t),
             " ",
             t("seconds")
           ] })
         ] }),
-        !compact && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-muted", children: t("browserUsageHint") })
+        !compact && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: t("browserUsageHint") })
       ] })
     ] }),
-    !providers.length && !browserUsage && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-muted", children: t("usageEmpty") })
+    !providers.length && !browserUsage && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: t("usageEmpty") })
   ] });
 }
 function UsageSidebar(props) {
   const state = props.useDaraskStatus((snapshot) => snapshot);
-  const [open, setOpen] = (0, import_react8.useState)(false);
+  const [open, setOpen] = (0, import_react9.useState)(false);
   const { t, wide } = props;
   const refresh = () => {
     void props.action({ action: "refresh" }).catch(() => {
     });
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask-usage-sidebar", "data-wide": wide, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("button", { className: "darask-usage-trigger", type: "button", "aria-label": t("usageDetails"), title: t("usageTitle"), onClick: () => setOpen(true), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("path", { d: "M4 20V12M10 20V4M16 20V8M22 20H2" }) }),
-      wide && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: t("usageTitle") })
+  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-usage-sidebar", "data-wide": wide, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("button", { className: "darask-usage-trigger", type: "button", "aria-label": t("usageDetails"), title: t("usageTitle"), onClick: () => setOpen(true), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("path", { d: "M4 20V12M10 20V4M16 20V8M22 20H2" }) }),
+      wide && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: t("usageTitle") })
     ] }),
-    wide && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask darask-usage-summary", children: [
-      state.loading && !state.data ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-muted", children: t("loading") }) : /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(UsageList, { data: state.data, t, compact: true }),
-      state.error && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-error", role: "alert", children: message(state.error, t, t("loadFailed")) })
+    wide && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask darask-usage-summary", children: [
+      state.loading && !state.data ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: t("loading") }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(UsageList, { data: state.data, t, compact: true }),
+      state.error && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-error", role: "alert", children: message(state.error, t, t("loadFailed")) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_dsh_client_ui_primitives7.Modal, { open, onClose: () => setOpen(false), title: t("usageTitle"), closeLabel: t("close"), className: "darask-usage-modal", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "darask darask-usage-full", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_dsh_client_ui_primitives7.Button, { variant: "outline", disabled: !!state.pending || state.loading, onClick: refresh, children: t("refresh") }),
-      state.error && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-error", role: "alert", children: message(state.error, t, t("loadFailed")) }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(UsageList, { data: state.data, t }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "darask-muted", children: t("creditHint") })
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Modal, { open, onClose: () => setOpen(false), title: t("usageTitle"), closeLabel: t("close"), className: "darask-usage-modal", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask darask-usage-full", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { variant: "outline", disabled: !!state.pending || state.loading, onClick: refresh, children: t("refresh") }),
+      state.error && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-error", role: "alert", children: message(state.error, t, t("loadFailed")) }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(UsageList, { data: state.data, t }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: t("creditHint") })
     ] }) })
   ] });
 }
 
 // src/codex-client.jsx
-var import_react9 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives8 = require("@deepseek-ai/dsh-client-ui-primitives");
-var import_jsx_runtime9 = require("react/jsx-runtime");
+var import_react10 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives9 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_jsx_runtime10 = require("react/jsx-runtime");
 function CodexConnection({ refresh }) {
-  const [node, setNode] = (0, import_react9.useState)(""), [nodes, setNodes] = (0, import_react9.useState)([]), [ready, setReady] = (0, import_react9.useState)(false);
-  const [pending, setPending] = (0, import_react9.useState)(false), [error, setError] = (0, import_react9.useState)("");
-  (0, import_react9.useEffect)(() => {
+  const [node, setNode] = (0, import_react10.useState)(""), [nodes, setNodes] = (0, import_react10.useState)([]), [ready, setReady] = (0, import_react10.useState)(false);
+  const [pending, setPending] = (0, import_react10.useState)(false), [error, setError] = (0, import_react10.useState)("");
+  (0, import_react10.useEffect)(() => {
     const controller = new AbortController();
     Promise.all(["/api/darask/codex/connection", "/api/darask/workspaces"].map(async (path) => {
       const response = await fetch(path, { credentials: "same-origin", cache: "no-store", signal: controller.signal });
@@ -13865,24 +14348,24 @@ function CodexConnection({ refresh }) {
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("section", { className: "darask-provider-fields", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { className: "darask-field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: "\u5171\u6709\u30E2\u30C7\u30EB\u306E\u8A8D\u8A3C\u5143\uFF08Codex / OpenAI / OpenRouter \u306A\u3069\uFF09" }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("select", { value: node, disabled: !ready || pending, onChange: (event) => void change(event.target.value), children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("option", { value: "", children: "\u3053\u306E PC \u306E\u8A8D\u8A3C" }),
-        nodes.map((item) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("option", { value: item.id, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "darask-provider-fields", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: "\u5171\u6709\u30E2\u30C7\u30EB\u306E\u8A8D\u8A3C\u5143\uFF08Codex / OpenAI / OpenRouter \u306A\u3069\uFF09" }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("select", { value: node, disabled: !ready || pending, onChange: (event) => void change(event.target.value), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "", children: "\u3053\u306E PC \u306E\u8A8D\u8A3C" }),
+        nodes.map((item) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("option", { value: item.id, children: [
           "\u{1F310} ",
           item.name || item.url
         ] }, item.id))
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: "\u63A5\u7D9A\u6E08\u307F PC \u3092\u9078\u3076\u3068\u3001\u305D\u306E PC \u3067\u8A2D\u5B9A\u3057\u305F OpenRouter \u306A\u3069\u306E\u30E2\u30C7\u30EB\u304C\u300C\u{1F310} \u2026\uFF08\u8A8D\u8A3C\u5143\uFF09\u300D\u3068\u3057\u3066\u9078\u629E\u6B04\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002\u4E00\u89A7\u306F\u7D041\u5206\u3054\u3068\u306B\u66F4\u65B0\u3057\u307E\u3059\u3002\u5171\u6709\u30E2\u30C7\u30EB\u306E\u63A8\u8AD6\u306F\u8A8D\u8A3C\u5143\u3092\u7D4C\u7531\u3057\u3001API \u30AD\u30FC\u306F\u30B3\u30D4\u30FC\u3057\u307E\u305B\u3093\u3002\u30D5\u30A1\u30A4\u30EB\u7DE8\u96C6\u3068\u30B3\u30DE\u30F3\u30C9\u5B9F\u884C\u306F\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306E PC \u3067\u884C\u3044\u307E\u3059\u3002\u4E21\u65B9\u306E PC \u306B\u5BFE\u5FDC\u7248 DARASK \u304C\u5FC5\u8981\u3067\u3059\u3002" }),
-    node && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-meta", children: "\u4F1A\u8A71\u30FB\u6DFB\u4ED8\u753B\u50CF\u30FB\u30C4\u30FC\u30EB\u306E\u5FDC\u7B54\u3092\u5171\u6709\u3057\u307E\u3059\u3002Codex \u306E\u753B\u50CF\u751F\u6210\u3084\u81EA\u52D5\u5BE9\u67FB\u306A\u3069\u3001\u5225\u306E\u6A5F\u80FD\u306E\u8A8D\u8A3C\u306F\u5B9F\u884C\u3059\u308B PC \u306E\u8A2D\u5B9A\u306B\u5F93\u3044\u307E\u3059\u3002" }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { role: "alert", className: "darask-error", children: error })
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: "\u63A5\u7D9A\u6E08\u307F PC \u3092\u9078\u3076\u3068\u3001\u305D\u306E PC \u3067\u8A2D\u5B9A\u3057\u305F OpenRouter \u306A\u3069\u306E\u30E2\u30C7\u30EB\u304C\u300C\u{1F310} \u2026\uFF08\u8A8D\u8A3C\u5143\uFF09\u300D\u3068\u3057\u3066\u9078\u629E\u6B04\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002\u4E00\u89A7\u306F\u7D041\u5206\u3054\u3068\u306B\u66F4\u65B0\u3057\u307E\u3059\u3002\u5171\u6709\u30E2\u30C7\u30EB\u306E\u63A8\u8AD6\u306F\u8A8D\u8A3C\u5143\u3092\u7D4C\u7531\u3057\u3001API \u30AD\u30FC\u306F\u30B3\u30D4\u30FC\u3057\u307E\u305B\u3093\u3002\u30D5\u30A1\u30A4\u30EB\u7DE8\u96C6\u3068\u30B3\u30DE\u30F3\u30C9\u5B9F\u884C\u306F\u30EF\u30FC\u30AF\u30B9\u30DA\u30FC\u30B9\u306E PC \u3067\u884C\u3044\u307E\u3059\u3002\u4E21\u65B9\u306E PC \u306B\u5BFE\u5FDC\u7248 DARASK \u304C\u5FC5\u8981\u3067\u3059\u3002" }),
+    node && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-meta", children: "\u4F1A\u8A71\u30FB\u6DFB\u4ED8\u753B\u50CF\u30FB\u30C4\u30FC\u30EB\u306E\u5FDC\u7B54\u3092\u5171\u6709\u3057\u307E\u3059\u3002Codex \u306E\u753B\u50CF\u751F\u6210\u3084\u81EA\u52D5\u5BE9\u67FB\u306A\u3069\u3001\u5225\u306E\u6A5F\u80FD\u306E\u8A8D\u8A3C\u306F\u5B9F\u884C\u3059\u308B PC \u306E\u8A2D\u5B9A\u306B\u5F93\u3044\u307E\u3059\u3002" }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { role: "alert", className: "darask-error", children: error })
   ] });
 }
 function CodexImages() {
-  const [status, setStatus] = (0, import_react9.useState)(null), [pending, setPending] = (0, import_react9.useState)(false), [error, setError] = (0, import_react9.useState)("");
+  const [status, setStatus] = (0, import_react10.useState)(null), [pending, setPending] = (0, import_react10.useState)(false), [error, setError] = (0, import_react10.useState)("");
   async function read(body, signal) {
     const response = await fetch("/api/darask/media", {
       method: body ? "POST" : "GET",
@@ -13894,7 +14377,7 @@ function CodexImages() {
     if (!response.ok) throw new Error("\u753B\u50CF\u751F\u6210\u306E\u8A2D\u5B9A\u3092\u8AAD\u307F\u8FBC\u3081\u307E\u305B\u3093\u3002DSH \u3092\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u304F\u3060\u3055\u3044\u3002");
     return response.json();
   }
-  (0, import_react9.useEffect)(() => {
+  (0, import_react10.useEffect)(() => {
     const controller = new AbortController();
     read(null, controller.signal).then(setStatus).catch((e) => {
       if (!controller.signal.aborted) setError(e.message);
@@ -13913,20 +14396,20 @@ function CodexImages() {
       setPending(false);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("section", { className: "darask-provider-fields", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-line", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("strong", { children: "GPT \u306E\u753B\u50CF\u751F\u6210" }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Switch, { label: "GPT \u306E\u753B\u50CF\u751F\u6210\u3092\u4F7F\u7528\u3059\u308B", checked: status?.codex?.enabled ?? false, disabled: !status || pending, onChange: change })
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "darask-provider-fields", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-line", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: "GPT \u306E\u753B\u50CF\u751F\u6210" }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Switch, { label: "GPT \u306E\u753B\u50CF\u751F\u6210\u3092\u4F7F\u7528\u3059\u308B", checked: status?.codex?.enabled ?? false, disabled: !status || pending, onChange: change })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: "\u4F7F\u7528\u4E2D\u306E Codex / ChatGPT \u30A2\u30AB\u30A6\u30F3\u30C8\u3067\u753B\u50CF\u3092\u751F\u6210\u3057\u307E\u3059\u3002OpenAI API \u30AD\u30FC\u306F\u4E0D\u8981\u3067\u3059\u3002" }),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { role: "status", className: "darask-meta", children: !status ? "\u72B6\u614B\u3092\u78BA\u8A8D\u4E2D\u2026" : !status.codex.enabled ? "\u7121\u52B9" : status.codex.registered ? "\u753B\u50CF\u751F\u6210\u30C4\u30FC\u30EB\u3092\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002" : "\u30C4\u30FC\u30EB\u306E\u767B\u9332\u3092\u5F85\u3063\u3066\u3044\u307E\u3059\u3002\u72B6\u614B\u304C\u5909\u308F\u3089\u306A\u3044\u5834\u5408\u306F DSH \u3092\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }),
-    error && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { role: "alert", className: "darask-error", children: error })
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: "\u4F7F\u7528\u4E2D\u306E Codex / ChatGPT \u30A2\u30AB\u30A6\u30F3\u30C8\u3067\u753B\u50CF\u3092\u751F\u6210\u3057\u307E\u3059\u3002OpenAI API \u30AD\u30FC\u306F\u4E0D\u8981\u3067\u3059\u3002" }),
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { role: "status", className: "darask-meta", children: !status ? "\u72B6\u614B\u3092\u78BA\u8A8D\u4E2D\u2026" : !status.codex.enabled ? "\u7121\u52B9" : status.codex.registered ? "\u753B\u50CF\u751F\u6210\u30C4\u30FC\u30EB\u3092\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002" : "\u30C4\u30FC\u30EB\u306E\u767B\u9332\u3092\u5F85\u3063\u3066\u3044\u307E\u3059\u3002\u72B6\u614B\u304C\u5909\u308F\u3089\u306A\u3044\u5834\u5408\u306F DSH \u3092\u518D\u8AAD\u307F\u8FBC\u307F\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { role: "alert", className: "darask-error", children: error })
   ] });
 }
 function CodexAccounts({ provider, action, pending, Usage: Usage2, t }) {
-  const [callback, setCallback] = (0, import_react9.useState)("");
-  const [removing, setRemoving] = (0, import_react9.useState)(null);
-  const [feedback, setFeedback] = (0, import_react9.useState)("");
+  const [callback, setCallback] = (0, import_react10.useState)("");
+  const [removing, setRemoving] = (0, import_react10.useState)(null);
+  const [feedback, setFeedback] = (0, import_react10.useState)("");
   const rows = provider.accounts ?? [];
   const signingIn = provider.login?.status === "running";
   const perform = async (payload) => {
@@ -13940,69 +14423,69 @@ function CodexAccounts({ provider, action, pending, Usage: Usage2, t }) {
     }
     return false;
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-codex-accounts", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(CodexConnection, { refresh: () => perform({ action: "refresh" }) }),
-    provider.authenticationSource && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("p", { className: "darask-meta", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-codex-accounts", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CodexConnection, { refresh: () => perform({ action: "refresh" }) }),
+    provider.authenticationSource && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("p", { className: "darask-meta", children: [
       "\u8A8D\u8A3C\u5143: \u{1F310} ",
       provider.authenticationSource,
       " \u2014 \u3053\u306E PC \u3067\u3082\u5171\u6709\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u4F7F\u7528\u3057\u307E\u3059\u3002"
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(CodexImages, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", variant: "outline", disabled: pending || signingIn || rows.length >= 16, onClick: () => void perform({ action: "login" }), children: "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u8FFD\u52A0" }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", disabled: pending, onClick: () => void perform({ action: "refresh" }), children: "\u72B6\u614B\u3092\u66F4\u65B0" }),
-      signingIn && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", disabled: pending, onClick: () => void perform({ action: "cancelLogin" }), children: "\u8FFD\u52A0\u30ED\u30B0\u30A4\u30F3\u3092\u4E2D\u6B62" })
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CodexImages, {}),
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", variant: "outline", disabled: pending || signingIn || rows.length >= 16, onClick: () => void perform({ action: "login" }), children: "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u8FFD\u52A0" }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => void perform({ action: "refresh" }), children: "\u72B6\u614B\u3092\u66F4\u65B0" }),
+      signingIn && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => void perform({ action: "cancelLogin" }), children: "\u8FFD\u52A0\u30ED\u30B0\u30A4\u30F3\u3092\u4E2D\u6B62" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: "\u6700\u592716\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u4FDD\u5B58\u3067\u304D\u307E\u3059\u3002\u300C\u4F7F\u7528\u3059\u308B\u300D\u3067\u4EE5\u5F8C\u306E Codex \u30EA\u30AF\u30A8\u30B9\u30C8\u306B\u4F7F\u3046\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u9078\u3073\u307E\u3059\u3002Usage \u306F\u5404\u30A2\u30AB\u30A6\u30F3\u30C8\u304B\u3089\u7D041\u5206\u3054\u3068\u306B\u53D6\u5F97\u3057\u307E\u3059\u3002" }),
-    signingIn && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: "\u5225\u306E\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u8FFD\u52A0\u3059\u308B\u5834\u5408\u306F\u3001\u8A8D\u8A3C\u30DA\u30FC\u30B8\u3067\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u5207\u308A\u66FF\u3048\u308B\u304B\u3001\u4E0B\u306E\u8A8D\u8A3C\u30EA\u30F3\u30AF\u3092\u30D7\u30E9\u30A4\u30D9\u30FC\u30C8\u30A6\u30A4\u30F3\u30C9\u30A6\u3067\u958B\u3044\u3066\u304F\u3060\u3055\u3044\u3002" }),
-    feedback && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { role: "alert", className: "darask-error", children: feedback }),
-    rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("section", { className: "darask-codex-account", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-codex-heading", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("strong", { children: row.displayName }),
-        row.active && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Tag, { tone: "success", children: "\u4F7F\u7528\u4E2D" })
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: "\u6700\u592716\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u4FDD\u5B58\u3067\u304D\u307E\u3059\u3002\u300C\u4F7F\u7528\u3059\u308B\u300D\u3067\u4EE5\u5F8C\u306E Codex \u30EA\u30AF\u30A8\u30B9\u30C8\u306B\u4F7F\u3046\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u9078\u3073\u307E\u3059\u3002Usage \u306F\u5404\u30A2\u30AB\u30A6\u30F3\u30C8\u304B\u3089\u7D041\u5206\u3054\u3068\u306B\u53D6\u5F97\u3057\u307E\u3059\u3002" }),
+    signingIn && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: "\u5225\u306E\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u8FFD\u52A0\u3059\u308B\u5834\u5408\u306F\u3001\u8A8D\u8A3C\u30DA\u30FC\u30B8\u3067\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u5207\u308A\u66FF\u3048\u308B\u304B\u3001\u4E0B\u306E\u8A8D\u8A3C\u30EA\u30F3\u30AF\u3092\u30D7\u30E9\u30A4\u30D9\u30FC\u30C8\u30A6\u30A4\u30F3\u30C9\u30A6\u3067\u958B\u3044\u3066\u304F\u3060\u3055\u3044\u3002" }),
+    feedback && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { role: "alert", className: "darask-error", children: feedback }),
+    rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "darask-codex-account", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-codex-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: row.displayName }),
+        row.active && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Tag, { tone: "success", children: "\u4F7F\u7528\u4E2D" })
       ] }),
-      row.maskedEmail && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "darask-meta", children: row.maskedEmail }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Usage2, { usage: row.usage, t }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", disabled: pending || signingIn || row.active, onClick: () => void perform({ action: "selectAccount", accountKey: row.accountKey }), children: "\u4F7F\u7528\u3059\u308B" }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", disabled: pending || signingIn || row.active && rows.length > 1, onClick: () => setRemoving(row.accountKey), children: "\u3053\u306E\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664" })
+      row.maskedEmail && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "darask-meta", children: row.maskedEmail }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Usage2, { usage: row.usage, t }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || signingIn || row.active, onClick: () => void perform({ action: "selectAccount", accountKey: row.accountKey }), children: "\u4F7F\u7528\u3059\u308B" }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || signingIn || row.active && rows.length > 1, onClick: () => setRemoving(row.accountKey), children: "\u3053\u306E\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664" })
       ] }),
-      row.active && rows.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("small", { className: "darask-muted", children: "\u524A\u9664\u3059\u308B\u5834\u5408\u306F\u3001\u5148\u306B\u5225\u306E\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u4F7F\u7528\u4E2D\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }),
-      removing === row.accountKey && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { role: "alert", className: "darask-login", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("p", { children: [
+      row.active && rows.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { className: "darask-muted", children: "\u524A\u9664\u3059\u308B\u5834\u5408\u306F\u3001\u5148\u306B\u5225\u306E\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u4F7F\u7528\u4E2D\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }),
+      removing === row.accountKey && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { role: "alert", className: "darask-login", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("p", { children: [
           "\u3053\u306E DSH \u306B\u4FDD\u5B58\u3057\u305F ",
           row.displayName,
           " \u306E\u30ED\u30B0\u30A4\u30F3\u60C5\u5831\u3092\u524A\u9664\u3057\u307E\u3059\u3002"
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "darask-actions", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", disabled: pending, onClick: async () => {
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: async () => {
             if (await perform({ action: "removeAccount", accountKey: row.accountKey })) setRemoving(null);
           }, children: "\u524A\u9664\u3059\u308B" }),
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", disabled: pending, onClick: () => setRemoving(null), children: "\u623B\u308B" })
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => setRemoving(null), children: "\u623B\u308B" })
         ] })
       ] })
     ] }, row.accountKey)),
-    signingIn && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "darask-codex-callback", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: "Mac \u306A\u3069\u5225\u306E PC \u3067\u30ED\u30B0\u30A4\u30F3\u3059\u308B\u5834\u5408" }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "darask-muted", children: "\u8A8D\u8A3C\u30DA\u30FC\u30B8\u3067\u30ED\u30B0\u30A4\u30F3\u5F8C\u3001localhost \u306E\u30DA\u30FC\u30B8\u3092\u958B\u3051\u306A\u304F\u306A\u3063\u305F\u3089\u3001\u305D\u306E\u6642\u306E\u30A2\u30C9\u30EC\u30B9\u5168\u4F53\u3092\u3053\u3053\u306B\u8CBC\u308A\u4ED8\u3051\u3066\u304F\u3060\u3055\u3044\u3002" }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("form", { onSubmit: async (event) => {
+    signingIn && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("details", { className: "darask-codex-callback", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("summary", { children: "Mac \u306A\u3069\u5225\u306E PC \u3067\u30ED\u30B0\u30A4\u30F3\u3059\u308B\u5834\u5408" }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: "\u8A8D\u8A3C\u30DA\u30FC\u30B8\u3067\u30ED\u30B0\u30A4\u30F3\u5F8C\u3001localhost \u306E\u30DA\u30FC\u30B8\u3092\u958B\u3051\u306A\u304F\u306A\u3063\u305F\u3089\u3001\u305D\u306E\u6642\u306E\u30A2\u30C9\u30EC\u30B9\u5168\u4F53\u3092\u3053\u3053\u306B\u8CBC\u308A\u4ED8\u3051\u3066\u304F\u3060\u3055\u3044\u3002" }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("form", { onSubmit: async (event) => {
         event.preventDefault();
         const callbackUrl = callback.trim();
         setCallback("");
         if (await perform({ action: "submitCallback", callbackUrl })) setFeedback("\u8A8D\u8A3C\u3092\u53D7\u3051\u4ED8\u3051\u307E\u3057\u305F\u3002\u5B8C\u4E86\u3092\u5F85\u3063\u3066\u3044\u307E\u3059\u3002");
       }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { className: "darask-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: "\u8A8D\u8A3C\u5F8C\u306E\u623B\u308A\u5148 URL" }),
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Input, { type: "password", value: callback, onChange: (event) => setCallback(event.target.value), autoComplete: "off", spellCheck: false })
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: "\u8A8D\u8A3C\u5F8C\u306E\u623B\u308A\u5148 URL" }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: callback, onChange: (event) => setCallback(event.target.value), autoComplete: "off", spellCheck: false })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_dsh_client_ui_primitives8.Button, { size: "sm", type: "submit", disabled: pending || !callback.trim(), children: "\u8A8D\u8A3C\u3092\u5B8C\u4E86" })
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", type: "submit", disabled: pending || !callback.trim(), children: "\u8A8D\u8A3C\u3092\u5B8C\u4E86" })
       ] })
     ] })
   ] });
 }
 
 // src/settings/providers.jsx
-var import_jsx_runtime10 = require("react/jsx-runtime");
+var import_jsx_runtime11 = require("react/jsx-runtime");
 function localStageLabel(stage, t) {
   if (stage === "ready") return t("localReady");
   if (stage === "loading") return t("localLoadingWeights");
@@ -14021,31 +14504,31 @@ function LocalRuntimePanel({ provider, pending, t, perform }) {
   const starting = ["starting", "loading", "serving"].includes(stage) && runtime?.phase !== "ready";
   const remote = runtime?.local === false;
   const test = runtime?.test;
-  return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-local-runtime", role: "group", "aria-label": t("localProgress"), children: [
-    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { variant: "outline", size: "sm", disabled: pending || remote || authentication(provider, t).connected || runtime?.owned, onClick: () => perform("startLocal"), children: t("startLocal") }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || !(runtime?.owned || runtime?.local && (runtime?.reachable || authentication(provider, t).connected)), onClick: () => perform("stopLocal"), children: t("stopLocal") }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || authentication(provider, t).connected !== true, onClick: () => perform("testLocal"), children: busy && pending === "testLocal:local" ? t("localTesting") : t("testLocal") }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") })
+  return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-local-runtime", role: "group", "aria-label": t("localProgress"), children: [
+    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { variant: "outline", size: "sm", disabled: pending || remote || authentication(provider, t).connected || runtime?.owned, onClick: () => perform("startLocal"), children: t("startLocal") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || !(runtime?.owned || runtime?.local && (runtime?.reachable || authentication(provider, t).connected)), onClick: () => perform("stopLocal"), children: t("stopLocal") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || authentication(provider, t).connected !== true, onClick: () => perform("testLocal"), children: busy && pending === "testLocal:local" ? t("localTesting") : t("testLocal") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") })
     ] }),
-    remote && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("localRemoteNoStart") }),
-    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-window", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-line", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("localProgress") }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: localStageLabel(stage, t) })
+    remote && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("localRemoteNoStart") }),
+    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-window", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-line", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("localProgress") }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: localStageLabel(stage, t) })
       ] }),
-      (starting || stage === "ready") && (percent2 === null ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("progress", { className: "darask-progress", "aria-label": t("localProgress") }) : /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("progress", { className: "darask-progress", max: "100", value: percent2, "aria-label": t("localProgress") })),
-      elapsed !== null && starting && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "darask-meta", children: [
+      (starting || stage === "ready") && (percent2 === null ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("progress", { className: "darask-progress", "aria-label": t("localProgress") }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("progress", { className: "darask-progress", max: "100", value: percent2, "aria-label": t("localProgress") })),
+      elapsed !== null && starting && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "darask-meta", children: [
         t("localElapsed"),
         ": ",
         elapsed,
         " ",
         t("seconds")
       ] }),
-      progress?.lastLine && starting && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { className: "darask-muted", children: progress.lastLine })
+      progress?.lastLine && starting && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { className: "darask-muted", children: progress.lastLine })
     ] }),
-    runtime?.error && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { role: "alert", children: message(runtime.error, t) }),
-    test?.ok && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("p", { className: "darask-muted", role: "status", children: [
+    runtime?.error && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { role: "alert", children: message(runtime.error, t) }),
+    test?.ok && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("p", { className: "darask-muted", role: "status", children: [
       t("localTestOk"),
       " \xB7 ",
       test.latencyMs,
@@ -14062,7 +14545,7 @@ function ProviderCard({ provider, value, index, count, edit, move, action, pendi
   const login = provider.login;
   const loginUrl = safeUrl(login?.url);
   const loginPending = ["pending", "waiting", "authorizing", "running"].includes(login?.status);
-  const [callbackUrl, setCallbackUrl] = (0, import_react10.useState)("");
+  const [callbackUrl, setCallbackUrl] = (0, import_react11.useState)("");
   const logoutConfirmation = provider.logoutConfirmation?.required === true && Date.parse(provider.logoutConfirmation.expiresAt) > Date.now();
   const perform = (type) => {
     void action({ action: type, provider: provider.id }).catch(() => {
@@ -14072,154 +14555,154 @@ function ProviderCard({ provider, value, index, count, edit, move, action, pendi
   const cliOnly = provider.id === "cursor";
   const conversationAndCli = ["grok", "claude"].includes(provider.id);
   const sectionId = `darask-${provider.id}`;
-  return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("article", { className: "darask-provider", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("header", { className: "darask-provider-header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "darask-rank", "aria-hidden": "true", children: index + 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-provider-name", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: providerName }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "darask-meta", children: t(cliOnly ? "cliProvider" : conversationAndCli ? "grokProvider" : "modelProvider") }),
-        typeof auth.account === "string" && auth.account && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "darask-meta", children: auth.account })
+  return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("article", { className: "darask-provider", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("header", { className: "darask-provider-header", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "darask-rank", "aria-hidden": "true", children: index + 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-provider-name", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: providerName }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "darask-meta", children: t(cliOnly ? "cliProvider" : conversationAndCli ? "grokProvider" : "modelProvider") }),
+        typeof auth.account === "string" && auth.account && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "darask-meta", children: auth.account })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Tag, { tone: auth.connected ? "success" : "neutral", children: auth.label }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-move", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: index === 0 || pending, onClick: () => move(-1), "aria-label": `${providerName}: ${t("up")}`, title: t("up"), children: "\u2191" }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: index === count - 1 || pending, onClick: () => move(1), "aria-label": `${providerName}: ${t("down")}`, title: t("down"), children: "\u2193" })
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Tag, { tone: auth.connected ? "success" : "neutral", children: auth.label }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-move", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: index === 0 || pending, onClick: () => move(-1), "aria-label": `${providerName}: ${t("up")}`, title: t("up"), children: "\u2191" }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: index === count - 1 || pending, onClick: () => move(1), "aria-label": `${providerName}: ${t("down")}`, title: t("down"), children: "\u2193" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Switch, { checked: value.enabled, onChange: (enabled) => edit({ enabled }), disabled: pending, label: `${providerName}: ${t("enabled")}` })
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Switch, { checked: value.enabled, onChange: (enabled) => edit({ enabled }), disabled: pending, label: `${providerName}: ${t("enabled")}` })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-provider-sections", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "darask-card-section", "aria-labelledby": `${sectionId}-account`, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h4", { className: "darask-card-section-title", id: `${sectionId}-account`, children: t("account") }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "darask-card-section-body", children: provider.id === "codex" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CodexAccounts, { provider, action, pending, Usage, t }) : provider.id === "local" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("localKey") }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.localApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, localApiKey: event.target.value })), autoComplete: "new-password" })
-        ] }) : provider.id === "openai" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || !auth.connected, onClick: () => perform("logout"), children: t("logout") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") })
+    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-provider-sections", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("section", { className: "darask-card-section", "aria-labelledby": `${sectionId}-account`, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h4", { className: "darask-card-section-title", id: `${sectionId}-account`, children: t("account") }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-card-section-body", children: provider.id === "codex" ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(CodexAccounts, { provider, action, pending, Usage, t }) : provider.id === "local" ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("localKey") }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: keys.localApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, localApiKey: event.target.value })), autoComplete: "new-password" })
+        ] }) : provider.id === "openai" ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || !auth.connected, onClick: () => perform("logout"), children: t("logout") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-warning", role: "alert", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: t("openaiDangerTitle") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { children: t("openaiDanger") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { children: t("openaiDangerMore") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("a", { href: OPENAI_DATA_CONTROLS, target: "_blank", rel: "noopener noreferrer", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-warning", role: "alert", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: t("openaiDangerTitle") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { children: t("openaiDanger") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { children: t("openaiDangerMore") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("a", { href: OPENAI_DATA_CONTROLS, target: "_blank", rel: "noopener noreferrer", children: [
               t("openaiDataControls"),
               " \u2197"
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("openaiApiKey") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.openaiApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openaiApiKey: event.target.value })), autoComplete: "new-password", spellCheck: false })
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("openaiApiKey") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: keys.openaiApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openaiApiKey: event.target.value })), autoComplete: "new-password", spellCheck: false })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("openaiAdminKey") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.openaiAdminKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openaiAdminKey: event.target.value })), autoComplete: "new-password", spellCheck: false }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t("openaiAdminHint") })
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("openaiAdminKey") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: keys.openaiAdminKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openaiAdminKey: event.target.value })), autoComplete: "new-password", spellCheck: false }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t("openaiAdminHint") })
           ] })
-        ] }) : /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { variant: "outline", size: "sm", disabled: pending || loginPending, onClick: () => perform("login"), children: t("login") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || !auth.connected, onClick: () => perform("logout"), children: t(logoutConfirmation ? "logoutConfirm" : "logout") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") }),
-            loginPending && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => perform("cancelLogin"), children: t("cancelLogin") })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { variant: "outline", size: "sm", disabled: pending || loginPending, onClick: () => perform("login"), children: t("login") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || !auth.connected, onClick: () => perform("logout"), children: t(logoutConfirmation ? "logoutConfirm" : "logout") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") }),
+            loginPending && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending, onClick: () => perform("cancelLogin"), children: t("cancelLogin") })
           ] }),
-          logoutConfirmation && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "darask-login", role: "status", children: t("logoutConfirmHint") }),
-          (loginPending || login?.message || loginUrl || login?.userCode) && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-login", role: "status", children: [
-            loginPending && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: t("loginPending") }),
-            login?.message && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { children: message(login.message, t) }),
-            login?.userCode && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
+          logoutConfirmation && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-login", role: "status", children: t("logoutConfirmHint") }),
+          (loginPending || login?.message || loginUrl || login?.userCode) && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-login", role: "status", children: [
+            loginPending && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: t("loginPending") }),
+            login?.message && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { children: message(login.message, t) }),
+            login?.userCode && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { children: [
               t("userCode"),
               ": ",
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("code", { children: login.userCode })
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("code", { children: login.userCode })
             ] }),
-            loginUrl && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("a", { href: loginUrl, target: "_blank", rel: "noopener noreferrer", children: [
+            loginUrl && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("a", { href: loginUrl, target: "_blank", rel: "noopener noreferrer", children: [
               t("openLogin"),
               " \u2197"
             ] }),
-            provider.id === "openrouter" && loginPending && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("details", { className: "darask-codex-callback", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("summary", { children: t("openrouterCallbackToggle") }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("openrouterCallbackHelp") }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("form", { onSubmit: (event) => {
+            provider.id === "openrouter" && loginPending && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "darask-codex-callback", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("openrouterCallbackToggle") }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("openrouterCallbackHelp") }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("form", { onSubmit: (event) => {
                 event.preventDefault();
                 const callback = callbackUrl.trim();
                 setCallbackUrl("");
                 if (callback) void action({ action: "submitCallback", provider: "openrouter", config: { callbackUrl: callback } }).catch(() => {
                 });
               }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("openrouterCallbackLabel") }),
-                  /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: callbackUrl, onChange: (event) => setCallbackUrl(event.target.value), autoComplete: "off", spellCheck: false })
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("openrouterCallbackLabel") }),
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: callbackUrl, onChange: (event) => setCallbackUrl(event.target.value), autoComplete: "off", spellCheck: false })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", type: "submit", disabled: pending || !callbackUrl.trim(), children: t("openrouterCallbackSubmit") })
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", type: "submit", disabled: pending || !callbackUrl.trim(), children: t("openrouterCallbackSubmit") })
               ] })
             ] })
           ] }),
-          provider.id === "openrouter" && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("apiKey") }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.openrouterApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openrouterApiKey: event.target.value })), autoComplete: "new-password", spellCheck: false })
+          provider.id === "openrouter" && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("apiKey") }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: keys.openrouterApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openrouterApiKey: event.target.value })), autoComplete: "new-password", spellCheck: false })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("managementKey") }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.openrouterManagementKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openrouterManagementKey: event.target.value })), autoComplete: "new-password", spellCheck: false }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t("keyHint") })
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("managementKey") }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: keys.openrouterManagementKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, openrouterManagementKey: event.target.value })), autoComplete: "new-password", spellCheck: false }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t("keyHint") })
             ] })
           ] })
         ] }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "darask-card-section", "aria-labelledby": `${sectionId}-model`, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h4", { className: "darask-card-section-title", id: `${sectionId}-model`, children: t("model") }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-card-section-body", children: [
-          provider.id === "local" && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(LocalRuntimePanel, { provider, pending, t, perform }),
-          cliOnly && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("cliHint") }),
-          provider.id === "claude" && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("claudeHint") }),
-          !cliOnly && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("model") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { value: value.model, disabled: pending, onChange: (event) => edit({ model: event.target.value }), autoComplete: "off", spellCheck: false }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t(provider.id === "openai" ? "openaiModelHint" : "modelHint") })
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("section", { className: "darask-card-section", "aria-labelledby": `${sectionId}-model`, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h4", { className: "darask-card-section-title", id: `${sectionId}-model`, children: t("model") }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-card-section-body", children: [
+          provider.id === "local" && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(LocalRuntimePanel, { provider, pending, t, perform }),
+          cliOnly && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("cliHint") }),
+          provider.id === "claude" && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("claudeHint") }),
+          !cliOnly && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("model") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: value.model, disabled: pending, onChange: (event) => edit({ model: event.target.value }), autoComplete: "off", spellCheck: false }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t(provider.id === "openai" ? "openaiModelHint" : "modelHint") })
           ] }),
-          MODEL_CATALOGS[provider.id]?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-model-visibility", role: "group", "aria-label": `${providerName}: ${t("modelVisibility")}`, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: t("modelVisibility") }),
-            MODEL_CATALOGS[provider.id].map((model) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-model-visibility-row", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: model.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Switch, { checked: visibleModels?.includes(model.id) === true, disabled: pending, label: `${model.name}: ${t("modelVisibility")}`, onChange: (shown) => editModels(provider.id, model.id, shown) })
+          MODEL_CATALOGS[provider.id]?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-model-visibility", role: "group", "aria-label": `${providerName}: ${t("modelVisibility")}`, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: t("modelVisibility") }),
+            MODEL_CATALOGS[provider.id].map((model) => /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-model-visibility-row", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: model.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Switch, { checked: visibleModels?.includes(model.id) === true, disabled: pending, label: `${model.name}: ${t("modelVisibility")}`, onChange: (shown) => editModels(provider.id, model.id, shown) })
             ] }, model.id)),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t("modelVisibilityHint") })
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t("modelVisibilityHint") })
           ] }),
-          ["cursor", "claude", "grok", "local"].includes(provider.id) && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("executable") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { value: value.executable, disabled: pending, onChange: (event) => edit({ executable: event.target.value }), autoComplete: "off", spellCheck: false }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t(provider.id === "local" ? "localHint" : "executableHint") })
+          ["cursor", "claude", "grok", "local"].includes(provider.id) && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("executable") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: value.executable, disabled: pending, onChange: (event) => edit({ executable: event.target.value }), autoComplete: "off", spellCheck: false }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t(provider.id === "local" ? "localHint" : "executableHint") })
           ] }),
-          provider.id === "local" && local && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("remoteHint") }),
-            provider.localRuntime?.phase === "starting" && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { role: "status", children: t("localStarting") }),
-            [["baseUrl", "localUrl"], ["modelFile", "localFile"]].map(([field, title]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t(title) }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { value: local[field], disabled: pending, onChange: (event) => editLocal({ [field]: event.target.value }), autoComplete: "off", spellCheck: false })
+          provider.id === "local" && local && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("remoteHint") }),
+            provider.localRuntime?.phase === "starting" && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { role: "status", children: t("localStarting") }),
+            [["baseUrl", "localUrl"], ["modelFile", "localFile"]].map(([field, title]) => /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t(title) }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: local[field], disabled: pending, onChange: (event) => editLocal({ [field]: event.target.value }), autoComplete: "off", spellCheck: false })
             ] }, field)),
-            [["contextSize", "localContext"], ["gpuLayers", "localGpu"]].map(([field, title]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t(title) }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "number", value: local[field], disabled: pending, onChange: (event) => editLocal({ [field]: Number(event.target.value) }) })
+            [["contextSize", "localContext"], ["gpuLayers", "localGpu"]].map(([field, title]) => /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t(title) }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "number", value: local[field], disabled: pending, onChange: (event) => editLocal({ [field]: Number(event.target.value) }) })
             ] }, field)),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Switch, { checked: local.autoStart, disabled: pending, label: t("localAuto"), onChange: (autoStart) => editLocal({ autoStart }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t("localSaveHint") }),
-            provider.localRuntime?.logFile && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("small", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Switch, { checked: local.autoStart, disabled: pending, label: t("localAuto"), onChange: (autoStart) => editLocal({ autoStart }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t("localSaveHint") }),
+            provider.localRuntime?.logFile && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("small", { children: [
               t("localLog"),
               ": ",
               provider.localRuntime.logFile
             ] })
           ] }),
-          provider.id === "openai" && openai && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("openaiHint") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Switch, { checked: openai.preferComplimentary !== false, disabled: pending, label: t("openaiPrefer"), onChange: (preferComplimentary) => editOpenAi({ preferComplimentary }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t("openaiPreferHint") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("openaiTier") }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("select", { value: openai.usageTier ?? "unknown", disabled: pending, onChange: (event) => editOpenAi({ usageTier: event.target.value }), children: [
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "unknown", children: t("openaiTierUnknown") }),
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "t12", children: t("openaiTier12") }),
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "t35", children: t("openaiTier35") })
+          provider.id === "openai" && openai && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("openaiHint") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Switch, { checked: openai.preferComplimentary !== false, disabled: pending, label: t("openaiPrefer"), onChange: (preferComplimentary) => editOpenAi({ preferComplimentary }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: t("openaiPreferHint") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("openaiTier") }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("select", { value: openai.usageTier ?? "unknown", disabled: pending, onChange: (event) => editOpenAi({ usageTier: event.target.value }), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("option", { value: "unknown", children: t("openaiTierUnknown") }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("option", { value: "t12", children: t("openaiTier12") }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("option", { value: "t35", children: t("openaiTier35") })
               ] })
             ] })
           ] })
@@ -14230,28 +14713,28 @@ function ProviderCard({ provider, value, index, count, edit, move, action, pendi
 }
 
 // src/settings/connections.jsx
-var import_react11 = __toESM(require("react"), 1);
-var import_dsh_client_ui_primitives10 = require("@deepseek-ai/dsh-client-ui-primitives");
-var import_jsx_runtime11 = require("react/jsx-runtime");
+var import_react12 = __toESM(require("react"), 1);
+var import_dsh_client_ui_primitives11 = require("@deepseek-ai/dsh-client-ui-primitives");
+var import_jsx_runtime12 = require("react/jsx-runtime");
 function TailscaleConnection({ data, action, pending, t }) {
   const tail = data.tailscale;
-  if (!tail) return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: "Tailscale \u306E\u72B6\u614B\u3092\u78BA\u8A8D\u3057\u3066\u3044\u307E\u3059\u2026" });
+  if (!tail) return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: "Tailscale \u306E\u72B6\u614B\u3092\u78BA\u8A8D\u3057\u3066\u3044\u307E\u3059\u2026" });
   const perform = (payload) => {
     void action(payload).catch(() => {
     });
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("article", { className: "darask-provider", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("header", { className: "darask-provider-header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: "Tailscale" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Tag, { tone: tail.connected ? "success" : "neutral", children: t(tail.connected ? "connected" : tail.available ? "disconnected" : "unavailable") }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Tag, { children: t(tail.serve === "on" ? "serveActive" : tail.serve === "conflict" ? "serveConflict" : "serveStopped") })
+  return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("article", { className: "darask-provider", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("header", { className: "darask-provider-header", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { children: "Tailscale" }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Tag, { tone: tail.connected ? "success" : "neutral", children: t(tail.connected ? "connected" : tail.available ? "disconnected" : "unavailable") }),
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Tag, { children: t(tail.serve === "on" ? "serveActive" : tail.serve === "conflict" ? "serveConflict" : "serveStopped") })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-usage", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("tailHint") }),
-      tail.dnsName && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: tail.dnsName }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", variant: "outline", disabled: pending || !tail.connected || tail.serve !== "off", onClick: () => perform({ action: "serveEnable", provider: "tailscale" }), children: t("serveOn") }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || tail.serve !== "on" || !tail.owned, onClick: () => perform({ action: "serveDisable", provider: "tailscale" }), children: t("serveOff") })
+    /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-usage", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: t("tailHint") }),
+      tail.dnsName && /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: tail.dnsName }),
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", variant: "outline", disabled: pending || !tail.connected || tail.serve !== "off", onClick: () => perform({ action: "serveEnable", provider: "tailscale" }), children: t("serveOn") }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", disabled: pending || tail.serve !== "on" || !tail.owned, onClick: () => perform({ action: "serveDisable", provider: "tailscale" }), children: t("serveOff") })
       ] })
     ] })
   ] });
@@ -14263,24 +14746,24 @@ function ComputerControl({ data, action, pending, t }) {
     });
   };
   const available = computer.available !== false;
-  return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("article", { className: "darask-provider", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("header", { className: "darask-provider-header", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: t("computerTitle") }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Tag, { tone: computer.enabled ? "success" : "neutral", children: t(computer.enabled ? "computerReady" : available ? "disabled" : "computerUnavailable") })
+  return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("article", { className: "darask-provider", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("header", { className: "darask-provider-header", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { children: t("computerTitle") }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Tag, { tone: computer.enabled ? "success" : "neutral", children: t(computer.enabled ? "computerReady" : available ? "disabled" : "computerUnavailable") })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-usage", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("computerHint") }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", variant: "outline", disabled: pending || !available || computer.enabled, onClick: () => perform({ action: "enableComputer", provider: "computer" }), children: t("computerOn") }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || !computer.enabled, onClick: () => perform({ action: "disableComputer", provider: "computer" }), children: t("computerOff") })
+    /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-usage", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: t("computerHint") }),
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", variant: "outline", disabled: pending || !available || computer.enabled, onClick: () => perform({ action: "enableComputer", provider: "computer" }), children: t("computerOn") }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", disabled: pending || !computer.enabled, onClick: () => perform({ action: "disableComputer", provider: "computer" }), children: t("computerOff") })
       ] })
     ] })
   ] });
 }
 function BrowserConnections({ data, action, pending, t }) {
   const run = data.browserRun;
-  const [accountId, setAccountId] = (0, import_react11.useState)("");
-  const [apiToken, setApiToken] = (0, import_react11.useState)("");
+  const [accountId, setAccountId] = (0, import_react12.useState)("");
+  const [apiToken, setApiToken] = (0, import_react12.useState)("");
   const perform = (payload) => {
     void action(payload).catch(() => {
     });
@@ -14292,42 +14775,42 @@ function BrowserConnections({ data, action, pending, t }) {
     } catch {
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-integrations", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("article", { className: "darask-provider", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("header", { className: "darask-provider-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: "Kitesurf" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Tag, { children: t(data.compatibility?.kitesurf ? "enabled" : "disabled") })
+  return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-integrations", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("article", { className: "darask-provider", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("header", { className: "darask-provider-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { children: "Kitesurf" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Tag, { children: t(data.compatibility?.kitesurf ? "enabled" : "disabled") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-usage", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("browserHint") }) })
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-usage", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: t("browserHint") }) })
     ] }),
-    run && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("article", { className: "darask-provider", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("header", { className: "darask-provider-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: "Cloudflare Browser Run" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Tag, { tone: run.connected ? "success" : "neutral", children: t(run.connected ? "connected" : run.configured ? "configured" : "disconnected") })
+    run && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("article", { className: "darask-provider", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("header", { className: "darask-provider-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { children: "Cloudflare Browser Run" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Tag, { tone: run.connected ? "success" : "neutral", children: t(run.connected ? "connected" : run.configured ? "configured" : "disconnected") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-usage", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("browserRunHint") }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("a", { href: safeUrl(run.dashboardUrl), target: "_blank", rel: "noopener noreferrer", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-usage", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: t("browserRunHint") }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("a", { href: safeUrl(run.dashboardUrl), target: "_blank", rel: "noopener noreferrer", children: [
           t("dashboard"),
           " \u2197"
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "darask-details", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("settings") }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-fields", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("cfAccount") }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: accountId, placeholder: run.accountId || "", disabled: pending, onChange: (e) => setAccountId(e.target.value.trim()), autoComplete: "off" })
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("details", { className: "darask-details", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("summary", { children: t("settings") }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-fields", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: t("cfAccount") }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Input, { value: accountId, placeholder: run.accountId || "", disabled: pending, onChange: (e) => setAccountId(e.target.value.trim()), autoComplete: "off" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("cfToken") }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { type: "password", value: apiToken, disabled: pending, onChange: (e) => setApiToken(e.target.value), autoComplete: "new-password" })
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: t("cfToken") }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Input, { type: "password", value: apiToken, disabled: pending, onChange: (e) => setApiToken(e.target.value), autoComplete: "new-password" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", variant: "primary", disabled: pending || !apiToken || !(accountId || run.accountId), onClick: () => {
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", variant: "primary", disabled: pending || !apiToken || !(accountId || run.accountId), onClick: () => {
               void saveConnection();
             }, children: t("connectSave") }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || !run.configured, onClick: () => perform({ action: "removeBrowserRun", provider: "browserRun" }), children: t("disconnectRemove") })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", disabled: pending || !run.configured, onClick: () => perform({ action: "removeBrowserRun", provider: "browserRun" }), children: t("disconnectRemove") })
           ] })
         ] })
       ] })
@@ -14336,7 +14819,7 @@ function BrowserConnections({ data, action, pending, t }) {
 }
 
 // src/settings/accounts.jsx
-var import_jsx_runtime12 = require("react/jsx-runtime");
+var import_jsx_runtime13 = require("react/jsx-runtime");
 function configuration(data) {
   const providers = Array.isArray(data?.providers) ? data.providers : [];
   const known = new Set(providers.map((provider) => provider.id));
@@ -14357,11 +14840,11 @@ function configuration(data) {
 function DaraskPanel(props) {
   const state = props.useDaraskStatus((snapshot) => snapshot);
   const { t } = props;
-  const [draft, setDraft] = (0, import_react12.useState)(null);
+  const [draft, setDraft] = (0, import_react13.useState)(null);
   const emptyKeys = { openrouterApiKey: "", openrouterManagementKey: "", localApiKey: "", openaiApiKey: "", openaiAdminKey: "" };
-  const [keys, setKeys] = (0, import_react12.useState)(emptyKeys);
-  const [saved, setSaved] = (0, import_react12.useState)(false);
-  const [tab, setTab] = (0, import_react12.useState)("ai");
+  const [keys, setKeys] = (0, import_react13.useState)(emptyKeys);
+  const [saved, setSaved] = (0, import_react13.useState)(false);
+  const [tab, setTab] = (0, import_react13.useState)("ai");
   const data = state.data;
   const config = draft ?? configuration(data);
   const dirty = draft !== null || Object.values(keys).some((value) => value !== "");
@@ -14383,26 +14866,26 @@ function DaraskPanel(props) {
   };
   const providers = new Map((data?.providers ?? []).map((provider) => [provider.id, provider]));
   const compatibilityMessages = [data?.compatibility?.message, ...Array.isArray(data?.compatibility?.warnings) ? data.compatibility.warnings : []].filter((value) => typeof value === "string" && value);
-  return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("section", { className: "darask", "aria-label": t("title"), children: [
-    /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("header", { className: "darask-heading", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h2", { children: t("title") }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { children: t("description") })
+  return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "darask", "aria-label": t("title"), children: [
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("header", { className: "darask-heading", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: t("title") }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: t("description") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { variant: "outline", disabled: pending || state.loading, onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_dsh_client_ui_primitives12.Button, { variant: "outline", disabled: pending || state.loading, onClick: () => {
         void props.action({ action: "refresh" }).catch(() => {
         });
       }, children: t("refresh") })
     ] }),
-    state.error && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-error", role: "alert", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: message(state.error, t, t("loadFailed")) }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", disabled: pending, onClick: () => {
+    state.error && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-error", role: "alert", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: message(state.error, t, t("loadFailed")) }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_dsh_client_ui_primitives12.Button, { size: "sm", disabled: pending, onClick: () => {
         void props.load();
       }, children: t("retry") })
     ] }),
-    state.loading && !data && /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", role: "status", children: t("loading") }),
-    data && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-account-tabs", role: "tablist", "aria-label": t("accountTabs"), children: ["ai", "pc", "browser"].map((id, index, tabs) => /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_dsh_client_ui_primitives11.Button, { id: `darask-tab-${id}`, role: "tab", "aria-selected": tab === id, "aria-controls": `darask-panel-${id}`, tabIndex: tab === id ? 0 : -1, variant: tab === id ? "primary" : "outline", onClick: () => setTab(id), onKeyDown: (event) => {
+    state.loading && !data && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "darask-muted", role: "status", children: t("loading") }),
+    data && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "darask-account-tabs", role: "tablist", "aria-label": t("accountTabs"), children: ["ai", "pc", "browser"].map((id, index, tabs) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_dsh_client_ui_primitives12.Button, { id: `darask-tab-${id}`, role: "tab", "aria-selected": tab === id, "aria-controls": `darask-panel-${id}`, tabIndex: tab === id ? 0 : -1, variant: tab === id ? "primary" : "outline", onClick: () => setTab(id), onKeyDown: (event) => {
         const next = event.key === "ArrowRight" ? (index + 1) % tabs.length : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
         if (next !== null) {
           event.preventDefault();
@@ -14413,23 +14896,23 @@ function DaraskPanel(props) {
         t(`${id}Tab`),
         id === "ai" && dirty ? " *" : ""
       ] }, id)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-account-panel", id: "darask-panel-ai", role: "tabpanel", "aria-labelledby": "darask-tab-ai", hidden: tab !== "ai", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-routing", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: t("routing") }),
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { children: t("routingHint") })
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-account-panel", id: "darask-panel-ai", role: "tabpanel", "aria-labelledby": "darask-tab-ai", hidden: tab !== "ai", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-routing", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: t("routing") }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: t("routingHint") })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Switch, { checked: config.routingEnabled, disabled: pending, label: t("routing"), onChange: (routingEnabled) => change((current) => ({ ...current, routingEnabled })) })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_dsh_client_ui_primitives12.Switch, { checked: config.routingEnabled, disabled: pending, label: t("routing"), onChange: (routingEnabled) => change((current) => ({ ...current, routingEnabled })) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-section-heading", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { children: t("priority") }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { children: t("priorityHint") })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-section-heading", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: t("priority") }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: t("priorityHint") })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-provider-list", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-provider-list", children: [
           config.priority.map((id, index) => {
             const provider = providers.get(id);
             if (!provider) return null;
-            return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+            return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
               ProviderCard,
               {
                 provider,
@@ -14460,31 +14943,31 @@ function DaraskPanel(props) {
               id
             );
           }),
-          config.priority.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: t("noProviders") })
+          config.priority.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "darask-muted", children: t("noProviders") })
         ] }),
-        compatibilityMessages.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("details", { className: "darask-compatibility", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("summary", { children: t("compatibility") }),
-          compatibilityMessages.map((message2, index) => /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { children: message2 }, index))
+        compatibilityMessages.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("details", { className: "darask-compatibility", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("summary", { children: t("compatibility") }),
+          compatibilityMessages.map((message2, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: message2 }, index))
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("footer", { className: "darask-footer", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { role: "status", children: dirty ? t("unsaved") : saved ? t("saved") : "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { disabled: !dirty || pending, onClick: () => {
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("footer", { className: "darask-footer", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { role: "status", children: dirty ? t("unsaved") : saved ? t("saved") : "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_dsh_client_ui_primitives12.Button, { disabled: !dirty || pending, onClick: () => {
             setDraft(null);
             setKeys(emptyKeys);
             setSaved(false);
           }, children: t("discard") }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { variant: "primary", disabled: !dirty || pending, onClick: () => {
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_dsh_client_ui_primitives12.Button, { variant: "primary", disabled: !dirty || pending, onClick: () => {
             void save();
           }, children: state.pending?.startsWith("save:") ? t("saving") : t("save") })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-account-panel", id: "darask-panel-pc", role: "tabpanel", "aria-labelledby": "darask-tab-pc", hidden: tab !== "pc", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(TailscaleConnection, { data, action: props.action, pending, t }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(PcConnections, {})
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-account-panel", id: "darask-panel-pc", role: "tabpanel", "aria-labelledby": "darask-tab-pc", hidden: tab !== "pc", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(TailscaleConnection, { data, action: props.action, pending, t }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PcConnections, {})
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-account-panel", id: "darask-panel-browser", role: "tabpanel", "aria-labelledby": "darask-tab-browser", hidden: tab !== "browser", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(ComputerControl, { data, action: props.action, pending, t }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(BrowserConnections, { data, action: props.action, pending, t })
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "darask-account-panel", id: "darask-panel-browser", role: "tabpanel", "aria-labelledby": "darask-tab-browser", hidden: tab !== "browser", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ComputerControl, { data, action: props.action, pending, t }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(BrowserConnections, { data, action: props.action, pending, t })
       ] })
     ] })
   ] });
@@ -14492,7 +14975,7 @@ function DaraskPanel(props) {
 
 // src/client.jsx
 var name = "dsh-darask-client";
-var inject = ["slots", "locale", "layout", "sidebarRightTabs"];
+var inject = ["slots", "locale", "layout", "sidebarRightTabs", "sessions"];
 function apply(ctx) {
   void Promise.resolve(completeOpenRouterRedirect()).catch(() => {
   });
