@@ -53,8 +53,10 @@ function sumBuckets(usageByModel) {
   return total;
 }
 var percent = (used, size) => size > 0 ? Math.min(100, Math.max(0, Math.round(used * 100 / size))) : null;
-function buildStatusContext({ sessionId, header, status, tokenUsage, contextPressure, sessionStats, title, version, now = Date.now(), trigger = "refresh_interval", running }) {
+function buildStatusContext({ sessionId, header, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, version, now = Date.now(), trigger = "refresh_interval", running }) {
   const usage = sumBuckets(status?.usageByModel);
+  const selected = modelSelection?.next;
+  const model = status?.model ?? (selected && typeof selected.model === "string" ? { provider: selected.provider, id: selected.model } : null);
   const contextWindow = contextPressure?.contextWindow ?? status?.contextWindow ?? null;
   const contextTokens = contextPressure?.projectedTokens ?? contextPressure?.pressureTokens ?? null;
   const used = contextWindow !== null && contextTokens !== null ? percent(contextTokens, contextWindow) : null;
@@ -67,9 +69,9 @@ function buildStatusContext({ sessionId, header, status, tokenUsage, contextPres
     session_id: sessionId ?? header?.id ?? null,
     session_name: typeof title === "string" && title !== "" ? title : null,
     model: {
-      id: status?.model?.id ?? null,
-      display_name: status?.model?.id ?? null,
-      provider: status?.model?.provider ?? null
+      id: model?.id ?? null,
+      display_name: model?.id ?? null,
+      provider: model?.provider ?? null
     },
     workspace: { current_dir: cwd },
     version,
@@ -291,6 +293,7 @@ function StatusLine(props) {
   const contextPressure = useProjection("contextPressure");
   const sessionStats = useProjection("sessionStats");
   const title = useProjection("title");
+  const modelSelection = useProjection("modelSelection");
   const entry = useSessions((list) => list.byId[String(sessionId)]);
   const running = entry?.running ?? (status?.turn !== null && status?.turn !== void 0);
   const tickingItems = config.type === "builtin" && config.items.includes("turn-timer") && running;
@@ -304,10 +307,11 @@ function StatusLine(props) {
     contextPressure: contextPressure ?? void 0,
     sessionStats: sessionStats ?? void 0,
     title: title ?? void 0,
+    modelSelection: modelSelection ?? void 0,
     version: config.version ?? "",
     now,
     running
-  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, now, running, config.version]);
+  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, now, running, config.version]);
   const [remote, setRemote] = (0, import_react.useState)(null);
   (0, import_react.useEffect)(() => {
     if (config.type !== "command") {

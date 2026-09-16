@@ -123,7 +123,7 @@ export function createStatusLineService({ ctx, config, dshHome = resolveDshHome(
   }
 
   function projectionValues(session) {
-    const snapshot = ctx.sessionProjections.snapshot(session, [PROJECTION_KEY, 'tokenUsage', 'contextPressure', 'sessionStats', 'title']);
+    const snapshot = ctx.sessionProjections.snapshot(session, [PROJECTION_KEY, 'tokenUsage', 'contextPressure', 'sessionStats', 'title', 'modelSelection']);
     return snapshot.values;
   }
 
@@ -141,6 +141,7 @@ export function createStatusLineService({ ctx, config, dshHome = resolveDshHome(
       contextPressure: values.contextPressure,
       sessionStats: values.sessionStats,
       title: values.title,
+      modelSelection: values.modelSelection,
       version: harnessVersion(),
       now: now(),
       trigger,

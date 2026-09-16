@@ -119,6 +119,23 @@ test('buildStatusContext degrades to nulls without projections', () => {
   assert.equal(renderStatusLine(context, ['cwd', 'turns']), 'x │ T0');
 });
 
+test('buildStatusContext falls back to the upstream modelSelection before the first request', () => {
+  const selection = { lastUsed: null, next: { provider: 'deepseek', model: 'deepseek-reasoner' } };
+  const fresh = buildStatusContext({ sessionId: 's2b', header: { cwd: '/tmp/x' }, modelSelection: selection, version: 'v', now: 5 });
+  assert.deepEqual(fresh.model, { id: 'deepseek-reasoner', display_name: 'deepseek-reasoner', provider: 'deepseek' });
+  assert.equal(renderStatusLine(fresh, ['model', 'context', 'cost', 'turn-timer']), 'deepseek-reasoner');
+  const folded = buildStatusContext({
+    sessionId: 's2c',
+    header: { cwd: '/tmp/x' },
+    status: { startedAt: 0, lastEventAt: 0, model: { provider: 'xai', id: 'grok-4' }, contextWindow: null, turn: null, turns: 1, usageByModel: {}, totalCostUsd: null },
+    modelSelection: selection,
+    version: 'v',
+    now: 5,
+  });
+  assert.equal(folded.model.id, 'grok-4', 'the fold wins once a request has run');
+  assert.equal(buildStatusContext({ sessionId: 's2d', header: {}, modelSelection: { lastUsed: null, next: null }, version: 'v', now: 5 }).model.id, null);
+});
+
 test('built-in renderer follows the configured item order and skips empty items', () => {
   const context = buildStatusContext({
     sessionId: 's3',

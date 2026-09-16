@@ -132,6 +132,7 @@ export function StatusLine(props) {
   const contextPressure = useProjection('contextPressure');
   const sessionStats = useProjection('sessionStats');
   const title = useProjection('title');
+  const modelSelection = useProjection('modelSelection');
   const entry = useSessions(list => list.byId[String(sessionId)]);
   const running = entry?.running ?? (status?.turn !== null && status?.turn !== undefined);
   const tickingItems = config.type === 'builtin' && config.items.includes('turn-timer') && running;
@@ -146,10 +147,11 @@ export function StatusLine(props) {
     contextPressure: contextPressure ?? undefined,
     sessionStats: sessionStats ?? undefined,
     title: title ?? undefined,
+    modelSelection: modelSelection ?? undefined,
     version: config.version ?? '',
     now,
     running,
-  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, now, running, config.version]);
+  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, now, running, config.version]);
 
   const [remote, setRemote] = useState(null);
   useEffect(() => {

@@ -177,8 +177,12 @@ const percent = (used, size) => size > 0 ? Math.min(100, Math.max(0, Math.round(
  * Every field is derived from projections and the session header; `now` is the
  * clock used for elapsed figures.
  */
-export function buildStatusContext({ sessionId, header, status, tokenUsage, contextPressure, sessionStats, title, version, now = Date.now(), trigger = 'refresh_interval', running }) {
+export function buildStatusContext({ sessionId, header, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, version, now = Date.now(), trigger = 'refresh_interval', running }) {
   const usage = sumBuckets(status?.usageByModel);
+  // Before the first request the fold has no model; upstream `modelSelection.next`
+  // (pending pick or last used) is what the next turn will run with.
+  const selected = modelSelection?.next;
+  const model = status?.model ?? (selected && typeof selected.model === 'string' ? { provider: selected.provider, id: selected.model } : null);
   const contextWindow = contextPressure?.contextWindow ?? status?.contextWindow ?? null;
   const contextTokens = contextPressure?.projectedTokens ?? contextPressure?.pressureTokens ?? null;
   const used = contextWindow !== null && contextTokens !== null ? percent(contextTokens, contextWindow) : null;
@@ -191,9 +195,9 @@ export function buildStatusContext({ sessionId, header, status, tokenUsage, cont
     session_id: sessionId ?? header?.id ?? null,
     session_name: typeof title === 'string' && title !== '' ? title : null,
     model: {
-      id: status?.model?.id ?? null,
-      display_name: status?.model?.id ?? null,
-      provider: status?.model?.provider ?? null,
+      id: model?.id ?? null,
+      display_name: model?.id ?? null,
+      provider: model?.provider ?? null,
     },
     workspace: { current_dir: cwd },
     version,
