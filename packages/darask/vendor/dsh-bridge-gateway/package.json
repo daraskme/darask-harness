@@ -1,0 +1,89 @@
+{
+  "name": "dsh-bridge-gateway",
+  "version": "0.1.7",
+  "description": "dsh-bridge を基盤に remote-gateway の能力を融合した DSH リモートアクセスゲートウェイ。LAN / Cloudflare トンネル / 自前トンネルに加え、「パブリック直結ゲートウェイ」（0.0.0.0 待ち受け + HTTPS 自己署名証明書 + 強制ログインゲート）を追加し、モバイル端末から外部ネットワーク経由でパソコンを直接操作できるようにします。",
+  "releaseNotes": "DARASK 同梱版: DSH 0.1.5-rc.2 の公式 Connection 認証に対応。一時・固定 Cloudflare トンネルの起動、接続判定、環境変数の分離を修正。日本語 UI を提供します。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": "./client/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "client",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "README.ja.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "docs"
+  ],
+  "dependencies": {
+    "qrcode": "^1.5.3",
+    "ws": "^8.18.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-llm": ">=0.1.0-rc.6"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-llm": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "remote",
+    "remote-access",
+    "tunnel",
+    "cloudflare",
+    "mobile",
+    "smartphone",
+    "tablet",
+    "qr-code",
+    "qrcode",
+    "websocket",
+    "bot",
+    "wechat",
+    "qq",
+    "feishu",
+    "telegram"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:daraskme/dsh-bridge-gateway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/daraskme/dsh-bridge-gateway/issues"
+  },
+  "homepage": "https://github.com/daraskme/dsh-bridge-gateway",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
