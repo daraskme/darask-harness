@@ -37,7 +37,7 @@
     "build": "npm run build --workspaces --if-present",
     "test": "node --test test/*.test.mjs && npm test --workspaces --if-present",
     "check": "npm run build && npm test",
-    "check:portable": "npm run build && node --test test/*.test.mjs && npm test --workspace @darask/dsh-hashline",
+    "check:portable": "npm run build && node --test test/*.test.mjs && npm test --workspace @darask/dsh-hashline --workspace @darask/dsh-rules --workspace @darask/dsh-status-line",
     "start": "npm start --workspace dsh-darask --",
     "dev": "npm run dev --workspace dsh-darask --"
   },
@@ -48,10 +48,14 @@
   },
   "dependencies": {
     "@darask/dsh-hashline": "file:packages/dsh-hashline",
+    "@darask/dsh-rules": "file:packages/dsh-rules",
+    "@darask/dsh-status-line": "file:packages/dsh-status-line",
     "dsh-darask": "file:packages/darask"
   },
   "bundleDependencies": [
     "@darask/dsh-hashline",
+    "@darask/dsh-rules",
+    "@darask/dsh-status-line",
     "dsh-darask"
   ],
   "peerDependencies": {
