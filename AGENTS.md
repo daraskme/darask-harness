@@ -11,6 +11,7 @@
 - `packages/dsh-hashline` は grok-build の仕様を JS で再実装したもの。Rust コードのコピーはしない。純粋ロジック (`hash` / `scheme` / `apply` / `format` / `search`) は DSH に依存せず単体テストできる状態を保つ。
 - `packages/dsh-rules` はディレクトリ型ルールだけを扱う。`AGENTS.md` 系のファイル名ロードは上流 `@deepseek-ai/dsh-agent-instructions` に任せ、重複して読まない。ルール本文はモデルに対する入力なので `system-reminder` タグは無効化し、サイズ上限を外さない。
 - `packages/dsh-status-line` は上流 projection (`tokenUsage` / `contextPressure` / `sessionStats` / `title`) を参照する。コンテキスト使用率の再計算を自前で持たない。`src/status.mjs` はブラウザーでも読まれるので Node 専用 API や zod を import しない (host 専用は `projection.mjs` / `command.mjs` / `index.mjs`)。外部コマンドは利用者設定ファイルだけから受け取り、モデル出力や HTTP リクエストでは指定できない。
+- `packages/dsh-memory` は host 専用 (`node:sqlite` / `node:fs` / `node:crypto`)。上流のセッション永続化・compaction を置き換えない。モデル出力 (観測・Dream 計画) は必ず `observation.mjs` / `prompts.mjs` の厳密パーサーを通し、未知フィールドは拒否する。ファイル書き込みは `resolveContained` で scope ディレクトリ内に閉じ、`writeAtomic` (同一ディレクトリの一時ファイル → rename) 以外で書かない。注入するメモリー文脈には「過去の文脈であり実ソースで検証する」旨の警告を残す。
 - 依存は固定バージョン。`*` / `latest` / 範囲指定は使わない。
 
 ## 検証

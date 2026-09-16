@@ -64,5 +64,11 @@
       config:
         type: builtin
         items: [model, context, cost, turn-timer]
+    # grok-build 由来: Memory v2。完了ターンからツール無しの補助モデル呼び出しで観測を抽出し、
+    # $DSH_HOME/darask/memory/{global,workspaces/<slug>-<hash>} に不変ファイル + SQLite FTS5 索引 +
+    # MEMORY.md 目次として保存。memory_search / memory_get ツールと /memory コマンド、Dream 統合を提供。
+    # セッション永続化・compaction は上流のまま。
+    - id: darask-memory
+      name: '@darask/dsh-memory'
     - id: darask-harness
       name: darask-harness
