@@ -1,0 +1,40 @@
+{
+  "name": "@darask/dsh-code-graph",
+  "version": "0.1.0-alpha.1",
+  "description": "DeepSeek Harness 向けコードグラフ (grok-build xai-codebase-graph 移植): tree-sitter (WASM) の tags クエリで定義・参照を索引し、code_definitions / code_references / code_outline / code_symbols ツールと /code-graph コマンドを提供。言語サーバー不要で JS / TS / Python / Go / Rust に対応。",
+  "type": "module",
+  "license": "MIT",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "grammars",
+    "grammars.json",
+    "scripts"
+  ],
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "build": "node scripts/fetch-grammars.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "web-tree-sitter": "0.26.13"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-fs": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-home-paths": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "code-graph",
+    "tree-sitter",
+    "grok-build"
+  ]
+}

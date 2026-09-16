@@ -37,7 +37,7 @@
     "build": "npm run build --workspaces --if-present",
     "test": "node --test test/*.test.mjs && npm test --workspaces --if-present",
     "check": "npm run build && npm test",
-    "check:portable": "npm run build && node --test test/*.test.mjs && npm test --workspace @darask/dsh-hashline --workspace @darask/dsh-hunk-tracker --workspace @darask/dsh-memory --workspace @darask/dsh-rules --workspace @darask/dsh-status-line",
+    "check:portable": "npm run build && node --test test/*.test.mjs && npm test --workspace @darask/dsh-code-graph --workspace @darask/dsh-hashline --workspace @darask/dsh-hunk-tracker --workspace @darask/dsh-memory --workspace @darask/dsh-rules --workspace @darask/dsh-status-line",
     "start": "npm start --workspace dsh-darask --",
     "dev": "npm run dev --workspace dsh-darask --"
   },
@@ -47,6 +47,7 @@
     }
   },
   "dependencies": {
+    "@darask/dsh-code-graph": "file:packages/dsh-code-graph",
     "@darask/dsh-hashline": "file:packages/dsh-hashline",
     "@darask/dsh-hunk-tracker": "file:packages/dsh-hunk-tracker",
     "@darask/dsh-memory": "file:packages/dsh-memory",
@@ -55,6 +56,7 @@
     "dsh-darask": "file:packages/darask"
   },
   "bundleDependencies": [
+    "@darask/dsh-code-graph",
     "@darask/dsh-hashline",
     "@darask/dsh-hunk-tracker",
     "@darask/dsh-memory",

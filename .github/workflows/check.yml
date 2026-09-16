@@ -27,3 +27,6 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run ${{ matrix.script }}
+        env:
+          # Grammar WASM fetch (packages/dsh-code-graph) must succeed in CI so its tests are not skipped.
+          DSH_CODE_GRAPH_REQUIRE_GRAMMARS: '1'
