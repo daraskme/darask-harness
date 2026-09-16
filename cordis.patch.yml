@@ -83,5 +83,17 @@
     # 索引は $DSH_HOME/darask/code-graph/<workspace-hash>.json。文法 WASM は npm run build で取得。
     - id: darask-code-graph
       name: '@darask/dsh-code-graph'
+    # grok-build 由来: monitor ツール。長時間スクリプトを上流 ctx.shell (bash / pwsh、sandbox 適用) で起動して
+    # ctx.jobs に登録し、stdout の各行を <monitor-event> として所有エージェントへ配信 (実行中は inject、
+    # 待機中は followup で起床)。トークンバケットで抑制・追い付き通知、30 秒継続過負荷で自動停止。
+    # 一覧・出力・停止は上流 job_list / job_output / job_kill をそのまま使う。
+    - id: darask-monitor
+      name: '@darask/dsh-monitor'
+    # grok-build xai-fast-worktree のライフサイクル部分: worktree_create / worktree_list / worktree_remove と
+    # /worktree (list・create・remove・gc)。<repo>/.darask/worktrees/<name> に git worktree add で作成し
+    # (.git/info/exclude 登録)、$DSH_HOME/darask/worktrees/registry.json で所有・基点・時刻を追跡。
+    # dirty は force 無しで消さない。CoW / overlay / Btrfs は非対象。
+    - id: darask-worktree
+      name: '@darask/dsh-worktree'
     - id: darask-harness
       name: darask-harness

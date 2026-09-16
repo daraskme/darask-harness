@@ -1,0 +1,32 @@
+{
+  "name": "@darask/dsh-worktree",
+  "version": "0.1.0-alpha.1",
+  "description": "DeepSeek Harness 向け Git worktree ライフサイクル (grok-build xai-fast-worktree の移植可能サブセット): worktree_create / worktree_list / worktree_remove ツールと /worktree コマンド。<repo>/.darask/worktrees/<name> に git worktree add で作成し、レジストリ ($DSH_HOME/darask/worktrees/registry.json) で所有セッション・基点・時刻を追跡、dirty/missing/prunable/stale 判定、force なしでは dirty を削除しない安全な削除、stale/消失エントリの gc。CoW/overlay/Btrfs は非対象。",
+  "type": "module",
+  "license": "MIT",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-home-paths": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "worktree",
+    "git",
+    "grok-build"
+  ]
+}

@@ -50,7 +50,7 @@ if (configured?.dependencies?.[linkedName] !== desired || !linked) {
 }
 const overlay = join(logs, 'development.patch.json');
 await writeFile(overlay, JSON.stringify([
-  { id: 'hmr', disabled: false, config: { base: pathToFileURL(source).href.replace(/\/?$/, '/'), root: [...harness ? ['src', 'packages/dsh-code-graph/src', 'packages/dsh-hashline/src', 'packages/dsh-hunk-tracker/src', 'packages/dsh-memory/src', 'packages/dsh-rules/src', 'packages/dsh-status-line/src'] : [], rel('src'), rel('vendor/dsh-bridge-gateway/lib'), rel('vendor/dsh-grok-provider/src')], ignored: ['**/node_modules/**', '**/.*', '**/*.tmp'], debounce: 200 } },
+  { id: 'hmr', disabled: false, config: { base: pathToFileURL(source).href.replace(/\/?$/, '/'), root: [...harness ? ['src', 'packages/dsh-code-graph/src', 'packages/dsh-hashline/src', 'packages/dsh-hunk-tracker/src', 'packages/dsh-memory/src', 'packages/dsh-monitor/src', 'packages/dsh-rules/src', 'packages/dsh-status-line/src', 'packages/dsh-worktree/src'] : [], rel('src'), rel('vendor/dsh-bridge-gateway/lib'), rel('vendor/dsh-grok-provider/src')], ignored: ['**/node_modules/**', '**/.*', '**/*.tmp'], debounce: 200 } },
   { id: 'client-hmr', config: { pollIntervalMs: 100 } },
 ], null, 2));
 await writeFile(join(logs, 'development.json'), JSON.stringify({ source, packageRoot, entry: fileURLToPath(import.meta.url), profile: 'web', git: true }, null, 2));

@@ -1,0 +1,33 @@
+{
+  "name": "@darask/dsh-monitor",
+  "version": "0.1.0-alpha.1",
+  "description": "DeepSeek Harness 向けバックグラウンド監視ツール (grok-build monitor 移植): 長時間スクリプトを ctx.shell / ctx.jobs で起動し、stdout の各行を <monitor-event> としてエージェントへ配信 (実行中は inject、待機中は followup で起床)。トークンバケットでレート制限し、抑制通知と過負荷時の自動停止を行う。job_list / job_output / job_kill は上流をそのまま使う。",
+  "type": "module",
+  "license": "MIT",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-jobs": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-llm": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-shell": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "monitor",
+    "grok-build"
+  ]
+}
