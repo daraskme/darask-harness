@@ -9,16 +9,16 @@ import { Config, apply, renderStatus, safeSessionFileName, truncateText } from '
 class FakeFs {
   async resolve(path, opts = {}) {
     const absolute = resolve(opts.cwd ?? process.cwd(), path);
-    return { targetKey: absolute.toLowerCase(), displayPath: path };
+    return { targetKey: absolute.toLowerCase(), processPath: absolute, displayPath: path };
   }
 
   processPath(target) {
-    return target.targetKey;
+    return target.processPath;
   }
 
   async stat(target) {
     try {
-      const info = await stat(target.targetKey);
+      const info = await stat(target.processPath);
       return { version: `${info.mtimeMs}:${info.size}`, type: info.isFile() ? 'file' : 'other', size: info.size };
     } catch (error) {
       if (error.code === 'ENOENT') return undefined;
@@ -27,13 +27,13 @@ class FakeFs {
   }
 
   async readText(target) {
-    const bytes = await readFile(target.targetKey);
+    const bytes = await readFile(target.processPath);
     if (bytes.includes(0)) throw Object.assign(new Error('not text'), { code: 'FS_NOT_TEXT' });
     return bytes.toString('utf8');
   }
 
   async writeText(target, content) {
-    await writeFile(target.targetKey, content, 'utf8');
+    await writeFile(target.processPath, content, 'utf8');
     return { operation: 'update', version: 'v', before: null, after: content };
   }
 }
@@ -74,8 +74,8 @@ async function harness(configOverrides = {}) {
     const exec = { callId: `call-${calls}`, agent, name: 'write' };
     const target = await fs.resolve(relative, { cwd: workspace });
     await h.listeners.get('fs/write-intent')(target, exec, async () => undefined);
-    if (content === null) await rm(target.targetKey, { force: true });
-    else await writeFile(target.targetKey, content, 'utf8');
+    if (content === null) await rm(target.processPath, { force: true });
+    else await writeFile(target.processPath, content, 'utf8');
     h.listeners.get('tools/result')(exec, { kind: 'success' });
   }
 
