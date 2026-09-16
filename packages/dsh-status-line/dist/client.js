@@ -286,7 +286,7 @@ function tooltipFor(item, context, t) {
   }
 }
 function StatusLine(props) {
-  const { sessionId, useProjection, useSessions, useStatusConfig, t } = props;
+  const { sessionId, useProjection, useSessions, useStatusConfig, useModelDirectory, t } = props;
   const config = useStatusConfig((state) => state);
   const status = useProjection("daraskStatus");
   const tokenUsage = useProjection("tokenUsage");
@@ -294,6 +294,7 @@ function StatusLine(props) {
   const sessionStats = useProjection("sessionStats");
   const title = useProjection("title");
   const modelSelection = useProjection("modelSelection");
+  const directoryModel = useModelDirectory((state) => state?.current ?? null);
   const entry = useSessions((list) => list.byId[String(sessionId)]);
   const running = entry?.running ?? (status?.turn !== null && status?.turn !== void 0);
   const tickingItems = config.type === "builtin" && config.items.includes("turn-timer") && running;
@@ -307,11 +308,11 @@ function StatusLine(props) {
     contextPressure: contextPressure ?? void 0,
     sessionStats: sessionStats ?? void 0,
     title: title ?? void 0,
-    modelSelection: modelSelection ?? void 0,
+    modelSelection: modelSelection?.next ? modelSelection : directoryModel ? { next: directoryModel } : void 0,
     version: config.version ?? "",
     now,
     running
-  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, now, running, config.version]);
+  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, directoryModel, now, running, config.version]);
   const [remote, setRemote] = (0, import_react.useState)(null);
   (0, import_react.useEffect)(() => {
     if (config.type !== "command") {
@@ -371,6 +372,17 @@ function configStore() {
     }
   };
 }
+var NULL_STORE = { getSnapshot: () => null, subscribe: () => () => {
+} };
+function modelDirectoryStore(ctx, sessionId) {
+  const directories = ctx.get("modelDirectories");
+  if (directories === void 0 || sessionId === void 0) return NULL_STORE;
+  try {
+    return directories.directoryFor(sessionId).store;
+  } catch {
+    return NULL_STORE;
+  }
+}
 function apply(ctx) {
   const store = configStore();
   ctx.effect(() => ctx.locale.register(NS, { ja, en }), "darask-status-line: dictionaries");
@@ -393,7 +405,7 @@ function apply(ctx) {
     id: "darask-status-line",
     order: -20,
     locale: NS,
-    inject: () => ({ hooks: { statusConfig: store } })
+    inject: (sessionId) => ({ hooks: { statusConfig: store, modelDirectory: modelDirectoryStore(ctx, sessionId) } })
   }, StatusLine));
 }
 return module.exports; } });

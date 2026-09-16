@@ -125,7 +125,7 @@ function tooltipFor(item, context, t) {
 }
 
 export function StatusLine(props) {
-  const { sessionId, useProjection, useSessions, useStatusConfig, t } = props;
+  const { sessionId, useProjection, useSessions, useStatusConfig, useModelDirectory, t } = props;
   const config = useStatusConfig(state => state);
   const status = useProjection('daraskStatus');
   const tokenUsage = useProjection('tokenUsage');
@@ -133,6 +133,7 @@ export function StatusLine(props) {
   const sessionStats = useProjection('sessionStats');
   const title = useProjection('title');
   const modelSelection = useProjection('modelSelection');
+  const directoryModel = useModelDirectory(state => state?.current ?? null);
   const entry = useSessions(list => list.byId[String(sessionId)]);
   const running = entry?.running ?? (status?.turn !== null && status?.turn !== undefined);
   const tickingItems = config.type === 'builtin' && config.items.includes('turn-timer') && running;
@@ -147,11 +148,11 @@ export function StatusLine(props) {
     contextPressure: contextPressure ?? undefined,
     sessionStats: sessionStats ?? undefined,
     title: title ?? undefined,
-    modelSelection: modelSelection ?? undefined,
+    modelSelection: modelSelection?.next ? modelSelection : (directoryModel ? { next: directoryModel } : undefined),
     version: config.version ?? '',
     now,
     running,
-  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, now, running, config.version]);
+  }), [sessionId, entry?.cwd, status, tokenUsage, contextPressure, sessionStats, title, modelSelection, directoryModel, now, running, config.version]);
 
   const [remote, setRemote] = useState(null);
   useEffect(() => {
@@ -213,6 +214,20 @@ function configStore() {
   };
 }
 
+const NULL_STORE = { getSnapshot: () => null, subscribe: () => () => {} };
+
+/** Upstream per-session model directory (`ctx.modelDirectories`): supplies the
+ * catalog default when the session has not picked or used a model yet. */
+function modelDirectoryStore(ctx, sessionId) {
+  const directories = ctx.get('modelDirectories');
+  if (directories === undefined || sessionId === undefined) return NULL_STORE;
+  try {
+    return directories.directoryFor(sessionId).store;
+  } catch {
+    return NULL_STORE;
+  }
+}
+
 export function apply(ctx) {
   const store = configStore();
   ctx.effect(() => ctx.locale.register(NS, { ja, en }), 'darask-status-line: dictionaries');
@@ -232,6 +247,6 @@ export function apply(ctx) {
     id: 'darask-status-line',
     order: -20,
     locale: NS,
-    inject: () => ({ hooks: { statusConfig: store } }),
+    inject: sessionId => ({ hooks: { statusConfig: store, modelDirectory: modelDirectoryStore(ctx, sessionId) } }),
   }, StatusLine));
 }
