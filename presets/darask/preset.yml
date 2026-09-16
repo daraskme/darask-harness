@@ -1,0 +1,3 @@
+name: DARASK
+description: 標準プリセットに hashline 編集ツールと GROK.md / AGENT.md 互換のプロジェクト指示を加えた darask-harness の既定エージェント。
+order: 0

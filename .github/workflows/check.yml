@@ -1,0 +1,29 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    # dsh-darask (packages/darask) targets Windows hosts (taskkill, UI Automation,
+    # Windows paths in fixtures); its suite runs on Windows only. The root plugin
+    # and hashline are portable and run on both.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: check
+          - os: ubuntu-latest
+            script: check:portable
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run ${{ matrix.script }}

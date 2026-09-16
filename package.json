@@ -1,0 +1,75 @@
+{
+  "name": "darask-harness",
+  "version": "0.1.0-alpha.1",
+  "description": "DeepSeek Harness を軸に、dsh-darask の DARASK 固有機能と grok-build 由来のツールを一つのプロファイルとして合成するハーネス。",
+  "type": "module",
+  "license": "MIT",
+  "author": "daraskme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daraskme/darask-harness.git"
+  },
+  "homepage": "https://github.com/daraskme/darask-harness#readme",
+  "bugs": {
+    "url": "https://github.com/daraskme/darask-harness/issues"
+  },
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "presets",
+    "cordis.patch.yml",
+    "AGENTS.md",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "node --test test/*.test.mjs && npm test --workspaces --if-present",
+    "check": "npm run build && npm test",
+    "check:portable": "npm run build && node --test test/*.test.mjs && npm test --workspace @darask/dsh-hashline",
+    "start": "npm start --workspace dsh-darask --",
+    "dev": "npm run dev --workspace dsh-darask --"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@darask/dsh-hashline": "file:packages/dsh-hashline",
+    "dsh-darask": "file:packages/darask"
+  },
+  "bundleDependencies": [
+    "@darask/dsh-hashline",
+    "dsh-darask"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.2",
+    "@deepseek-ai/dsh-home-paths": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh": "0.1.5-rc.2",
+    "esbuild": "0.25.9",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "grok-build",
+    "hashline",
+    "japanese"
+  ]
+}

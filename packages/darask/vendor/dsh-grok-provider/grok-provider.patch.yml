@@ -1,0 +1,3 @@
+- insert:
+    - id: llm-grok
+      name: dsh-grok-provider

@@ -1,0 +1,40 @@
+# One selected bundle explicitly composes each upstream exactly once.
+# Restate the permission table so Auto sits beside the shipped presets.
+# A patch replaces the targeted row's whole config.
+- id: permission
+  config:
+    defaultPreset: workspace-write
+    presets:
+      read-only:
+        sandbox: read-only
+        approval: ask
+      workspace-write:
+        sandbox: workspace-write
+        approval: ask
+      auto:
+        sandbox: workspace-write
+        approval: ask
+        name: 自動
+        description: ワークスペース内の編集・ビルド・テスト・依存導入・通常のシェル・ブラウザー操作は自動で実行し、破壊・公開・外部送信・システム変更・PC 画面操作だけ承認を求めます。
+      danger-full-access:
+        sandbox: danger-full-access
+        approval: never
+- insert:
+    - id: locale-ja
+      name: '@fang2hou/dsh-locale-ja'
+    - id: llm-grok
+      name: dsh-grok-provider
+    - id: llm-openai-codex
+      name: dsh-codex-connect
+      config:
+        enableProxy: false
+        enableSearch: false
+        enableReserveFallback: false
+        enableNativeCompaction: false
+        enableImageTool: false
+        enableImageGeneration: true
+        enableAutoReview: false
+    - id: dsh-bridge-gateway
+      name: dsh-bridge-gateway
+    - id: dsh-darask
+      name: dsh-darask
