@@ -88,6 +88,7 @@ export function apply(ctx, config) {
       cwd,
       index: undefined,
       versions: new Map(),
+      dirty: false,
       skipped: 0,
       truncated: 0,
       source: 'none',
@@ -113,11 +114,12 @@ export function apply(ctx, config) {
   }
 
   async function persist(ws) {
-    if (!resolved.persist) return;
+    if (!resolved.persist || !ws.dirty) return;
     await mkdir(stateDir, { recursive: true });
     const tmp = `${ws.stateFile}.${process.pid}.tmp`;
     await writeFile(tmp, JSON.stringify(ws.index.snapshot()), 'utf8');
     await rename(tmp, ws.stateFile);
+    ws.dirty = false;
   }
 
   function enqueue(ws, job) {
@@ -127,6 +129,13 @@ export function apply(ctx, config) {
   }
 
   // ---- indexing ------------------------------------------------------------
+
+  function removeFile(ws, path) {
+    ws.versions.delete(path);
+    const removed = ws.index.removeFile(path);
+    if (removed) ws.dirty = true;
+    return removed;
+  }
 
   async function readSource(target) {
     let info;
@@ -163,27 +172,27 @@ export function apply(ctx, config) {
     }
     const source = await readSource(target);
     if (source.status === 'missing') {
-      ws.versions.delete(path);
-      return ws.index.removeFile(path) ? 'removed' : 'unchanged';
+      return removeFile(ws, path) ? 'removed' : 'unchanged';
     }
     if (source.status === 'skip') {
-      ws.versions.set(path, source.version);
-      ws.index.removeFile(path);
+      removeFile(ws, path);
       return 'skipped';
     }
     const hash = contentHash(source.text);
     const existing = ws.index.get(path);
     if (existing && existing.hash === hash) {
       ws.versions.set(path, source.version);
+      if (existing.version !== source.version) ws.dirty = true;
       existing.version = source.version;
       return 'unchanged';
     }
     const extracted = await extractor.extract(language, source.text);
     if (!extracted) {
-      ws.versions.set(path, source.version);
+      removeFile(ws, path);
       return 'skipped';
     }
     ws.index.setFile(path, { language, hash, size: Buffer.byteLength(source.text, 'utf8'), version: source.version, indexedAt: Date.now(), ...extracted });
+    ws.dirty = true;
     ws.versions.set(path, source.version);
     return 'indexed';
   }
@@ -195,7 +204,7 @@ export function apply(ctx, config) {
     ws.truncated = Math.max(0, files.length - resolved.maxFiles);
     const wanted = files.slice(0, resolved.maxFiles);
     const seen = new Set(wanted.map(file => file.path));
-    for (const path of ws.index.paths()) if (!seen.has(path)) { ws.index.removeFile(path); ws.versions.delete(path); }
+    for (const path of ws.index.paths()) if (!seen.has(path)) removeFile(ws, path);
     const counts = { indexed: 0, unchanged: 0, removed: 0, skipped: 0 };
     for (const file of wanted) {
       try {
@@ -215,6 +224,7 @@ export function apply(ctx, config) {
     const ws = workspaceFor(session.header.cwd);
     await enqueue(ws, async () => {
       if (refresh || ws.lastScanAt === 0 || Date.now() - ws.lastScanAt > resolved.staleAfterMs) await scan(ws);
+      else await persist(ws);
     });
     return ws;
   }
@@ -360,7 +370,10 @@ export function apply(ctx, config) {
       const path = await relativePath(ws, String(args.path));
       const language = languageForPath(path);
       if (!language) throw new Error(`${args.path}: unsupported language (indexed: ${Object.keys(LANGUAGES).join(', ')})`);
-      await enqueue(ws, () => indexFile(ws, path, language));
+      await enqueue(ws, async () => {
+        await indexFile(ws, path, language);
+        await persist(ws);
+      });
       const record = ws.index.get(path);
       if (!record) throw new Error(`${args.path}: not indexed (missing, binary, too large, or its grammar is unavailable)`);
       return { path, language, definitions: record.definitions.map(def => ({ path, ...def })) };
@@ -414,7 +427,10 @@ export function apply(ctx, config) {
         const path = await relativePath(ws, rest.join(' '));
         const language = languageForPath(path);
         if (!language) return { kind: 'error', text: `${path}: unsupported language` };
-        await enqueue(ws, () => indexFile(ws, path, language));
+        await enqueue(ws, async () => {
+          await indexFile(ws, path, language);
+          await persist(ws);
+        });
         const defs = ws.index.outline(path);
         if (!defs) return { kind: 'error', text: `${path}: not indexed` };
         return { kind: 'success', text: defs.length === 0 ? `${path}: no definitions.` : defs.map(def => formatLocation({ path, ...def })).join('\n') };

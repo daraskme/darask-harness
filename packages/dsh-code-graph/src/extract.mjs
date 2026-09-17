@@ -11,7 +11,7 @@ import { GRAMMARS_DIR, LANGUAGES } from './languages.mjs';
 let initialized;
 
 async function ensureInit() {
-  initialized ??= Parser.init();
+  initialized ??= Parser.init().catch(error => { initialized = undefined; throw error; });
   await initialized;
 }
 
@@ -73,7 +73,10 @@ export class SymbolExtractor {
     if (this.#languages.has(languageId)) return this.#languages.get(languageId);
     let pending = this.#loading.get(languageId);
     if (!pending) {
-      pending = this.#load(languageId).then(loaded => { this.#languages.set(languageId, loaded); this.#loading.delete(languageId); return loaded; });
+      pending = this.#load(languageId).then(loaded => {
+        if (loaded) this.#languages.set(languageId, loaded);
+        return loaded;
+      }).finally(() => this.#loading.delete(languageId));
       this.#loading.set(languageId, pending);
     }
     return pending;

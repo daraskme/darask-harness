@@ -81,8 +81,9 @@ function truncateUtf8(text, maxBytes) {
 }
 
 /** Discover the rule set for one session: home scopes, extra dirs, then project root → cwd. */
-export async function collectBaselineRules(cwd, resolved) {
+export async function collectBaselineRules(cwd, resolved, cache) {
   const projectRoot = await findProjectRoot(cwd, resolved.projectRootMarkers);
+  const options = { maxSourceBytes: resolved.maxSourceBytes, cache };
   const rules = [];
   const seen = new Set();
   const push = list => {
@@ -92,15 +93,16 @@ export async function collectBaselineRules(cwd, resolved) {
       rules.push(rule);
     }
   };
-  push(await scanScopeDir(resolved.dshHome, ['rules'], { maxSourceBytes: resolved.maxSourceBytes }));
-  push(await scanScopeDir(homedir(), resolved.homeRuleDirs, { maxSourceBytes: resolved.maxSourceBytes }));
+  push(await scanScopeDir(resolved.dshHome, ['rules'], options));
+  push(await scanScopeDir(homedir(), resolved.homeRuleDirs, options));
   for (const dir of resolved.extraRuleDirs) {
     const absolute = isAbsolute(dir) ? dir : resolve(cwd, dir);
-    push(await scanScopeDir(absolute, ['.'], { maxSourceBytes: resolved.maxSourceBytes }));
+    push(await scanScopeDir(absolute, ['.'], options));
   }
   for (const scope of ancestorScopeDirs(projectRoot, join(cwd, '__rules_scope__'))) {
-    push(await scanScopeDir(scope, resolved.ruleDirs, { maxSourceBytes: resolved.maxSourceBytes }));
+    push(await scanScopeDir(scope, resolved.ruleDirs, options));
   }
+  if (cache) for (const file of cache.keys()) if (!seen.has(file)) cache.delete(file);
   return { projectRoot, rules };
 }
 
@@ -134,23 +136,26 @@ export function apply(ctx, config) {
   const baselineFor = async agent => {
     const session = agent.session;
     const cwd = session.header.cwd ?? process.cwd();
-    const { projectRoot, rules } = await collectBaselineRules(cwd, resolved);
-    const rendered = renderBaseline(rules, { relativeTo: projectRoot });
-    if (rendered === undefined) return undefined;
-    const text = truncateUtf8(rendered, resolved.maxBaselineBytes);
-    const identity = digest(text);
-    let known = baselines.get(session);
-    if (known === undefined) {
-      known = new Set();
+    let state = baselines.get(session);
+    if (state === undefined) {
+      state = { known: new Set(), files: new Map(), snapshot: undefined };
       for (const existing of sessionPluginTexts(session)) {
         const marker = existing.indexOf(BASELINE_MARKER);
-        if (marker >= 0) known.add(existing.slice(marker + BASELINE_MARKER.length, marker + BASELINE_MARKER.length + 40));
+        if (marker >= 0) state.known.add(existing.slice(marker + BASELINE_MARKER.length, marker + BASELINE_MARKER.length + 40));
       }
-      baselines.set(session, known);
+      baselines.set(session, state);
     }
-    if (known.has(identity)) return undefined;
-    known.add(identity);
-    return pluginMessage(`${text}\n<!-- ${BASELINE_MARKER}${identity} -->`);
+    const { projectRoot, rules } = await collectBaselineRules(cwd, resolved, state.files);
+    const previous = state.snapshot;
+    if (previous?.projectRoot !== projectRoot || previous.maxBytes !== resolved.maxBaselineBytes
+      || previous.rules.length !== rules.length || rules.some((rule, index) => rule !== previous.rules[index])) {
+      const rendered = renderBaseline(rules, { relativeTo: projectRoot });
+      const text = rendered === undefined ? undefined : truncateUtf8(rendered, resolved.maxBaselineBytes);
+      state.snapshot = { projectRoot, rules, maxBytes: resolved.maxBaselineBytes, text, identity: text === undefined ? undefined : digest(text) };
+    }
+    const { text, identity } = state.snapshot;
+    if (identity === undefined || state.known.has(identity)) return undefined;
+    return { message: pluginMessage(`${text}\n<!-- ${BASELINE_MARKER}${identity} -->`), identity, known: state.known };
   };
 
   ctx.on('agent/pre-step', async ({ agent, messages, signal }, next) => {
@@ -165,8 +170,9 @@ export function apply(ctx, config) {
       ctx.logger.warn('project rules baseline failed: %o', error);
     }
     signal.throwIfAborted();
-    const additions = [...(desired ? [desired] : []), ...discovery.messages];
+    const additions = [...(desired ? [desired.message] : []), ...discovery.messages];
     if (!additions.length) return decision;
+    if (desired) desired.known.add(desired.identity);
     discovery.messages = [];
     const lastClaimed = decision.messages.findLastIndex(message => messages.includes(message));
     return { ...decision, messages: decision.messages.toSpliced(lastClaimed + 1, 0, ...additions) };

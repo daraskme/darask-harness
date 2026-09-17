@@ -18,21 +18,48 @@ export function toUnixPath(path) {
 function stripQuotes(value) {
   const text = value.trim();
   if (text.length >= 2 && ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'")))) {
+    if (splitTopLevelCommas(text).length > 1) return text;
     return text.slice(1, -1);
   }
   return text;
 }
 
-function parseScalar(value) {
+function splitTopLevelCommas(text) {
+  const parts = [];
+  let start = 0;
+  let braces = 0;
+  let inClass = false;
+  let quote;
+  for (let index = 0; index < text.length; index++) {
+    const char = text[index];
+    if (quote !== undefined) {
+      if (char === '\\' && quote === '"') index++;
+      else if (char === quote) quote = undefined;
+    } else if (inClass) {
+      if (char === ']') inClass = false;
+    } else if (char === '"' || char === "'") quote = char;
+    else if (char === '[') inClass = true;
+    else if (char === '{') braces++;
+    else if (char === '}') braces = Math.max(0, braces - 1);
+    else if (char === ',' && braces === 0) {
+      parts.push(text.slice(start, index));
+      start = index + 1;
+    }
+  }
+  parts.push(text.slice(start));
+  return parts;
+}
+
+function parseScalar(value, preserveQuotes = false) {
   const text = value.trim();
   if (text === '') return '';
   if (text.startsWith('[') && text.endsWith(']')) {
     const inner = text.slice(1, -1).trim();
-    return inner === '' ? [] : inner.split(',').map(stripQuotes);
+    return inner === '' ? [] : splitTopLevelCommas(inner).map(item => preserveQuotes ? item.trim() : stripQuotes(item));
   }
   if (/^(true|yes|on)$/iu.test(text)) return true;
   if (/^(false|no|off)$/iu.test(text)) return false;
-  return stripQuotes(text);
+  return preserveQuotes ? text : stripQuotes(text);
 }
 
 /**
@@ -40,17 +67,18 @@ function parseScalar(value) {
  * `key: [a, b]`, and block lists (`key:` followed by `- item` lines).
  * Unknown or malformed lines are ignored rather than failing the rule.
  */
-export function parseFrontmatter(text) {
+export function parseFrontmatter(text, { preserveGlobQuotes = false } = {}) {
   const match = FRONTMATTER.exec(text);
   if (match === null) return { data: undefined, body: text };
   const data = {};
+  const preserveQuotes = key => preserveGlobQuotes && (key === 'globs' || key === 'paths');
   let listKey;
   for (const rawLine of match[1].split(/\r?\n/u)) {
     const line = rawLine.replace(/\s+#.*$/u, '');
     if (line.trim() === '') continue;
     const item = /^\s+-\s*(.*)$/u.exec(line);
     if (item !== null && listKey !== undefined) {
-      data[listKey].push(stripQuotes(item[1]));
+      data[listKey].push(preserveQuotes(listKey) ? item[1].trim() : stripQuotes(item[1]));
       continue;
     }
     const pair = /^([A-Za-z_][\w-]*)\s*:\s*(.*)$/u.exec(line);
@@ -63,7 +91,7 @@ export function parseFrontmatter(text) {
       data[key] = [];
       listKey = key;
     } else {
-      data[key] = parseScalar(value);
+      data[key] = parseScalar(value, preserveQuotes(key));
       listKey = undefined;
     }
   }
@@ -74,8 +102,8 @@ function globField(value) {
   if (value === undefined || value === null || value === false) return [];
   const items = Array.isArray(value) ? value : [String(value)];
   return items
-    .flatMap(item => String(item).split(','))
-    .map(item => item.trim())
+    .flatMap(item => splitTopLevelCommas(String(item)))
+    .map(stripQuotes)
     .filter(item => item.length > 0);
 }
 
@@ -86,7 +114,7 @@ function globField(value) {
  * grok-build's plain rules directory entries and applied at baseline).
  */
 export function parseRule(fullPath, scopeDir, text) {
-  const { data, body } = parseFrontmatter(text);
+  const { data, body } = parseFrontmatter(text, { preserveGlobQuotes: true });
   const rule = { fullPath, scopeDir, body: body.replace(/^\s*\n/u, ''), globs: [], description: undefined };
   if (data === undefined) return { ...rule, kind: 'manual' };
   const globs = [...globField(data.globs), ...globField(data.paths)];
@@ -155,10 +183,15 @@ export function fileGlobsMatch(scopeDir, readPath, globs) {
   const rel = relative(scopeDir, readPath);
   const relativeCandidate = rel === '' || rel.startsWith('..') || isAbsolute(rel) ? '' : toUnixPath(rel);
   return globs.some(raw => {
-    const glob = toUnixPath(raw).replace(/^\.\//u, '');
-    if (isAbsoluteGlob(glob)) return globToRegExp(glob).test(absolute);
-    if (relativeCandidate === '') return false;
-    return globToRegExp(glob).test(relativeCandidate) || globToRegExp(normalizeRelativeGlob(glob)).test(relativeCandidate);
+    try {
+      const glob = toUnixPath(raw).replace(/^\.\//u, '');
+      if (isAbsoluteGlob(glob)) return globToRegExp(glob).test(absolute);
+      if (relativeCandidate === '') return false;
+      return globToRegExp(glob).test(relativeCandidate) || globToRegExp(normalizeRelativeGlob(glob)).test(relativeCandidate);
+    } catch (error) {
+      if (!(error instanceof SyntaxError)) throw error;
+      return false;
+    }
   });
 }
 
@@ -198,21 +231,31 @@ async function listRuleFiles(dir, recursive) {
  * @param ruleDirs - relative rule directory names to probe.
  * @param options.maxSourceBytes - rules larger than this are skipped.
  */
-export async function scanScopeDir(scopeDir, ruleDirs, { maxSourceBytes = 1048576, recursive = true } = {}) {
+export async function scanScopeDir(scopeDir, ruleDirs, { maxSourceBytes = 1048576, recursive = true, cache } = {}) {
   const rules = [];
   for (const ruleDir of ruleDirs) {
     const dir = join(scopeDir, ruleDir);
     if (!(await isDirectory(dir))) continue;
     for (const file of await listRuleFiles(dir, recursive)) {
-      let text;
       try {
         const info = await stat(file);
-        if (!info.isFile() || info.size > maxSourceBytes) continue;
-        text = await readFile(file, 'utf8');
+        if (!info.isFile() || info.size > maxSourceBytes) {
+          cache?.delete(file);
+          continue;
+        }
+        const version = [info.dev, info.ino, info.size, info.mtimeMs, info.ctimeMs].join(':');
+        const cached = cache?.get(file);
+        if (cached?.version === version && cached.rule.scopeDir === scopeDir) {
+          rules.push(cached.rule);
+          continue;
+        }
+        const rule = parseRule(file, scopeDir, await readFile(file, 'utf8'));
+        cache?.set(file, { version, rule });
+        rules.push(rule);
       } catch {
+        cache?.delete(file);
         continue;
       }
-      rules.push(parseRule(file, scopeDir, text));
     }
   }
   return rules;
@@ -324,13 +367,15 @@ export class RuleTracker {
     const scopeSet = new Set(scopes.map(scope => resolve(scope)));
     const absolute = resolve(readPath);
     const matched = [];
+    const matchedPaths = new Set();
     for (const rule of this.rules) {
-      if (!scopeSet.has(resolve(rule.scopeDir)) || this.injected.has(rule.fullPath)) continue;
+      if (!scopeSet.has(resolve(rule.scopeDir)) || this.injected.has(rule.fullPath) || matchedPaths.has(rule.fullPath)) continue;
       const fires = rule.kind === 'globbed' && fileGlobsMatch(rule.scopeDir, absolute, rule.globs);
       if (!fires) continue;
-      this.injected.add(rule.fullPath);
       matched.push(rule);
+      matchedPaths.add(rule.fullPath);
     }
+    this.markInjected(matchedPaths);
     return matched;
   }
 
