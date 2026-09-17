@@ -70,5 +70,11 @@
     # セッション永続化・compaction は上流のまま。
     - id: darask-memory
       name: '@darask/dsh-memory'
+    # grok-build 由来: Hunk tracker。上流ファイルツールの fs/write-intent・fs/edit-intent・tools/result を
+    # 観測してエージェント編集をターン帰属で追跡し、外部編集はターン境界で再読込して区別する。
+    # hunks_status / hunks_diff ツールと /hunks コマンド (accept・reject・forget)。
+    # 状態は $DSH_HOME/darask/hunks/<session>.json。baseline: session | git-head。
+    - id: darask-hunk-tracker
+      name: '@darask/dsh-hunk-tracker'
     - id: darask-harness
       name: darask-harness
