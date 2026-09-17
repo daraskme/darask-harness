@@ -565,13 +565,13 @@ const TunnelCard = React.memo(function TunnelCard({
 const CloudflareConfigForm = React.memo(function CloudflareConfigForm({ token, hostname, onSave }) {
   useLocaleRevision();
   const [open, setOpen] = React.useState(Boolean(token || hostname));
-  const [tokenVal, setTokenVal] = React.useState(token || '');
+  const [tokenVal, setTokenVal] = React.useState(token === '******' ? '' : token || '');
   const [hostnameVal, setHostnameVal] = React.useState(hostname || '');
   const [saving, setSaving] = React.useState(false);
   const [msg, setMsg] = React.useState(null);
 
   React.useEffect(() => {
-    setTokenVal(token || '');
+    setTokenVal(token === '******' ? '' : token || '');
     setHostnameVal(hostname || '');
   }, [token, hostname]);
 
@@ -580,7 +580,7 @@ const CloudflareConfigForm = React.memo(function CloudflareConfigForm({ token, h
     setSaving(true);
     setMsg(null);
     try {
-      await onSave({ token: tokenVal, hostname: hostnameVal });
+      await onSave({ token: token === '******' && !tokenVal ? undefined : tokenVal, hostname: hostnameVal });
       setMsg({ ok: true, text: t('cf.saved') });
     } catch (err) {
       setMsg({ ok: false, text: err.message || t('btn.saveFail') });
@@ -5585,11 +5585,31 @@ function RemoteDirectoryFlow(props) {
 
 // ---- 插件入口 ----
 
+function RemoteAccessGuide() {
+  const steps = [
+    'Google CloudでWeb application型OAuth Clientを作り、Team DomainをJavaScript origin、/cdn-cgi/access/callbackをredirect URIへ登録します。CloudflareのGoogle IdPではPKCEを有効にします。',
+    'Access controlsでSelf-hosted Applicationを作り、Googleと本人のメールだけをAllowします。Clientless Isolation、ブラウザRDP/SSH/VNC、Cloudflare One Client認証は無効にします。',
+    'Networks → TunnelsでCloudflared Tunnelを作り、Connectorコマンドの--token以降だけを取得します。Public HostnameのOriginはhttp://127.0.0.1:3082です。',
+    'この画面でTunnel Tokenと固定ホスト名を保存し、自動起動を有効にします。セキュリティでTeam DomainとAccess ApplicationのAUD Tagを保存します。',
+    'Error 1033はConnector停止または無効Tokenです。Tunnel Token、cloudflaredの起動、Origin 3082番を確認します。マスク表示******はTokenとして保存しません。',
+  ];
+  return React.createElement('details', { style: { margin: '12px 0' } },
+    React.createElement('summary', { style: { cursor: 'pointer', fontWeight: 600 } }, 'Cloudflare Tunnel・Zero Trust・キー取得の設定手順'),
+    React.createElement('ol', { style: { display: 'grid', gap: 8, paddingLeft: 24, fontSize: 12 } }, steps.map((step, index) => React.createElement('li', { key: index }, step))),
+    React.createElement('div', { style: { display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 12 } },
+      React.createElement('a', { href: 'https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/', target: '_blank', rel: 'noopener noreferrer' }, 'Tunnel公式手順 ↗'),
+      React.createElement('a', { href: 'https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/', target: '_blank', rel: 'noopener noreferrer' }, 'Access Application公式手順 ↗'),
+      React.createElement('a', { href: 'https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google/', target: '_blank', rel: 'noopener noreferrer' }, 'Google IdP公式手順 ↗'),
+    ),
+  );
+}
+
 function AdditionalConnections({ rpcCall }) {
   const [expanded, setExpanded] = React.useState(true);
   return React.createElement('section', { style: { color: 'var(--dsw-alias-label-primary)', lineHeight: 1.7 } },
     React.createElement('h2', null, 'リモートアクセス'),
     React.createElement('p', null, 'PC 間接続は「アカウント → PC・Tailscale」、公開接続はCloudflare TunnelとZero Trust Accessで設定します。'),
+    React.createElement(RemoteAccessGuide),
     React.createElement('details', { open: expanded, onToggle: event => setExpanded(event.currentTarget.open) },
       React.createElement('summary', { style: { cursor: 'pointer', padding: '14px 0' } }, 'Cloudflare Tunnel・Zero Trust Access・LAN・外部サービス'),
       expanded && React.createElement(BridgePanel, { rpcCall }),

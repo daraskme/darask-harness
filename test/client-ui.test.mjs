@@ -199,7 +199,7 @@ test('Bridge UI exposes Cloudflare remote access without duplicate workspace or 
   assert.equal(entries[0].options.label(), 'リモートアクセス');
   assert.equal(window.__dshOpenRemoteWorkspaceModal, undefined);
   const panel = renderToStaticMarkup(React.createElement(entries[0].component));
-  for (const text of ['PC・Tailscale', 'Cloudflare Tunnel', 'Zero Trust Access']) assert.ok(panel.includes(text), text);
+  for (const text of ['PC・Tailscale', 'Cloudflare Tunnel', 'Zero Trust Access', 'キー取得の設定手順', '127.0.0.1:3082', 'Error 1033', 'create-remote-tunnel', 'self-hosted-public-app', 'identity-providers/google']) assert.ok(panel.includes(text), text);
   disposers.forEach(dispose => dispose?.());
 });
 

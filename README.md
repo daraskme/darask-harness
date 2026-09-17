@@ -155,16 +155,49 @@ Browser Runは明示的に選択された公開HTTPSページで使用します�
 
 ### Cloudflare TunnelとZero Trust Access
 
-同梱Bridge Gatewayの **設定 → リモートアクセス** で管理します。
+同梱Bridge Gatewayの **設定 → リモートアクセス** で管理します。公開TunnelはDSHの3080番へ直結せず、Access JWTとDSHセッションを検証するBridgeの `http://127.0.0.1:3082` へ接続します。
 
-- Cloudflare TunnelのTokenと固定ホスト名
-- 自動起動
-- アクセス認証モード
-- Cloudflare Zero Trust Accessの有効・無効
-- Team Domain
-- Application Audience（AUD）
+#### 1. GoogleをAccessのログイン方法にする
 
-Origin、Host、DSHセッション、Cloudflare Accessの検証は無効化しないでください。対話ログインが必要なCloudflare公開URLは、PC間の自動更新配布には使いません。
+1. Cloudflare Zero TrustでTeam Domainを決めます（例: `darask.cloudflareaccess.com`）。
+2. Google CloudでWeb application型のOAuth Clientを作ります。
+3. Authorized JavaScript originsへ `https://<Team Domain>` を追加します。
+4. Authorized redirect URIへ `https://<Team Domain>/cdn-cgi/access/callback` を追加します。
+5. Zero Trustの **Integrations → Identity providers → Google** へClient IDとClient Secretを保存します。
+6. PKCEを有効にしてTestを実行します。Clientless Web Isolation、ブラウザRDP/SSH/VNC、Cloudflare One Client認証は通常のDSHブラウザー接続では無効のままにします。
+
+#### 2. Self-hosted Access Applicationを作る
+
+1. **Access controls → Applications → Create new application → Self-hosted and private** を選びます。
+2. Public hostname（例: `dsh.darask.me`）を登録します。
+3. GoogleだけをIdentity Providerにし、Instant authenticationを有効にします。
+4. Allowポリシーは利用者本人のGoogleメールアドレスだけに限定します。`Everyone`や`Bypass`は使用しません。
+5. 保存後、**Additional settings → Application Audience (AUD) Tag**をコピーします。
+
+#### 3. Named Tunnelを作る
+
+1. **Networks → Tunnels → Create a tunnel → Cloudflared** を選びます。
+2. Tunnel名を付け、Windows Connectorのコマンドを表示します。
+3. コマンドの `--token` 以降にあるTunnel Tokenだけをコピーします。コマンド全体、Tunnel ID、画面のマスク値`******`はTokenではありません。
+4. Public HostnameにAccess Applicationと同じホスト名を追加し、Serviceを `HTTP` / `127.0.0.1:3082` にします。
+
+#### 4. DSHへ保存する
+
+1. **設定 → リモートアクセス → Cloudflare Tunnel**でTunnel Tokenと固定ホスト名を保存します。
+2. 自動起動を有効にし、Tunnelを開始します。
+3. **セキュリティ → Cloudflare Zero Trust Access**でTeam Domain（`https://`なし）とAUD Tagを保存し、有効にします。
+4. 公開URLを開き、Googleログイン後にDSHが表示されることを確認します。
+
+| 値 | 取得場所 | 用途 |
+| --- | --- | --- |
+| Tunnel Token | Zero Trust → Networks → Tunnels → Connector setup | `cloudflared`のNamed Tunnel接続 |
+| Team Domain | Zero TrustのTeam設定 | Access JWTのIssuer検証 |
+| Application Audience (AUD) | Access Application → Additional settings | Access JWTのAudience検証 |
+| Google OAuth Client ID / Secret | Google Cloud OAuth Client | Cloudflare AccessのGoogleログイン |
+| Browser Run API Token | Cloudflare API Tokens、Browser Rendering — Edit | Cloudflare Browser Run。Tunnel Tokenとは別 |
+| R2 Access Key ID / Secret Access Key | R2 → Manage R2 API Tokens | R2のS3互換保存。通常のAPI Tokenとは別 |
+
+`Error 1033`はAccessポリシーではなく接続中のTunnel Connectorがない状態です。DSHのTunnel開始状態、Token、`cloudflared`プロセス、Originの3082番を確認します。Origin、Host、DSHセッション、Cloudflare Accessの検証は無効化しないでください。対話ログインが必要なCloudflare公開URLは、PC間の自動更新配布には使いません。
 
 ## 開発・更新
 

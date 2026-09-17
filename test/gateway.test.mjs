@@ -29,6 +29,16 @@ test('unloading Gateway stops its tunnel without disabling automatic startup', a
   }
 });
 
+test('saving a masked Cloudflare form preserves the stored tunnel token until explicitly cleared', async () => {
+  const saved = [];
+  const service = new BridgeService({ cloudflaredConfig: { token: 'private-token', hostname: 'old.example.com', autoStart: true }, onPersist: async patch => saved.push(patch) });
+  await service.saveCloudflaredConfig({ token: undefined, hostname: 'new.example.com' });
+  assert.equal(service.cloudflaredConfig.token, 'private-token');
+  assert.equal(saved[0].cloudflared.token, 'private-token');
+  await service.saveCloudflaredConfig({ token: '', hostname: '' });
+  assert.equal(service.cloudflaredConfig.token, '');
+});
+
 test('explicitly stopping the tunnel still disables and persists automatic startup', async () => {
   const saved = [];
   const service = new BridgeService({ cloudflaredConfig: { token: 'fixture', hostname: 'example.com', autoStart: true }, onPersist: async patch => saved.push(patch) });

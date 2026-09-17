@@ -1838,12 +1838,12 @@ var TunnelCard = React.memo(function TunnelCard2({
 var CloudflareConfigForm = React.memo(function CloudflareConfigForm2({ token, hostname, onSave }) {
   useLocaleRevision();
   const [open, setOpen] = React.useState(Boolean(token || hostname));
-  const [tokenVal, setTokenVal] = React.useState(token || "");
+  const [tokenVal, setTokenVal] = React.useState(token === "******" ? "" : token || "");
   const [hostnameVal, setHostnameVal] = React.useState(hostname || "");
   const [saving, setSaving] = React.useState(false);
   const [msg, setMsg] = React.useState(null);
   React.useEffect(() => {
-    setTokenVal(token || "");
+    setTokenVal(token === "******" ? "" : token || "");
     setHostnameVal(hostname || "");
   }, [token, hostname]);
   const handleSave = async (e) => {
@@ -1851,7 +1851,7 @@ var CloudflareConfigForm = React.memo(function CloudflareConfigForm2({ token, ho
     setSaving(true);
     setMsg(null);
     try {
-      await onSave({ token: tokenVal, hostname: hostnameVal });
+      await onSave({ token: token === "******" && !tokenVal ? void 0 : tokenVal, hostname: hostnameVal });
       setMsg({ ok: true, text: t("cf.saved") });
     } catch (err) {
       setMsg({ ok: false, text: err.message || t("btn.saveFail") });
@@ -4358,6 +4358,28 @@ function BridgePanel({ rpcCall }) {
     )
   );
 }
+function RemoteAccessGuide() {
+  const steps = [
+    "Google Cloud\u3067Web application\u578BOAuth Client\u3092\u4F5C\u308A\u3001Team Domain\u3092JavaScript origin\u3001/cdn-cgi/access/callback\u3092redirect URI\u3078\u767B\u9332\u3057\u307E\u3059\u3002Cloudflare\u306EGoogle IdP\u3067\u306FPKCE\u3092\u6709\u52B9\u306B\u3057\u307E\u3059\u3002",
+    "Access controls\u3067Self-hosted Application\u3092\u4F5C\u308A\u3001Google\u3068\u672C\u4EBA\u306E\u30E1\u30FC\u30EB\u3060\u3051\u3092Allow\u3057\u307E\u3059\u3002Clientless Isolation\u3001\u30D6\u30E9\u30A6\u30B6RDP/SSH/VNC\u3001Cloudflare One Client\u8A8D\u8A3C\u306F\u7121\u52B9\u306B\u3057\u307E\u3059\u3002",
+    "Networks \u2192 Tunnels\u3067Cloudflared Tunnel\u3092\u4F5C\u308A\u3001Connector\u30B3\u30DE\u30F3\u30C9\u306E--token\u4EE5\u964D\u3060\u3051\u3092\u53D6\u5F97\u3057\u307E\u3059\u3002Public Hostname\u306EOrigin\u306Fhttp://127.0.0.1:3082\u3067\u3059\u3002",
+    "\u3053\u306E\u753B\u9762\u3067Tunnel Token\u3068\u56FA\u5B9A\u30DB\u30B9\u30C8\u540D\u3092\u4FDD\u5B58\u3057\u3001\u81EA\u52D5\u8D77\u52D5\u3092\u6709\u52B9\u306B\u3057\u307E\u3059\u3002\u30BB\u30AD\u30E5\u30EA\u30C6\u30A3\u3067Team Domain\u3068Access Application\u306EAUD Tag\u3092\u4FDD\u5B58\u3057\u307E\u3059\u3002",
+    "Error 1033\u306FConnector\u505C\u6B62\u307E\u305F\u306F\u7121\u52B9Token\u3067\u3059\u3002Tunnel Token\u3001cloudflared\u306E\u8D77\u52D5\u3001Origin 3082\u756A\u3092\u78BA\u8A8D\u3057\u307E\u3059\u3002\u30DE\u30B9\u30AF\u8868\u793A******\u306FToken\u3068\u3057\u3066\u4FDD\u5B58\u3057\u307E\u305B\u3093\u3002"
+  ];
+  return React.createElement(
+    "details",
+    { style: { margin: "12px 0" } },
+    React.createElement("summary", { style: { cursor: "pointer", fontWeight: 600 } }, "Cloudflare Tunnel\u30FBZero Trust\u30FB\u30AD\u30FC\u53D6\u5F97\u306E\u8A2D\u5B9A\u624B\u9806"),
+    React.createElement("ol", { style: { display: "grid", gap: 8, paddingLeft: 24, fontSize: 12 } }, steps.map((step, index) => React.createElement("li", { key: index }, step))),
+    React.createElement(
+      "div",
+      { style: { display: "flex", gap: 12, flexWrap: "wrap", fontSize: 12 } },
+      React.createElement("a", { href: "https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/", target: "_blank", rel: "noopener noreferrer" }, "Tunnel\u516C\u5F0F\u624B\u9806 \u2197"),
+      React.createElement("a", { href: "https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/", target: "_blank", rel: "noopener noreferrer" }, "Access Application\u516C\u5F0F\u624B\u9806 \u2197"),
+      React.createElement("a", { href: "https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google/", target: "_blank", rel: "noopener noreferrer" }, "Google IdP\u516C\u5F0F\u624B\u9806 \u2197")
+    )
+  );
+}
 function AdditionalConnections({ rpcCall }) {
   const [expanded, setExpanded] = React.useState(true);
   return React.createElement(
@@ -4365,6 +4387,7 @@ function AdditionalConnections({ rpcCall }) {
     { style: { color: "var(--dsw-alias-label-primary)", lineHeight: 1.7 } },
     React.createElement("h2", null, "\u30EA\u30E2\u30FC\u30C8\u30A2\u30AF\u30BB\u30B9"),
     React.createElement("p", null, "PC \u9593\u63A5\u7D9A\u306F\u300C\u30A2\u30AB\u30A6\u30F3\u30C8 \u2192 PC\u30FBTailscale\u300D\u3001\u516C\u958B\u63A5\u7D9A\u306FCloudflare Tunnel\u3068Zero Trust Access\u3067\u8A2D\u5B9A\u3057\u307E\u3059\u3002"),
+    React.createElement(RemoteAccessGuide),
     React.createElement(
       "details",
       { open: expanded, onToggle: (event) => setExpanded(event.currentTarget.open) },

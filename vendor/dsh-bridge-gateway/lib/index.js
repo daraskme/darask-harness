@@ -762,7 +762,7 @@ class BridgeService {
   async saveCloudflaredConfig({ token, hostname }) {
     this.cloudflaredConfig = {
       ...(this.cloudflaredConfig ?? {}),
-      token: token ? String(token).trim() : '',
+      token: token === undefined ? this.cloudflaredConfig?.token || '' : token ? String(token).trim() : '',
       hostname: hostname ? String(hostname).trim() : '',
     };
     await this.onPersist?.({ cloudflared: this.cloudflaredConfig });
