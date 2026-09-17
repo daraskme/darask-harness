@@ -89,15 +89,59 @@ export function condenseTranscript(events, { fromTurn, throughTurn, budget = DEF
 
 /** Drop the oldest tool output first, then the oldest messages, until the rendering fits. */
 function fitBudget(items, budget) {
-  let current = items.slice();
-  let text = renderTranscript(current);
-  while (utf8Length(text) > budget && current.length > 1) {
-    const toolIndex = current.findIndex(item => item.role === 'tool-result' || item.role === 'tool-error' || item.role === 'tool-call');
-    current.splice(toolIndex >= 0 ? toolIndex : 0, 1);
-    text = renderTranscript(current);
+  const nodes = items.map((item, index) => {
+    const text = renderItem(item);
+    const bytes = utf8Length(text);
+    const heading = `## Turn ${item.turn}`;
+    return {
+      item, text, bytes, heading,
+      headingBytes: utf8Length(heading) + 1,
+      trailingBytes: bytes - utf8Length(text.trimEnd()),
+      previous: index - 1,
+      next: index + 1,
+      removed: false,
+    };
+  });
+  const headingBytes = (node, previous) => node.item.turn !== nodes[previous]?.item.turn ? node.headingBytes : 0;
+  let total = nodes.reduce((sum, node) => sum + node.bytes + 2 + headingBytes(node, node.previous), 0);
+  let last = nodes.length - 1;
+  let count = nodes.length;
+  const renderedBytes = () => last < 0 ? 0 : total - 2 - nodes[last].trailingBytes;
+  for (const toolsFirst of [true, false]) {
+    for (let index = 0; index < nodes.length && count > 1 && renderedBytes() > budget; index++) {
+      const node = nodes[index];
+      const isTool = node.item.role === 'tool-result' || node.item.role === 'tool-error' || node.item.role === 'tool-call';
+      if (isTool !== toolsFirst) continue;
+      total -= node.bytes + 2 + headingBytes(node, node.previous);
+      const next = nodes[node.next];
+      if (next) {
+        total += headingBytes(next, node.previous) - headingBytes(next, index);
+        next.previous = node.previous;
+      } else {
+        last = node.previous;
+      }
+      const previous = nodes[node.previous];
+      if (previous) previous.next = node.next;
+      node.removed = true;
+      count--;
+    }
   }
-  if (utf8Length(text) > budget) text = trimMiddle(text, budget);
+  const current = [], lines = [];
+  let lastTurn;
+  for (const node of nodes) {
+    if (node.removed) continue;
+    current.push(node.item);
+    if (node.item.turn !== lastTurn) lines.push(node.heading);
+    lastTurn = node.item.turn;
+    lines.push(node.text, '');
+  }
+  let text = lines.join('\n').trimEnd();
+  if (renderedBytes() > budget) text = trimMiddle(text, budget);
   return { items: current, text, truncated: current.length !== items.length };
+}
+
+function renderItem(item) {
+  return item.role === 'tool-call' ? `[tool-call ${item.name}] ${item.text}` : `[${item.role}]\n${item.text}`;
 }
 
 export function renderTranscript(items) {
@@ -108,8 +152,7 @@ export function renderTranscript(items) {
       lines.push(`## Turn ${item.turn}`);
       lastTurn = item.turn;
     }
-    if (item.role === 'tool-call') lines.push(`[tool-call ${item.name}] ${item.text}`);
-    else lines.push(`[${item.role}]\n${item.text}`);
+    lines.push(renderItem(item));
     lines.push('');
   }
   return lines.join('\n').trimEnd();
