@@ -10,7 +10,7 @@ import { registerSessionNavigation } from './session-navigation-client.jsx'
 export { SessionNavigation, navigateSession, sessionNavigationState } from './session-navigation-client.jsx'
 
 export const name = 'dsh-darask-client'
-export const inject = ['slots', 'locale', 'layout', 'sidebarRightTabs']
+export const inject = ['slots', 'locale', 'layout', 'sidebarRightTabs', 'sessions']
 
 import { NS, dictionaries } from './locales/settings.mjs'
 import { createStatusResource } from './settings/status-resource.mjs'

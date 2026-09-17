@@ -66,7 +66,7 @@ export function validateClientBundle(source) {
         slots: {
           inject(_name, fn) { return fn(); },
           register(options) {
-            const key = `${options.name}/${options.id}`;
+            const key = `${options.name}/${options.id ?? options.key}`;
             assert.ok(!seats.has(key), `Duplicate UI slot: ${key}`);
             seats.set(key, options);
             const dispose = () => seats.delete(key);

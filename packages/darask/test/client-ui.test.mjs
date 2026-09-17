@@ -113,6 +113,38 @@ test('Accounts centralizes provider login; sidebar Usage displays available bala
   disposers.forEach(fn => fn?.());
 });
 
+test('Agent Dashboard registers a keyed main panel with a sidebar icon and renders local sessions from the existing DSH snapshot', () => {
+  let plugin; const entries = [], disposers = [];
+  vm.runInNewContext(readFileSync(new URL('../dist/client.js', import.meta.url), 'utf8'), {
+    window: { __ModuleLoader__: { load({ factory }) { plugin = factory(id => id === '@deepseek-ai/dsh-client-ui-primitives' ? primitives : require(id)); } } },
+    document: { createElement: () => ({ dataset: {}, remove() {} }), head: { appendChild() {} } },
+    AbortController, AbortSignal, setTimeout, clearTimeout, structuredClone, URL, Intl,
+    fetch() { throw new Error('SSR must not send credentials or start requests'); },
+  });
+  const openedLocal = [];
+  plugin.apply({ sidebarRightTabs: { register() { return () => {}; } }, effect(fn) { disposers.push(fn()); },
+    locale: { register() { return () => {}; }, bind() { return key => key; } }, layout: { selectPanel(id) { openedLocal.push(['panel', id]); } }, sessions: { open(id) { openedLocal.push(['open', id]); } },
+    slots: { inject(name, callback) { return callback(); }, register(options, component) { entries.push({ options, component }); return () => {}; } },
+  });
+  const icon = entries.find(e => e.options.name === 'sidebar.panellist' && e.options.id === 'darask-dashboard');
+  const panel = entries.find(e => e.options.name === 'main' && e.options.key === 'darask-dashboard');
+  assert.ok(icon && panel); assert.equal(icon.options.label(), 'ダッシュボード');
+  assert.ok(renderToStaticMarkup(React.createElement(icon.component, { size: 18, active: false })).includes('<svg'));
+  const injected = panel.options.inject();
+  injected.openLocal('s-1');
+  assert.deepEqual(openedLocal, [['open', 's-1'], ['panel', null]]);
+  assert.equal(typeof injected.navigation.openSession, 'function'); assert.equal(typeof injected.loadGroups, 'function');
+  const sessions = { phase: 'ready', current: 's-1', ids: ['s-1', 's-2'], byId: {
+    's-1': { id: 's-1', displayTitle: 'キャプション修正', cwd: 'C:/work/app', running: true, blank: false, updatedAt: 2, projectionValues: { modelSelection: { lastUsed: { provider: 'grok', model: 'grok-4.6' } } } },
+    's-2': { id: 's-2', displayTitle: '古い作業', cwd: 'C:/work/app', running: false, completed: true, blank: false, updatedAt: 1 } }, subagentsByParent: {}, jobsBySession: {} };
+  const props = { ...injected, useSessions: select => select(sessions), useSessionPendingInteraction: select => select(new Map()), useWorkspaces: select => select({ items: [{ workspaceId: 'w-app', title: 'app', path: 'C:/work/app', sessionIds: ['s-1', 's-2'] }], archivedSessionIds: [] }) };
+  const markup = renderToStaticMarkup(React.createElement(panel.component, props));
+  for (const text of ['エージェント ダッシュボード', 'キャプション修正', '古い作業', 'grok-4.6', '作業中', '完了', 'この PC', 'app', 'グループ化', 'フィルター', '並べ替え', 'サブエージェントを表示']) assert.ok(markup.includes(text), text);
+  assert.ok(markup.includes('aria-current="page"'), 'current session is marked');
+  assert.ok(!markup.includes('http'), 'no raw URLs leak into the dashboard');
+  disposers.forEach(fn => fn?.());
+});
+
 test('workspace UI retains other PCs and shows existing and added remote workspaces together', () => {
   let plugin;
   vm.runInNewContext(readFileSync(new URL('../dist/client.js', import.meta.url), 'utf8'), {

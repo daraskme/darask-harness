@@ -47,9 +47,30 @@ test('local node lists and searches user/assistant text across sessions',async t
  const payload=await remoteSearch.json();assert.equal(payload.items[0].sessionId,sessionId);
  await assert.rejects(worker.run({action:'search',node,query:'offset'}));
 });
-test('read-only tool is registered on the authenticated native connection ',()=>{
- let route,tool;
- registerRemoteSessions({inject(deps,fn){assert.deepEqual(deps,['sessionQuery','tools']);fn({sessionQuery:{},connection:{fetch:{register(r){route=r;}}},tools:{register(t){tool=t;}}});}},{});
- assert.equal(route.path,'/api/darask/sessions/read-only');assert.equal(tool.name,'darask_remote_sessions');
+test('dashboard route accepts only same-origin JSON list/read and reuses the bounded redacted reader',async t=>{
+ const ctx=new Context();const sessions=new SessionStore(ctx);const query=new SessionQueryEngine(ctx);
+ const session=seed(sessions,sessionId,'dashboard peek');const detach=sessions.enter(session);t.after(detach);
+ const worker=createRemoteSessions({hub:{info:()=>host,workspaceCatalog:async()=>[{node:'local',name:'Here',hostId,status:'online',workspaces:[{path:cwd,title:'Local'}]}]},query});
+ const post=(body,headers={})=>worker.dashboardRoute.fetch(new Request(origin+'/api/darask/sessions/dashboard',{method:'POST',headers:{Host:'worker.example.com',Origin:origin,'Content-Type':'application/json',...headers},body:typeof body==='string'?body:JSON.stringify(body)}));
+ assert.equal(worker.dashboardRoute.path,'/api/darask/sessions/dashboard');assert.deepEqual(worker.dashboardRoute.methods,['POST']);
+ const list=await post({action:'list',node:'local',cwd});assert.equal(list.status,200);assert.equal(list.headers.get('Cache-Control'),'no-store');
+ assert.equal((await list.json()).items[0].sessionId,sessionId);
+ const read=await post({action:'read',node:'local',cwd,sessionId,limit:5});const payload=await read.json();
+ assert.equal(payload.items[0].text,'dashboard peek');assert.doesNotMatch(JSON.stringify(payload),/private reasoning|secret-fixture|arguments/);
+ assert.equal(sessions.get(sessionId),session,'peek must not activate or replace the session');
+ assert.equal((await post({action:'search',node:'local',query:'peek'})).status,400);
+ assert.equal((await post({action:'pcs'})).status,400);
+ assert.equal((await post({action:'list',node:'local',cwd,expectedHost:hostId})).status,400);
+ assert.equal((await post({action:'list',node:'local',cwd,query:'x'})).status,400);
+ assert.equal((await post({action:'read',node:'local',cwd:'relative/path',sessionId})).status,400);
+ assert.equal((await post('{"action":"list","node":"local","cwd":"'+'x'.repeat(20000)+'"}')).status,413);
+ assert.equal((await post({action:'list',node:'local',cwd},{'Content-Type':'text/plain'})).status,415);
+ assert.equal((await post({action:'list',node:'local',cwd},{Origin:'https://evil.example'})).status,403);
+ assert.equal((await worker.dashboardRoute.fetch(new Request(origin+'/api/darask/sessions/dashboard',{method:'GET',headers:{Host:'worker.example.com'}}))).status,405);
+});
+test('read-only tool and dashboard route are registered on the authenticated native connection ',()=>{
+ const routes=[];let tool;
+ registerRemoteSessions({inject(deps,fn){assert.deepEqual(deps,['sessionQuery','tools']);fn({sessionQuery:{},connection:{fetch:{register(r){routes.push(r);}}},tools:{register(t){tool=t;}}});}},{});
+ assert.deepEqual(routes.map(r=>r.path),['/api/darask/sessions/read-only','/api/darask/sessions/dashboard']);assert.equal(tool.name,'darask_remote_sessions');
  assert.match(JSON.stringify(tool.parameters),/"search"/);
 });

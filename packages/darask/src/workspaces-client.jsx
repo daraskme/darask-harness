@@ -5,6 +5,7 @@ import { WorkspaceSetsEditor, registerWorkspaceSetUi } from './workspace-sets-cl
 import { ConnectionQrTools } from './connection-qr-client.jsx';
 import { createWorkspaceNavigation, REMOTE_PANEL } from './workspace-navigation.mjs';
 import { KeySharing } from './key-sharing-client.jsx';
+import { registerDashboardUi } from './dashboard-client.jsx';
 
 const endpoint = '/api/darask/workspaces';
 async function call(body, signal) {
@@ -343,6 +344,7 @@ export function registerWorkspaceUi(ctx) {
   ctx.slots.inject('main.persistent', () => ctx.slots.register({ name: 'main.persistent', inject }, RemoteWorkspacePool));
   ctx.slots.inject('shell.overlay', () => ctx.slots.register({ name: 'shell.overlay', id: 'darask-workspace-navigation', inject }, WorkspaceNavigationBridge));
   ctx.slots.inject('sidebar.workspaces.remote', () => ctx.slots.register({ name: 'sidebar.workspaces.remote', inject }, RemoteWorkspaceSidebar));
+  registerDashboardUi(ctx, { navigation, loadGroups: signal => call(null, signal) });
   ctx.slots.inject('settings.section', () => ctx.slots.register({ name: 'settings.section', id: 'darask-workspaces', order: 12, label: () => 'ワークスペース', inject }, WorkspacePanel));
   ctx.slots.inject('settings.section', () => ctx.slots.register({ name: 'settings.section', id: 'darask-archives', order: 13, label: () => 'アーカイブ' }, ArchivePanel));
   for (const slot of ['conversation.hero.workspace.directoryFlow', 'sidebar.workspaces.directoryFlow']) {
