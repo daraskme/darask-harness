@@ -38,8 +38,7 @@ import { installAutoApproval } from './auto-approval.mjs';
 import { OpenAICodexProxyManager, readOpenAICodexRateLimits, resolveOpenAICodexProxyUrl, resolveOpenAICodexSettings } from 'dsh-codex-connect';
 import { createAddonStore } from './addons/store.mjs';
 import { createAddons, registerAddons, createAddonRoutes } from './addons/register.mjs';
-import { openAiModelCatalog } from './providers/openai.mjs';
-import { visibleModelCatalog } from './model-catalogs.mjs';
+import { syncModelCatalogs as syncRegisteredModelCatalogs } from './model-catalog-sync.mjs';
 
 const release = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
 
@@ -177,22 +176,7 @@ export async function apply(ctx, config) {
     if (ctx.settings.get('llm-pi-ai') === undefined) throw new Error('DSH llm-pi-ai settings are unavailable.');
     await ctx.settings.update('llm-pi-ai', { providers: { [provider]: { apiKeyEnv: ref } } });
   };
-  const syncModelCatalogs = async usage => {
-    const visibility = store.get().modelVisibility;
-    const current = ctx.settings.get('llm-pi-ai');
-    const provider = current?.providers?.openai ?? {};
-    const models = openAiModelCatalog(usage, visibility?.openai);
-    if (JSON.stringify(provider.models) !== JSON.stringify(models) || provider.displayName !== 'OpenAI API') {
-      // Keep the catalog visible on hosts without a local key: a remote session
-      // may execute this route through its selected authenticated relay.
-      await ctx.settings.update('llm-pi-ai', { providers: { openai: { ...provider, displayName: 'OpenAI API', models } } });
-    }
-    const openrouter = current?.providers?.openrouter ?? {};
-    const openrouterModels = visibleModelCatalog('openrouter', visibility);
-    if (JSON.stringify(openrouter.models) !== JSON.stringify(openrouterModels) || openrouter.displayName !== 'OpenRouter') await ctx.settings.update('llm-pi-ai', { providers: { openrouter: { ...openrouter, displayName: 'OpenRouter', models: openrouterModels } } });
-    await ctx.settings.update('llm-openai-codex', { models: visibility?.codex ?? visibleModelCatalog('codex').map(model => model.id) });
-    await ctx.settings.update('llm-grok', { models: visibility?.grok ?? visibleModelCatalog('grok').map(model => model.id) });
-  };
+  const syncModelCatalogs = usage => syncRegisteredModelCatalogs(ctx.settings, store.get().modelVisibility, usage);
   const service = createService({ store, directory, credentials: ctx.credentials, tailscale, browserRun, localModel, computer, enableLocalRoute, enableClaudeRoute: () => enableClaudeRoute({ settings: ctx.settings, credentials: ctx.credentials, visibleModels: store.get().modelVisibility?.claude }), enableOpenRouterRoute: ref => enablePiAiKey('openrouter', ref), enableOpenAiRoute: ref => enablePiAiKey('openai', ref), syncOpenAiModels: syncModelCatalogs, compatibility: () => ({ dsh: '0.1.5-rc.2', subagentPackagesRequired: false, cursor: 'isolated-cli', grok: 'isolated-cli', routing: 'before-request', claudeUsage: 'statusLine', kitesurf: config.kitesurf, computer: store.get().computer?.enabled ? 'desktop' : 'opt-in' }) });
   await syncModelCatalogs(service.snapshots.openai?.usage);
   serviceRef = service;
