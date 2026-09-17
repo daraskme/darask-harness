@@ -71,6 +71,7 @@ export function outcomeDetail({ exitCode, signal, timedOut, timeoutMs, autoKille
 /** Bounded FIFO of undelivered lines for `job_output`; keeps the tail when over budget. */
 export class UnreadBuffer {
   #lines = [];
+  #head = 0;
   #bytes = 0;
   #dropped = 0;
 
@@ -81,20 +82,26 @@ export class UnreadBuffer {
   push(line) {
     this.#lines.push(line);
     this.#bytes += Buffer.byteLength(line, 'utf8') + 1;
-    while (this.#bytes > this.maxBytes && this.#lines.length > 1) {
-      const removed = this.#lines.shift();
+    while (this.#bytes > this.maxBytes && this.#lines.length - this.#head > 1) {
+      const removed = this.#lines[this.#head];
+      this.#lines[this.#head++] = undefined;
       this.#bytes -= Buffer.byteLength(removed, 'utf8') + 1;
       this.#dropped += 1;
+    }
+    if (this.#head > 0 && this.#head * 2 >= this.#lines.length) {
+      this.#lines = this.#lines.slice(this.#head);
+      this.#head = 0;
     }
   }
 
   drain() {
-    const parts = this.#dropped > 0 ? [`[${this.#dropped} earlier lines dropped]`] : [];
-    parts.push(...this.#lines);
+    const notice = this.#dropped > 0 ? `[${this.#dropped} earlier lines dropped]\n` : '';
+    const tail = this.#lines.length > this.#head ? `${this.#lines.slice(this.#head).join('\n')}\n` : '';
     this.#lines = [];
+    this.#head = 0;
     this.#bytes = 0;
     this.#dropped = 0;
-    return parts.length === 0 ? '' : `${parts.join('\n')}\n`;
+    return notice + tail;
   }
 }
 
