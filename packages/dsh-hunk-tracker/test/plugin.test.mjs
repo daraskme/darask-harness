@@ -149,7 +149,7 @@ test('external edits are detected at turn boundaries and distinguished from agen
   assert.equal(after.unattributedPending, 1);
 });
 
-test('/hunks accept folds into the baseline and reject reverts the file on disk', async () => {
+test('/hunks accept folds into the baseline and reject reverts edits but preserves newly created files', async () => {
   await using t = await harness();
   await writeFile(join(t.workspace, 'a.txt'), '1\n2\n3\n4\n5\n', 'utf8');
   await t.agentWrite('a.txt', '1\nX\n3\n4\nY\n');
@@ -164,14 +164,26 @@ test('/hunks accept folds into the baseline and reject reverts the file on disk'
   const denied = await t.command('reject all');
   assert.equal(denied.kind, 'error');
   assert.match(denied.text, /--yes/u);
+  assert.equal((await t.tool('hunks_status')).pendingHunks, 2);
+  assert.equal(await readFile(join(t.workspace, 'a.txt'), 'utf8'), '1\nX\n3\n4\nY\n');
+  assert.equal(await readFile(join(t.workspace, 'new.txt'), 'utf8'), 'created\n');
+  const createdDiff = await t.tool('hunks_diff', { path: 'new.txt' });
   const reverted = await t.command('reject all --yes');
-  assert.equal(reverted.kind, 'success', reverted.text);
-  assert.match(reverted.text, /Reverted 2 hunks/u);
+  assert.equal(reverted.kind, 'error', reverted.text);
+  assert.match(reverted.text, /Reverted 1 hunks before failing: DSH does not provide guarded deletion/u);
   assert.equal(await readFile(join(t.workspace, 'a.txt'), 'utf8'), '1\nX\n3\n4\n5\n');
-  await assert.rejects(stat(join(t.workspace, 'new.txt')), /ENOENT/u);
+  assert.equal(await readFile(join(t.workspace, 'new.txt'), 'utf8'), 'created\n');
   const status = await t.tool('hunks_status');
-  assert.equal(status.pendingHunks, 0);
-  assert.match(status.text, /accepted 1 .*rejected 2/u);
+  assert.equal(status.pendingHunks, 1);
+  assert.match(status.text, /accepted 1 .*rejected 1/u);
+  assert.deepEqual(await t.tool('hunks_diff', { path: 'new.txt' }), createdDiff);
+  const pending = await t.command('list new.txt');
+  const refused = await t.command('reject new.txt');
+  assert.equal(refused.kind, 'error');
+  assert.match(refused.text, /guarded deletion/u);
+  assert.deepEqual(await t.command('list new.txt'), pending);
+  assert.deepEqual(await t.tool('hunks_status'), status);
+  assert.equal(await readFile(join(t.workspace, 'new.txt'), 'utf8'), 'created\n');
 
   assert.match((await t.command('forget a.txt')).text, /Stopped tracking/u);
   assert.equal((await t.tool('hunks_status')).filesModified, 1);
