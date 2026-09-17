@@ -16,7 +16,7 @@ const SAFE_TOOLS = new Set([
 ]);
 
 const SHELL_TOOLS = new Set(['pwsh', 'bash', 'terminal']);
-const COMPUTER_MUTATING = new Set(['move', 'click', 'double_click', 'right_click', 'drag', 'scroll', 'type', 'key', 'focus', 'invoke', 'set_value', 'select', 'toggle']);
+const COMPUTER_MUTATING = new Set(['launch_game', 'launch_game_pair', 'move', 'click', 'double_click', 'right_click', 'drag', 'scroll', 'type', 'key', 'focus', 'invoke', 'set_value', 'select', 'toggle']);
 const SAFE_MCP_ACTIONS = new Set([
   'take_snapshot', 'take_screenshot', 'list_pages', 'list_console_messages', 'list_network_requests',
   'wait_for', 'hover', 'select_page', 'get_console_message', 'get_network_request',

@@ -22,18 +22,11 @@ export function createComputerRemote({computer,hub,directory,fetch:fetchImpl=glo
   if(!receivers.has(key)){if(receivers.size>=64)throw error();receivers.set(key,{at:now});}
   const actor=receivers.get(key);actor.at=now;return actor;
  }
- async function run(raw,exec={}){
-  const {node,...args}=raw;
-  if(args.action==='pcs'){
-   const groups=await hub.workspaceCatalog();return {action:'pcs',text:JSON.stringify({local:hub.info(),pcs:groups.slice(0,64).map(g=>({node:g.node,name:g.name,status:g.status})),notice:'node を毎回指定してください。相手側でも PC 画面操作の有効化とログイン済みデスクトップが必要です。'})};
-  }
-  if(!node||node==='local')return computer.run(args,exec);
-  if(!UUID.test(node))throw error();
+ async function remoteRun(node,args,exec={}){
   validateComputerAction({...args});exec.signal?.throwIfAborted();
-  let response;
   try{
    const remote=await hub.remoteConnection(node);
-   response=await fetchImpl(remote.node.url+COMPUTER_REMOTE_PATH,{method:'POST',redirect:'error',signal:AbortSignal.any([...(exec.signal?[exec.signal]:[]),AbortSignal.timeout(30000)]),headers:{'Content-Type':'application/json',Origin:remote.node.url,Cookie:remote.cookie},body:JSON.stringify({args,expectedHost:remote.host.id,actor:actorId(exec.agent)})});
+   const response=await fetchImpl(remote.node.url+COMPUTER_REMOTE_PATH,{method:'POST',redirect:'error',signal:AbortSignal.any([...(exec.signal?[exec.signal]:[]),AbortSignal.timeout(30000)]),headers:{'Content-Type':'application/json',Origin:remote.node.url,Cookie:remote.cookie},body:JSON.stringify({args,expectedHost:remote.host.id,actor:actorId(exec.agent)})});
    if(!response.ok){if([401,403].includes(response.status))hub.invalidateRemote(node);await response.body?.cancel();throw error();}
    const chunks=[];let length=0;const reader=response.body.getReader();
    try{for(;;){const{done,value}=await reader.read();if(done)break;length+=value.length;if(length>LIMIT)throw error();chunks.push(value);}}finally{await reader.cancel();}
@@ -48,6 +41,45 @@ export function createComputerRemote({computer,hub,directory,fetch:fetchImpl=glo
    }
    return result;
   }catch(cause){exec.signal?.throwIfAborted();if(cause?.message?.startsWith('Computer: このセッション'))throw cause;throw error();}
+ }
+ async function pair(action,node,exec){
+  if(!UUID.test(node))throw error();
+  const local=hub.info();
+  let remoteName='リモート PC';
+  try{remoteName=(await hub.remoteConnection(node)).host.name||remoteName;}catch{}
+  const computerAction=action==='launch_game_pair'?'launch_game':'screenshot';
+  const targets=[
+   {node:'local',name:local.name||'この PC',run:()=>computer.run({action:computerAction},exec)},
+   {node,name:remoteName,run:()=>remoteRun(node,{action:computerAction},exec)},
+  ];
+  const settled=await Promise.allSettled(targets.map(target=>target.run()));
+  const nodes=settled.map((result,index)=>({
+   node:targets[index].node,name:targets[index].name,ok:result.status==='fulfilled',
+   text:result.status==='fulfilled'?result.value.text:error().message,
+  }));
+  const screens=action==='pair_screenshot'?settled.flatMap((result,index)=>result.status==='fulfilled'?[{
+   node:targets[index].node,name:targets[index].name,...view(result.value),...(result.value.image?{image:result.value.image}:{}),
+  }]:[]):undefined;
+  const summary=nodes.map(result=>`${result.name}: ${result.ok?'成功':'失敗'}`).join(' / ');
+  return {
+   action,nodes,...(screens?{screens}:{}),
+   text:action==='launch_game_pair'
+    ? `2 台へゲーム起動を要求しました。${summary}。部分的に失敗した場合も自動再送せず、windows または pair_screenshot で各 PC を確認してください。`
+    : `2 台の画面を観測しました。${summary}。各画面の snapshotId は同じ node の次の操作だけに使用してください。`,
+  };
+ }
+ async function run(raw,exec={}){
+  const {node,...args}=raw;
+  if(args.action==='pcs'){
+   const groups=await hub.workspaceCatalog();return {action:'pcs',text:JSON.stringify({local:hub.info(),pcs:groups.slice(0,64).map(g=>({node:g.node,name:g.name,status:g.status})),notice:'node を毎回指定してください。対人検証では launch_game_pair と pair_screenshot に相手 PC の node を渡し、その後は各 snapshotId と同じ node を使って操作してください。両方の PC で画面操作とゲーム起動プロファイルが必要です。'})};
+  }
+  if(['launch_game_pair','pair_screenshot'].includes(args.action)){
+   if(Object.keys(args).some(key=>key!=='action'))throw error();
+   return pair(args.action,node,exec);
+  }
+  if(!node||node==='local')return computer.run(args,exec);
+  if(!UUID.test(node))throw error();
+  return remoteRun(node,args,exec);
  }
  const route={path:COMPUTER_REMOTE_PATH,methods:['POST'],requestBody:'buffered',async fetch(request){
   const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','Referrer-Policy':'no-referrer'}});

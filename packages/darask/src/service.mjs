@@ -97,9 +97,14 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
           if (!browserRun) throw new Error('Browser Run: integration unavailable.');
           if (action === 'saveBrowserRun') await browserRun.save(payload.config);
           else await browserRun.remove();
-        } else if (provider === 'computer' && ['enableComputer', 'disableComputer'].includes(action)) {
+        } else if (provider === 'computer' && ['enableComputer', 'disableComputer', 'saveComputerGame'].includes(action)) {
           if (!computer) throw new Error('Computer: integration unavailable.');
-          await store.save({ computer: { enabled: action === 'enableComputer' } });
+          if (action === 'saveComputerGame') {
+            const validated = validateConfig({ computer: { game: payload.config } }, store.get());
+            await store.save({ computer: { game: validated.computer.game } });
+          } else {
+            await store.save({ computer: { enabled: action === 'enableComputer' } });
+          }
         } else if (provider === 'jev' && action === 'logout') {
           await jev.remove();
         } else if (action === 'save') {

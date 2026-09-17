@@ -3,10 +3,10 @@ import { COMPUTER_ACTIONS, COMPUTER_IMAGE_SCHEMA, imageReadContent } from './com
 export function registerComputerTool(toolsCtx, computer) {
     toolsCtx.tools.register(defineTool({
       name: 'darask_computer',
-      description: 'Computer Use: ローカル・登録済みリモート PC のアプリを操作する。pcs で接続先を確認し node を毎回指定する。画像入力不要の windows → inspect → 要素 ID による invoke/set_value/select/toggle を優先。画像を見られるモデルは screenshot と座標操作も利用可能。最新 snapshotId を使い、操作後に再観測する。Web は Kitesurf。設定で PC 画面操作を有効にする。',
+      description: 'Computer Use: ローカル・登録済みリモート PC のアプリを操作する。pcs で接続先を確認し node を毎回指定する。対人ゲームは launch_game_pair で両方の許可済みゲームを起動し、pair_screenshot で同時観測してから各 node を個別操作する。画像入力不要の windows → inspect → 要素 ID による操作を優先。画像を見られるモデルは screenshot と座標操作も利用可能。最新 snapshotId を使い、操作後に再観測する。Web は Kitesurf。',
       parameters: {
-        action: { type: 'string', enum: ['pcs', ...COMPUTER_ACTIONS], required: true, description: 'inspect, invoke, set_value, select, toggle, screenshot, windows, focus, move, click, double_click, right_click, drag, scroll, type, key, wait, cursor.' },
-        node: { type: 'string', description: 'pcs が返した PC の node。local はこのワークスペースの PC。リモートの操作では毎回同じ node を指定する。' },
+        action: { type: 'string', enum: ['pcs', 'launch_game_pair', 'pair_screenshot', ...COMPUTER_ACTIONS], required: true, description: 'launch_game_pair, pair_screenshot, launch_game, inspect, invoke, set_value, select, toggle, screenshot, windows, focus, move, click, double_click, right_click, drag, scroll, type, key, wait, cursor.' },
+        node: { type: 'string', description: 'pcs が返した PC の node。local はこのワークスペースの PC。リモート操作では毎回同じ node、ペア操作では相手 PC の node を指定する。' },
         snapshotId: { type: 'string', description: '最新 inspect / screenshot の snapshotId。要素操作では必須。' },
         elementId: { type: 'string', description: 'inspect が返した要素 ID。対応する actions のみ実行できる。' },
         x: { type: 'integer', description: 'X in last-screenshot pixels unless space is screen.' },
@@ -32,10 +32,29 @@ export function registerComputerTool(toolsCtx, computer) {
           cursorX: { type: 'integer' }, cursorY: { type: 'integer' }, cursorShotX: { type: 'integer' }, cursorShotY: { type: 'integer' },
           hwnd: { type: 'string' }, title: { type: 'string' },
           windows: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { hwnd: { type: 'string', required: true }, title: { type: 'string', required: true }, x: { type: 'integer', required: true }, y: { type: 'integer', required: true }, width: { type: 'integer', required: true }, height: { type: 'integer', required: true }, pid: { type: 'integer', required: true } } } },
+          nodes: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { node: { type: 'string', required: true }, name: { type: 'string', required: true }, ok: { type: 'boolean', required: true }, text: { type: 'string', required: true } } } },
+          screens: { type: 'array', items: { type: 'object', additionalProperties: false, properties: {
+            node: { type: 'string', required: true }, name: { type: 'string', required: true }, action: { type: 'string', required: true }, text: { type: 'string', required: true },
+            width: { type: 'integer' }, height: { type: 'integer' }, screenWidth: { type: 'integer' }, screenHeight: { type: 'integer' },
+            scaleX: { type: 'number' }, scaleY: { type: 'number' }, originX: { type: 'integer' }, originY: { type: 'integer' },
+            cursorX: { type: 'integer' }, cursorY: { type: 'integer' }, cursorShotX: { type: 'integer' }, cursorShotY: { type: 'integer' },
+            snapshotId: { type: 'string' }, image: COMPUTER_IMAGE_SCHEMA,
+          } } },
           snapshotId: { type: 'string' }, effect: { type: 'string', enum: ['confirmed', 'unverified'] },
           image: COMPUTER_IMAGE_SCHEMA,
         } },
         render: (_args, value) => {
+          if (value.screens) {
+            const content = [{ type: 'text', text: value.text }];
+            for (const screen of value.screens) {
+              content.push({ type: 'text', text: `${screen.name} (${screen.node})\n${screen.text}` });
+              if (screen.image) {
+                const [meta, image] = imageReadContent(`${screen.name}-screen.png`, screen.image);
+                content.push(meta, image);
+              }
+            }
+            return content;
+          }
           if (!value.image) return [{ type: 'text', text: value.text }];
           const [meta, image] = imageReadContent(value.file ?? 'screen.png', value.image);
           return [{ type: 'text', text: `${value.text}\n${meta.text}` }, image];
