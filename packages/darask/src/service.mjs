@@ -4,6 +4,7 @@ import { IDS, NAMES, MODEL_ROUTES, validateConfig } from './config.mjs';
 import { createCliProvider } from './providers/cli.mjs';
 import { createOpenRouterProvider } from './providers/openrouter.mjs';
 import { createOpenAiProvider, defaultOpenAi } from './providers/openai.mjs';
+import { createJev } from './jev.mjs';
 
 const blank = source => ({ status: 'unavailable', source, updatedAt: null, windows: [], credits: null });
 export function normalizeClaudeStatusline(input) {
@@ -17,7 +18,7 @@ export function normalizeClaudeStatusline(input) {
   }
   return { status: windows.length ? 'available' : 'unavailable', source: 'Claude Code statusLine', updatedAt: input.updatedAt, windows, credits: null, stale: Date.now() - Date.parse(input.updatedAt) > 120000, message: windows.length ? null : 'Claude Code has not supplied subscription limits.' };
 }
-export function createService({ store, credentials, enableOpenRouterRoute, enableOpenAiRoute, syncOpenAiModels, enableLocalRoute, enableClaudeRoute, directory, cliFactory = createCliProvider, fetch, tailscale, browserRun, localModel, computer, compatibility = () => ({}) }) {
+export function createService({ store, credentials, enableOpenRouterRoute, enableOpenAiRoute, syncOpenAiModels, enableLocalRoute, enableClaudeRoute, directory, cliFactory = createCliProvider, fetch, tailscale, browserRun, localModel, computer, compatibility = () => ({}), jev = createJev({ credentials }) }) {
   const providers = {};
   const snapshots = Object.fromEntries(IDS.map(id => [id, { auth: 'unknown', usage: blank(id) }]));
   const openrouter = createOpenRouterProvider({ credentials, enableRoute: enableOpenRouterRoute, fetch });
@@ -29,6 +30,7 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
   let tailscaleState;
   let browserRunState;
   let computerState;
+  let jevState = { model: 'typesafe-ai/jev', configured: false };
   async function cli(id) {
     const executable = store.get().providers[id].executable;
     const old = providers[id];
@@ -65,6 +67,8 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
       tailscaleState = await tailscale?.status();
       browserRunState = await browserRun?.status();
       computerState = computer?.status();
+      try { jevState = await jev.status(); }
+      catch { jevState = { model: 'typesafe-ai/jev', configured: false, error: 'AI Gateway の認証状態を確認できません。' }; }
       if (localModel) snapshots.local = await localModel.status();
       if (enableClaudeRoute) await enableClaudeRoute();
     })().finally(() => { refreshing = undefined; });
@@ -72,10 +76,11 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
   }
   function snapshot() {
     const config = store.get();
-    return { priority: config.priority, routingEnabled: config.routingEnabled, modelVisibility: config.modelVisibility, local: config.local, openai: config.openai, computer: computerState ?? { enabled: config.computer?.enabled === true }, providers: config.priority.map(id => ({ id, name: NAMES[id], ...structuredClone(snapshots[id]), ...config.providers[id], capability: MODEL_ROUTES[id] ? 'model' : 'agent' })), tailscale: tailscaleState, browserRun: browserRunState, compatibility: compatibility() };
+    return { priority: config.priority, routingEnabled: config.routingEnabled, purposeRoutes: config.purposeRoutes, modelVisibility: config.modelVisibility, local: config.local, openai: config.openai, jev: structuredClone(jevState), computer: computerState ?? { enabled: config.computer?.enabled === true }, providers: config.priority.map(id => ({ id, name: NAMES[id], ...structuredClone(snapshots[id]), ...config.providers[id], capability: MODEL_ROUTES[id] ? 'model' : 'agent' })), tailscale: tailscaleState, browserRun: browserRunState, compatibility: compatibility() };
   }
   return {
     snapshots, refresh, snapshot,
+    evaluateJev(args, signal) { return jev.run(args, signal); },
     async status() { if (Date.now() - lastRefresh > 30000) await refresh(); return snapshot(); },
     async callback(url) { await openrouter.callback(url); await refresh(); },
     action(payload, origin) {
@@ -95,12 +100,15 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
         } else if (provider === 'computer' && ['enableComputer', 'disableComputer'].includes(action)) {
           if (!computer) throw new Error('Computer: integration unavailable.');
           await store.save({ computer: { enabled: action === 'enableComputer' } });
+        } else if (provider === 'jev' && action === 'logout') {
+          await jev.remove();
         } else if (action === 'save') {
           const validated = validateConfig(payload.config, store.get());
           if (localModel && snapshots.local?.localRuntime?.owned && (JSON.stringify(validated.local) !== JSON.stringify(store.get().local) || JSON.stringify(validated.providers.local) !== JSON.stringify(store.get().providers.local))) throw new Error('ローカルモデルを停止してから実行設定を変更してください。');
           if (enableLocalRoute && (payload.config.local || payload.config.providers?.local || payload.config.localApiKey)) await enableLocalRoute(validated, payload.config.localApiKey);
           await openrouter.saveKeys(payload.config);
           await openai.saveKeys(payload.config);
+          await jev.save(payload.config);
           await store.save(payload.config);
         } else if (action === 'refresh') {
           // Refresh is shared across concurrent clients below.

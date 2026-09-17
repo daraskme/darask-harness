@@ -4,7 +4,7 @@ import { resolveDshHome } from '@deepseek-ai/dsh-home-paths';
 import { createStore } from './store.mjs';
 import { createService } from './service.mjs';
 import { createRoutes, createOpenRouterCallbackRoute } from './http.mjs';
-import { candidates, MODEL_ROUTES } from './config.mjs';
+import { candidatesForPurpose, MODEL_ROUTES } from './config.mjs';
 import { enableClaudeRoute } from './claude-route.mjs';
 import { fileURLToPath } from 'node:url';
 import * as mcpClient from '@deepseek-ai/dsh-mcp-client';
@@ -205,7 +205,8 @@ export async function apply(ctx, config) {
     let request = original;
     if (current.routingEnabled) {
       signal.throwIfAborted();
-      const choices = candidates(current, service.snapshots);
+      const purpose = addons.api.currentObservation?.()?.intent?.id;
+      const choices = candidatesForPurpose(current, service.snapshots, purpose);
       let routed;
       for (const id of choices) {
         const provider = MODEL_ROUTES[id];

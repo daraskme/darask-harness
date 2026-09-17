@@ -58,8 +58,10 @@
     }
   },
   "dependencies": {
+    "@ai-sdk/gateway": "4.0.85",
     "@deepseek-ai/dsh-mcp-client": "0.1.5-rc.2",
     "@fang2hou/dsh-locale-ja": "0.5.0",
+    "ai": "7.0.105",
     "chrome-devtools-mcp": "1.9.0",
     "dsh-bridge-gateway": "file:vendor/dsh-bridge-gateway",
     "dsh-codex-connect": "0.1.0-alpha.4.35",

@@ -1,7 +1,7 @@
 /** I-10 7+1 intent routing + I-01 constraint detection, forked from oh-my-deepseek-harness. */
 const RULES = [
   { id: 'architecture', effort: 'high', hint: 'Architecture: compare trade-offs, name constraints, then propose a structure. Do not start large refactors until the shape is agreed.', keywords: ['architecture', 'アーキテクチャ', '設計', '構成', 'system design', 'スケール'] },
-  { id: 'research', effort: 'high', hint: 'Research: gather sources, separate facts from guesses, and report uncertainty.', keywords: ['research', '調査', '調べ', 'why', '比較', '論文', '根拠'] },
+  { id: 'research', effort: 'high', hint: 'Research: gather sources, separate facts from guesses, and report uncertainty.', keywords: ['research', 'search', 'lookup', 'find', '検索', '調査', '調べ', '探し', 'why', '比較', '論文', '根拠'] },
   { id: 'collaboration', effort: 'high', hint: 'Collaboration: keep a shared plan, report blockers, and do not silently change another agent\'s task.', keywords: ['review', 'レビュー', 'pair', '一緒', 'subagent', '委任', 'かんばん'] },
   { id: 'refactor', effort: 'medium', hint: 'Refactor: preserve behavior, take small steps, and verify after each change.', keywords: ['refactor', 'リファクタ', '整理', 'rename', 'cleanup', '書き直し'] },
   { id: 'new', effort: 'medium', hint: 'New work: invent only what was asked. List files you will create before writing them.', keywords: ['create', '新規', '作って', 'scaffold', '追加して', '実装して'] },

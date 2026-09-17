@@ -15,5 +15,33 @@ export function registerCoreTools(toolsCtx, { browserRun, store, service, config
       output: { schema: { type: 'object', additionalProperties: false, properties: { provider: { type: 'string', required: true }, mode: { type: 'string', required: true }, output: { type: 'string', required: true } } }, render: (_args, value) => [{ type: 'text', text: `${value.provider} (${value.mode})\n${value.output}` }] },
       async execute(args, exec) { return delegate({ config: store.get(), snapshots: service.snapshots, ...args, cwd: exec.agent?.session.header.cwd, signal: exec.signal, timeoutMs: config.cliTimeoutMs }); },
     }));
+    toolsCtx.tools.register(defineTool({
+      name: 'darask_jev_evaluate',
+      description: 'Evaluate shared state with typesafe-ai/jev through Vercel AI Gateway. Use for fast typed classification, routing, rubric scoring, or automated verification; it is not a conversation or browser-control model.',
+      parameters: {
+        state: { type: 'string', required: true, description: 'Text or serialized state to evaluate.' },
+        questions: {
+          type: 'array', required: true, description: 'One to sixteen typed questions.',
+          items: {
+            type: 'object', additionalProperties: false, properties: {
+              id: { type: 'string', required: true },
+              type: { type: 'string', enum: ['boolean', 'choice', 'score'], required: true },
+              instructions: { type: 'string', required: true },
+              criteria: {
+                type: 'array',
+                items: {
+                  type: 'object', additionalProperties: false, properties: {
+                    id: { type: 'string', required: true },
+                    description: { type: 'string', required: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      output: { schema: { type: 'object', additionalProperties: false, properties: { model: { type: 'string', required: true }, text: { type: 'string', required: true }, inputTokens: { type: 'number' } } }, render: (_args, value) => [{ type: 'text', text: value.text }] },
+      async execute(args, exec) { return service.evaluateJev(args, exec.signal); },
+    }));
     registerComputerTool(toolsCtx, computer);
 }

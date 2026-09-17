@@ -68,6 +68,9 @@
 .darask-heading > button { flex: none; }
 .darask-routing { justify-content: space-between; padding: 16px; background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; margin-bottom: 24px; }
 .darask-routing strong { font-size: 14px; font-weight: 600; }
+.darask-purpose-routing { margin-bottom: 24px; padding: 16px; background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; }
+.darask-purpose-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.darask-jev { margin-bottom: 24px; background: var(--dsw-alias-bg-layer-3); border: .5px solid var(--dsw-alias-border-l4); border-radius: 16px; overflow: hidden; }
 .darask-section-heading { margin-bottom: 14px; }
 .darask-section-heading h3 { font-size: 15px; font-weight: 600; }
 .darask-provider-list { display: grid; gap: 12px; }

@@ -11,7 +11,7 @@ function configuration(data) {
   const known = new Set(providers.map(provider => provider.id))
   const priority = [...new Set([...(data?.priority ?? []), ...known])].filter(id => known.has(id))
   return {
-    priority, routingEnabled: data?.routingEnabled === true, modelVisibility: structuredClone(data?.modelVisibility ?? defaultModelVisibility()), ...(data?.local ? { local: { ...data.local } } : {}),
+    priority, routingEnabled: data?.routingEnabled === true, purposeRoutes: structuredClone(data?.purposeRoutes ?? {}), modelVisibility: structuredClone(data?.modelVisibility ?? defaultModelVisibility()), ...(data?.local ? { local: { ...data.local } } : {}),
     ...(data?.openai ? { openai: { ...data.openai } } : {}),
     providers: Object.fromEntries(providers.map(provider => [provider.id, {
       enabled: provider.enabled === true, model: provider.model ?? '', executable: provider.executable ?? '',
@@ -23,7 +23,7 @@ export function DaraskPanel(props) {
   const state = props.useDaraskStatus(snapshot => snapshot)
   const { t } = props
   const [draft, setDraft] = useState(null)
-  const emptyKeys = { openrouterApiKey: '', openrouterManagementKey: '', localApiKey: '', openaiApiKey: '', openaiAdminKey: '' }
+  const emptyKeys = { openrouterApiKey: '', openrouterManagementKey: '', localApiKey: '', openaiApiKey: '', openaiAdminKey: '', aiGatewayApiKey: '' }
   const [keys, setKeys] = useState(emptyKeys)
   const [saved, setSaved] = useState(false)
   const [tab, setTab] = useState('ai')
@@ -42,6 +42,8 @@ export function DaraskPanel(props) {
     } catch { setSaved(false) }
   }
   const providers = new Map((data?.providers ?? []).map(provider => [provider.id, provider]))
+  const modelProviders = config.priority.filter(id => providers.get(id)?.capability === 'model')
+  const purposes = ['research', 'architecture', 'spec_driven', 'new', 'refactor', 'medium', 'collaboration', 'simple']
   const compatibilityMessages = [data?.compatibility?.message, ...(Array.isArray(data?.compatibility?.warnings) ? data.compatibility.warnings : [])].filter(value => typeof value === 'string' && value)
   return <section className="darask" aria-label={t('title')}>
     <header className="darask-heading"><div><h2>{t('title')}</h2><p>{t('description')}</p></div><Button variant="outline" disabled={pending || state.loading} onClick={() => { void props.action({ action: 'refresh' }).catch(() => {}) }}>{t('refresh')}</Button></header>
@@ -56,6 +58,31 @@ export function DaraskPanel(props) {
       </div>
       <div className="darask-account-panel" id="darask-panel-ai" role="tabpanel" aria-labelledby="darask-tab-ai" hidden={tab !== 'ai'}>
       <div className="darask-routing"><div><strong>{t('routing')}</strong><p>{t('routingHint')}</p></div><Switch checked={config.routingEnabled} disabled={pending} label={t('routing')} onChange={routingEnabled => change(current => ({ ...current, routingEnabled }))} /></div>
+      <section className="darask-purpose-routing" aria-labelledby="darask-purpose-routing-title">
+        <div className="darask-section-heading"><h3 id="darask-purpose-routing-title">{t('purposeRouting')}</h3><p>{t('purposeRoutingHint')}</p></div>
+        <div className="darask-purpose-grid">
+          {purposes.map(id => <label className="darask-field" key={id}><span>{t(`purpose_${id}`)}</span><select value={config.purposeRoutes?.[id] ?? ''} disabled={pending} onChange={event => change(current => ({ ...current, purposeRoutes: { ...current.purposeRoutes, [id]: event.target.value } }))}>
+            <option value="">{t('autoPriority')}</option>
+            {modelProviders.map(providerId => <option value={providerId} key={providerId}>{providers.get(providerId)?.name ?? providerId}</option>)}
+          </select></label>)}
+        </div>
+      </section>
+      <section className="darask-jev" aria-labelledby="darask-jev-title">
+        <div className="darask-provider-header">
+          <div className="darask-provider-name"><h3 id="darask-jev-title">{t('jevTitle')}</h3><span className="darask-meta">typesafe-ai/jev · {t('jevType')}</span></div>
+          <Tag tone={data.jev?.configured ? 'success' : 'neutral'}>{data.jev?.configured ? t('configured') : t('disconnected')}</Tag>
+        </div>
+        <div className="darask-card-section">
+          <div className="darask-card-section-body">
+            <p className="darask-muted">{t('jevHint')}</p>
+            <label className="darask-field"><span>{t('aiGatewayApiKey')}</span><Input type="password" value={keys.aiGatewayApiKey} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, aiGatewayApiKey: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label>
+            <div className="darask-actions">
+              <a href="https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys&title=AI+Gateway+API+Keys" target="_blank" rel="noopener noreferrer">{t('createAiGatewayKey')} ↗</a>
+              <Button size="sm" disabled={pending || !data.jev?.configured} onClick={() => { void props.action({ action: 'logout', provider: 'jev' }).catch(() => {}) }}>{t('removeAiGatewayKey')}</Button>
+            </div>
+          </div>
+        </div>
+      </section>
       <div className="darask-section-heading"><h3>{t('priority')}</h3><p>{t('priorityHint')}</p></div>
       <div className="darask-provider-list">
         {config.priority.map((id, index) => {

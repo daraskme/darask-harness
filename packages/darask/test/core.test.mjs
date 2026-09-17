@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { candidates, defaultConfig, MODEL_ROUTES, validateConfig } from '../src/config.mjs';
+import { candidates, candidatesForPurpose, defaultConfig, MODEL_ROUTES, validateConfig } from '../src/config.mjs';
 import { createStore } from '../src/store.mjs';
 import { createOpenRouterCallbackRoute, createRoutes } from '../src/http.mjs';
 import { createService, normalizeClaudeStatusline } from '../src/service.mjs';
@@ -27,6 +27,7 @@ test('configuration rejects incomplete priority, unknown keys, and command injec
     { providers: { cursor: { executable: 'agent.cmd' } } },
     { providers: { cursor: { executable: 'C:\\tools\\agent.cmd\nwhoami' } } },
     { openrouterApiKey: 'token with spaces' }, { routingEnabled: 'true' },
+    { purposeRoutes: { unknown: 'grok' } }, { purposeRoutes: { research: 'cursor' } },
   ]) assert.throws(() => validateConfig(input));
 });
 
@@ -51,6 +52,23 @@ test('routing respects capability and user priority without treating unknown usa
   assert.deepEqual(candidates(config, { codex: { auth: 'unauthenticated' }, grok: { auth: 'unavailable' } }), ['openrouter']);
 });
 
+test('purpose routing prefers its configured conversation model and preserves priority fallback', () => {
+  const config = validateConfig({
+    priority: ['openai', 'openrouter', 'codex', 'grok', 'claude', 'cursor', 'local'],
+    purposeRoutes: { research: 'grok', architecture: 'claude' },
+    providers: {
+      openai: { model: 'gpt-model' },
+      openrouter: { model: 'router-model' },
+      grok: { model: 'grok-model' },
+      claude: { model: 'claude-model' },
+    },
+  });
+  assert.deepEqual(candidatesForPurpose(config, {}, 'research').slice(0, 3), ['grok', 'openai', 'openrouter']);
+  assert.equal(candidatesForPurpose(config, { grok: { auth: 'unavailable' } }, 'research')[0], 'openai');
+  assert.equal(candidatesForPurpose(config, {}, 'architecture')[0], 'claude');
+  assert.equal(candidatesForPurpose(config, {}, 'medium')[0], 'openai');
+});
+
 test('routing excludes only fresh confirmed exhaustion and rechecks expired limits', () => {
   const now = Date.parse('2026-09-14T10:00:00Z');
   const config = validateConfig({ providers: { grok: { model: 'grok-model' }, openai: { enabled: false } } });
@@ -69,12 +87,13 @@ test('preferences store never persists supplied keys and serializes concurrent p
   const store = createStore(location);
   await store.load();
   await Promise.all([
-    store.save({ openrouterApiKey: 'secret-api-value', openrouterManagementKey: 'secret-management-value', routingEnabled: true }),
+    store.save({ openrouterApiKey: 'secret-api-value', openrouterManagementKey: 'secret-management-value', aiGatewayApiKey: 'secret-gateway-value', routingEnabled: true }),
     store.save({ providers: { cursor: { enabled: false } } }),
   ]);
   const raw = await readFile(path.join(location, 'preferences.json'), 'utf8');
   assert.ok(!raw.includes('secret-'));
   assert.ok(!raw.includes('openrouterApiKey'));
+  assert.ok(!raw.includes('aiGatewayApiKey'));
   const parsed = JSON.parse(raw);
   assert.equal(parsed.routingEnabled, true);
   assert.equal(parsed.providers.cursor.enabled, false);
