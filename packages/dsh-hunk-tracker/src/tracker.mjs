@@ -11,7 +11,7 @@ import {
   findMatchingOldHunk,
   hunksMatchContent,
   lineCounts,
-  patchLines,
+  patchLineChanges,
 } from './diff.mjs';
 
 export const SNAPSHOT_VERSION = 1;
@@ -102,7 +102,6 @@ export class HunkTracker {
 
   #recompute(key, state, current, source) {
     const oldHunks = state.hunks;
-    state.current = current;
     const now = this.#now();
     let hunks = [];
     const { baseline } = state;
@@ -111,9 +110,11 @@ export class HunkTracker {
     else if (baseline.status === 'missing' && current.status === 'full') hunks = current.text === '' ? [] : [fileCreatedHunk(state.path, current.text, source, now)];
 
     const claimed = new Set();
+    const byPosition = new Map(oldHunks.map(hunk => [`${hunk.oldStart}:${hunk.newStart}`, hunk]));
     for (const hunk of hunks) {
-      const match = findMatchingOldHunk(hunk, oldHunks);
-      if (!match || claimed.has(match.id)) continue;
+      const aligned = byPosition.get(`${hunk.oldStart}:${hunk.newStart}`);
+      const match = aligned && !claimed.has(aligned.id) && hunksMatchContent(aligned, hunk) ? aligned : findMatchingOldHunk(hunk, oldHunks, claimed);
+      if (!match) continue;
       claimed.add(match.id);
       hunk.id = match.id;
       hunk.createdAt = match.createdAt;
@@ -121,6 +122,7 @@ export class HunkTracker {
       // and an external reshaping of an agent hunk stays attributed to the agent.
       if (hunksMatchContent(match, hunk) || (!isAgentEdit(hunk.source) && isAgentEdit(match.source))) hunk.source = match.source;
     }
+    state.current = current;
     state.hunks = hunks;
     return { changed: true, hunks: hunks.map(hunk => ({ ...hunk })) };
   }
@@ -143,15 +145,62 @@ export class HunkTracker {
   accept(hunkId) {
     const found = this.#find(hunkId);
     if (!found) return false;
-    const { state, hunk } = found;
-    this.#count(hunk, true);
-    if (state.baseline.status === 'missing' || state.current.status !== 'full') state.baseline = state.current;
-    else state.baseline = full(patchLines(state.baseline.text, hunk.oldStart, hunk.oldCount, hunk.newText));
-    state.baselineAccepted = true;
-    const remaining = state.hunks.filter(entry => entry.id !== hunk.id);
-    state.hunks = remaining;
-    this.#recompute(found.key, state, state.current, remaining[0]?.source ?? external());
-    return true;
+    return this.acceptMany(found.key, [hunkId]) > 0;
+  }
+
+  acceptMany(key, hunkIds) {
+    const proposal = this.#prepareReview(key, hunkIds, true);
+    if (!proposal) return 0;
+    this.#files.set(key, proposal.next);
+    for (const hunk of proposal.selected) this.#count(hunk, true);
+    return proposal.selected.length;
+  }
+
+  #prepareReview(key, hunkIds, accepted) {
+    const state = this.#files.get(key);
+    if (!state) return undefined;
+    const ids = new Set(hunkIds);
+    const selected = [];
+    const remaining = [];
+    let shift = 0;
+    for (const hunk of state.hunks) {
+      if (ids.has(hunk.id)) {
+        selected.push(hunk);
+        shift += accepted ? hunk.newCount - hunk.oldCount : hunk.oldCount - hunk.newCount;
+      } else {
+        remaining.push({ ...hunk, oldStart: hunk.oldStart + (accepted ? shift : 0), newStart: hunk.newStart + (accepted ? 0 : shift) });
+      }
+    }
+    if (selected.length === 0) return undefined;
+    const next = { ...state, hunks: remaining };
+    if (accepted) {
+      next.baseline = state.baseline.status === 'missing' || state.current.status !== 'full' ? state.current : full(patchLineChanges(state.baseline.text, selected.map(hunk => ({
+        startLine: hunk.oldStart, removeCount: hunk.oldCount, insertText: hunk.newText,
+      }))));
+      next.baselineAccepted = true;
+    } else if (state.current.status === 'missing' && state.baseline.status === 'full') next.current = state.baseline;
+    else if (state.baseline.status === 'missing' && state.current.status === 'full') next.current = missing();
+    else if (state.current.status === 'full') next.current = full(patchLineChanges(state.current.text, selected.map(hunk => ({
+      startLine: hunk.newStart, removeCount: hunk.newCount, insertText: hunk.oldText ?? '',
+    }))));
+    else return undefined;
+    this.#recompute(key, next, next.current, remaining[0]?.source ?? external());
+    return { state, next, selected };
+  }
+
+  /** Prepare one file's rejection without committing until its guarded write succeeds. */
+  prepareReject(key, hunkIds) {
+    const proposal = this.#prepareReview(key, hunkIds, false);
+    if (!proposal) return undefined;
+    const { state, next, selected } = proposal;
+    return {
+      key, path: next.path, content: next.current.status === 'full' ? next.current.text : null, count: selected.length,
+      commit: () => {
+        if (this.#files.get(key) !== state) throw new Error('Hunk state changed before rejection was committed.');
+        this.#files.set(key, next);
+        for (const hunk of selected) this.#count(hunk, false);
+      },
+    };
   }
 
   /**
@@ -162,16 +211,10 @@ export class HunkTracker {
   reject(hunkId) {
     const found = this.#find(hunkId);
     if (!found) return undefined;
-    const { key, state, hunk } = found;
-    let next;
-    if (state.current.status === 'missing' && state.baseline.status === 'full') next = state.baseline;
-    else if (state.baseline.status === 'missing' && state.current.status === 'full') next = missing();
-    else if (state.current.status === 'full') next = full(patchLines(state.current.text, hunk.newStart, hunk.newCount, hunk.oldText ?? ''));
-    else return undefined;
-    this.#count(hunk, false);
-    state.hunks = state.hunks.filter(entry => entry.id !== hunk.id);
-    this.#recompute(key, state, next, state.hunks[0]?.source ?? external());
-    return { key, path: state.path, content: next.status === 'full' ? next.text : null };
+    const outcome = this.prepareReject(found.key, [hunkId]);
+    if (!outcome) return undefined;
+    outcome.commit();
+    return { key: outcome.key, path: outcome.path, content: outcome.content };
   }
 
   /** Pending hunks, optionally narrowed to a file, an agent turn, or an attribution class. */

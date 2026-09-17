@@ -47,11 +47,11 @@ export function computeHunks(path, baseline, current, source, createdAt = Date.n
     const lines = splitLines(change.value);
     if (change.added) {
       builder ??= { oldStart: oldLine, newStart: newLine, oldLines: [], newLines: [] };
-      builder.newLines.push(...lines);
+      for (const line of lines) builder.newLines.push(line);
       newLine += lines.length;
     } else if (change.removed) {
       builder ??= { oldStart: oldLine, newStart: newLine, oldLines: [], newLines: [] };
-      builder.oldLines.push(...lines);
+      for (const line of lines) builder.oldLines.push(line);
       oldLine += lines.length;
     } else {
       if (builder) { hunks.push(buildHunk(builder, path, source, createdAt)); builder = undefined; }
@@ -80,6 +80,20 @@ export function patchLines(content, startLine, removeCount, insertText) {
   return [...lines.slice(0, start), ...inserted, ...lines.slice(end)].join('');
 }
 
+/** Apply non-overlapping edits against the original line coordinates. */
+export function patchLineChanges(content, changes) {
+  const lines = splitLines(content);
+  const parts = [];
+  let end = lines.length;
+  for (const { startLine, removeCount, insertText } of [...changes].sort((a, b) => b.startLine - a.startLine)) {
+    const start = Math.min(Math.max(startLine - 1, 0), lines.length);
+    parts.push(lines.slice(start + removeCount, end).join(''), insertText);
+    end = start;
+  }
+  parts.push(lines.slice(0, end).join(''));
+  return parts.reverse().join('');
+}
+
 export function hunksMatchContent(a, b) {
   return a.path === b.path && a.oldText === b.oldText && a.newText === b.newText;
 }
@@ -106,14 +120,15 @@ function overlapSize(a, b) {
 }
 
 /** Exact content match closest by position first, else the old hunk with the largest baseline overlap. */
-export function findMatchingOldHunk(newHunk, oldHunks) {
-  const contentMatches = oldHunks.filter(old => hunksMatchContent(old, newHunk));
+export function findMatchingOldHunk(newHunk, oldHunks, claimed = new Set()) {
+  const contentMatches = oldHunks.filter(old => !claimed.has(old.id) && hunksMatchContent(old, newHunk));
   if (contentMatches.length > 0) {
     return contentMatches.reduce((best, old) => (Math.abs(old.newStart - newHunk.newStart) < Math.abs(best.newStart - newHunk.newStart) ? old : best));
   }
   let best;
   let bestSize = -1;
   for (const old of oldHunks) {
+    if (claimed.has(old.id)) continue;
     if (!hunksOverlap(old, newHunk)) continue;
     const size = overlapSize(old, newHunk);
     if (size > bestSize) { best = old; bestSize = size; }

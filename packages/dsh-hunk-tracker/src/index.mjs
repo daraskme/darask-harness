@@ -154,7 +154,7 @@ export function apply(ctx, config) {
   function entryFor(session) {
     let entry = sessions.get(session.id);
     if (entry) return entry;
-    entry = { session, tracker: undefined, turn: turnOf(session), targets: new Map(), versions: new Map(), queue: Promise.resolve(), stateFile: join(stateDir, safeSessionFileName(session.id)) };
+    entry = { session, tracker: undefined, dirty: false, turn: turnOf(session), targets: new Map(), versions: new Map(), queue: Promise.resolve(), stateFile: join(stateDir, safeSessionFileName(session.id)) };
     entry.loaded = (async () => {
       if (resolved.persist) {
         try {
@@ -171,11 +171,12 @@ export function apply(ctx, config) {
   }
 
   async function persist(entry) {
-    if (!resolved.persist) return;
+    if (!resolved.persist || !entry.dirty) return;
     await mkdir(stateDir, { recursive: true });
     const tmp = `${entry.stateFile}.${process.pid}.tmp`;
     await writeFile(tmp, JSON.stringify(entry.tracker.snapshot()), 'utf8');
     await rename(tmp, entry.stateFile);
+    entry.dirty = false;
   }
 
   /** Serialize tracker mutations per session; failures are logged, never propagated to tools. */
@@ -197,7 +198,7 @@ export function apply(ctx, config) {
   }
 
   async function refresh(entry) {
-    if (!resolved.trackExternal) return;
+    if (!resolved.trackExternal) { await persist(entry); return; }
     for (const file of entry.tracker.files()) {
       let target;
       try {
@@ -211,8 +212,9 @@ export function apply(ctx, config) {
         if (info?.version === known) continue;
       }
       const { state, version } = await readState(target);
+      const { changed } = entry.tracker.recordExternalContent({ key: file.key, path: file.path, current: state });
+      entry.dirty ||= changed;
       entry.versions.set(file.key, version);
-      entry.tracker.recordExternalContent({ key: file.key, path: file.path, current: state });
     }
     await persist(entry);
   }
@@ -222,10 +224,11 @@ export function apply(ctx, config) {
       const key = target.targetKey;
       entry.targets.set(key, target);
       const { state, version } = await readState(target);
-      entry.versions.set(key, version);
       let baseline = before;
       if (!entry.tracker.has(key) && resolved.baseline === 'git-head') baseline = (await gitHeadState(target)) ?? before;
       entry.tracker.recordAgentWrite({ key, path: target.displayPath, before: baseline, after: state, turn: entry.turn });
+      entry.dirty = true;
+      entry.versions.set(key, version);
     }
     await persist(entry);
   }
@@ -382,14 +385,13 @@ export function apply(ctx, config) {
 
   // ---- /hunks command ------------------------------------------------------
 
-  async function rejectHunk(entry, hunkId) {
+  async function rejectHunks(entry, key, hunkIds) {
     const policy = ctx.get?.('sandboxPolicy')?.resolve({ session: entry.session });
     const mode = policy?.mode ?? ctx.get?.('shell')?.sandboxMode;
     if (mode !== undefined && mode !== 'danger-full-access') throw new Error('Hunk rejection is unavailable under a confined sandbox policy.');
     if (!policy && mode !== undefined) throw new Error('Cannot resolve the hunk rejection sandbox policy.');
-    const proposed = HunkTracker.fromSnapshot(entry.tracker.snapshot());
-    const outcome = proposed.reject(hunkId);
-    if (!outcome) return false;
+    const outcome = entry.tracker.prepareReject(key, hunkIds);
+    if (!outcome) return 0;
     const target = await targetFor(entry, outcome.key, outcome.path);
     const expected = entry.versions.get(outcome.key);
     let version;
@@ -400,9 +402,19 @@ export function apply(ctx, config) {
       const written = await ctx.fs.writeText(target, outcome.content, intent, undefined, policy);
       version = written.version;
     }
-    entry.tracker = proposed;
+    outcome.commit();
+    entry.dirty = true;
     entry.versions.set(outcome.key, version);
-    return true;
+    return outcome.count;
+  }
+
+  function groupHunks(hunks) {
+    const files = new Map();
+    for (const hunk of hunks) {
+      if (!files.has(hunk.key)) files.set(hunk.key, []);
+      files.get(hunk.key).push(hunk.id);
+    }
+    return files;
   }
 
   async function selectHunks(entry, selector) {
@@ -438,7 +450,11 @@ export function apply(ctx, config) {
         const hunks = await selectHunks(entry, rest);
         let accepted = 0;
         await enqueue(entry, async () => {
-          for (const hunk of hunks) if (entry.tracker.accept(hunk.id)) accepted += 1;
+          for (const [key, ids] of groupHunks(hunks)) {
+            const count = entry.tracker.acceptMany(key, ids);
+            accepted += count;
+            entry.dirty ||= count > 0;
+          }
           await persist(entry);
         });
         return { kind: 'success', text: `Accepted ${accepted} hunks (folded into the session baseline).` };
@@ -452,7 +468,7 @@ export function apply(ctx, config) {
         let failure;
         await enqueue(entry, async () => {
           try {
-            for (const hunk of hunks) if (await rejectHunk(entry, hunk.id)) rejected += 1;
+            for (const [key, ids] of groupHunks(hunks)) rejected += await rejectHunks(entry, key, ids);
           } catch (error) {
             failure = error;
           }
@@ -464,7 +480,7 @@ export function apply(ctx, config) {
       case 'forget': {
         if (rest.length === 0) return { kind: 'error', text: 'Usage: /hunks forget <path>' };
         const key = await keyForPath(entry, rest.join(' '));
-        await enqueue(entry, async () => { entry.tracker.forget(key); entry.targets.delete(key); entry.versions.delete(key); await persist(entry); });
+        await enqueue(entry, async () => { if (entry.tracker.forget(key)) entry.dirty = true; entry.targets.delete(key); entry.versions.delete(key); await persist(entry); });
         return { kind: 'success', text: `Stopped tracking ${rest.join(' ')}.` };
       }
       default:
