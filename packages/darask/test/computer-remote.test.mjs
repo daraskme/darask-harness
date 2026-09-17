@@ -26,3 +26,47 @@ test('native remote computer route enforces origin, host and actor and refuses r
  assert.equal((await worker.route.fetch(request({...body,args:{action:'windows',node}}))).status,400);
  assert.equal(dispatched,0);
 });
+
+test('paired Computer Use launches and observes hub and remote PC with node-bound snapshots',async()=>{
+ const localCalls=[];const remoteCalls=[];const remoteSnapshot=randomUUID(),localSnapshot=randomUUID();
+ const hub={info:()=>({id:randomUUID(),name:'Hub'}),workspaceCatalog:async()=>[],remoteConnection:async id=>{
+  assert.equal(id,node);return{node:{url:origin},host,cookie:'test-only-cookie'};
+ },invalidateRemote:()=>{}};
+ const computer=createComputerRemote({
+  directory:'.',hub,
+  computer:{run:async args=>{
+   localCalls.push(args.action);
+   if(args.action==='screenshot')return{action:'screenshot',text:'local screen',snapshotId:localSnapshot,width:1,height:1,image:{attachmentId:'local-image',mediaType:'image/png',bytes:68,width:1,height:1}};
+   return{action:args.action,text:'local launched'};
+  }},
+  fetch:async(_url,init)=>{
+   const input=JSON.parse(init.body);remoteCalls.push(input.args.action);
+   return new Response(JSON.stringify({host:host.id,value:input.args.action==='screenshot'
+    ?{action:'screenshot',text:'remote screen',snapshotId:remoteSnapshot,width:1,height:1}
+    :{action:'launch_game',text:'remote launched'}}),{headers:{'Content-Type':'application/json'}});
+  },
+ });
+ const exec={agent:{},attachments:{saveImage:async()=>{throw new Error('unexpected image');}}};
+ const launched=await computer.run({action:'launch_game_pair',node},exec);
+ assert.deepEqual(launched.nodes.map(result=>[result.node,result.ok]),[['local',true],[node,true]]);
+ const observed=await computer.run({action:'pair_screenshot',node},exec);
+ assert.deepEqual(observed.screens.map(screen=>[screen.node,screen.snapshotId]),[['local',localSnapshot],[node,remoteSnapshot]]);
+ assert.deepEqual(localCalls,['launch_game','screenshot']);
+ assert.deepEqual(remoteCalls,['launch_game','screenshot']);
+});
+
+test('paired game launch reports partial success without resending either launch',async()=>{
+ let localLaunches=0,requests=0;
+ const computer=createComputerRemote({
+  directory:'.',
+  hub:{info:()=>({id:randomUUID(),name:'Hub'}),remoteConnection:async()=>({node:{url:origin},host,cookie:'test-only-cookie'}),invalidateRemote:()=>{}},
+  computer:{run:async()=>{localLaunches++;return{action:'launch_game',text:'local launched'};}},
+  fetch:async()=>{requests++;return new Response('{}',{status:503});},
+ });
+ const result=await computer.run({action:'launch_game_pair',node},{agent:{}});
+ assert.equal(result.nodes[0].ok,true);
+ assert.equal(result.nodes[1].ok,false);
+ assert.equal(localLaunches,1);
+ assert.equal(requests,1);
+ assert.match(result.text,/自動再送せず/);
+});

@@ -337,6 +337,10 @@ DSH 0.1.5-rc.2 の遠隔ブラウザ設定ミラーを、認証済み Connection
 
 要素操作は UI Automation の対応パターンだけを使用し、未対応時に前景マウス操作へ切り替えません。入力・選択・トグルは状態を照合し、ボタン実行は新しい要素一覧で目的の結果を確認します。スナップショットはセッション間で共有せず、60 秒で失効し、操作後・中断後は再取得します。画像の座標倍率変換はツール側で一度だけ行います。Windows でログイン済みのデスクトップが必要です。
 
+ゲームは各 PC の「設定 → アカウント → ブラウザーと画面操作」で、許可する実行ファイル・引数・作業フォルダーを起動プロファイルとして保存します。リモート呼び出しから任意のコマンドやパスは指定できません。`launch_game` は選択した PC のプロファイル、`launch_game_pair` はハブと登録済み相手 PC の両方を起動します。`pair_screenshot` は両画面を一度に観測し、PC ごとに別の `snapshotId` を返します。その後の操作は必ず対応する node と `snapshotId` の組み合わせで行います。
+
+対人検証は `pcs → launch_game_pair → pair_screenshot` の後、ロビー作成・参加を各 node で操作し、再度 `pair_screenshot` で双方の接続を確認します。さらに一方の入力が他方へ反映されることを両方向で確認します。起動やロビー表示だけでは対人成功と判定しません。片方だけ起動した場合は自動再送せず、各 PC の `windows` または画面で状態を確かめます。
+
 Hermes の [Computer Use 手順](https://github.com/NousResearch/hermes-agent/blob/main/skills/autonomous-ai-agents/computer-use/SKILL.md) の観測・操作・再観測と、[Microsoft UI Automation](https://learn.microsoft.com/en-us/dotnet/framework/ui-automation/ui-automation-control-patterns-overview) を参考にしています。外部ドライバーや専用モデルはインストールしません。TWA の PvP 検証手順はゲーム固有の手順として併用できます。
 
 通常の `npm run check` に加え、Windows の対話デスクトップで `DSH_COMPUTER_LIVE_TEST=1` を設定すると、専用の一時フォームで日本語入力・ボタン・パスワード欄の保護を実機検証します。フォームは検証後に閉じます。

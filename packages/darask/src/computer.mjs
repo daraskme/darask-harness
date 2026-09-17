@@ -4,7 +4,7 @@ import { mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const COMPUTER_ACTIONS = Object.freeze(['inspect', 'invoke', 'set_value', 'select', 'toggle', 'screenshot', 'windows', 'focus', 'move', 'click', 'double_click', 'right_click', 'drag', 'scroll', 'type', 'key', 'wait', 'cursor']);
+export const COMPUTER_ACTIONS = Object.freeze(['launch_game', 'inspect', 'invoke', 'set_value', 'select', 'toggle', 'screenshot', 'windows', 'focus', 'move', 'click', 'double_click', 'right_click', 'drag', 'scroll', 'type', 'key', 'wait', 'cursor']);
 const ELEMENT_ACTIONS = new Set(['invoke', 'set_value', 'select', 'toggle']);
 const MUTATING = new Set(['move', 'click', 'double_click', 'right_click', 'drag', 'scroll', 'type', 'key', 'focus']);
 const KEY_NAME = /^(?:enter|return|tab|esc|escape|backspace|delete|del|space|home|end|pageup|pgup|pagedown|pgdn|left|up|right|down|ctrl|control|alt|shift|win|meta|super|caps|capslock|insert|f(?:[1-9]|1[0-2])|[a-z0-9])$/i;
@@ -25,13 +25,30 @@ export const COMPUTER_IMAGE_SCHEMA = IMAGE_VALUE_SCHEMA;
 const DEFAULT_SCRIPT = fileURLToPath(new URL('../scripts/computer-host.ps1', import.meta.url));
 
 export function defaultComputer() {
-  return { enabled: false };
+  return { enabled: false, game: { name: '', executable: '', args: [], cwd: '', windowTitle: '' } };
 }
 
 export function validateComputer(input, base = defaultComputer()) {
-  if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(key => key !== 'enabled')) throw new Error('Invalid computer setting');
+  if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(key => !['enabled', 'game'].includes(key))) throw new Error('Invalid computer setting');
   if (input.enabled !== undefined && typeof input.enabled !== 'boolean') throw new Error('Invalid computer setting');
-  return { ...base, ...input };
+  const result = structuredClone(base);
+  if (input.enabled !== undefined) result.enabled = input.enabled;
+  if (input.game !== undefined) {
+    const game = input.game;
+    const keys = ['name', 'executable', 'args', 'cwd', 'windowTitle'];
+    if (!game || typeof game !== 'object' || Array.isArray(game) || Object.keys(game).some(key => !keys.includes(key))) throw new Error('Invalid computer game setting');
+    const current = { ...result.game, ...game };
+    for (const key of ['name', 'executable', 'cwd', 'windowTitle']) {
+      if (typeof current[key] !== 'string' || current[key].length > 2048 || /[\x00-\x1f]/.test(current[key])) throw new Error('Invalid computer game setting');
+      current[key] = current[key].trim();
+    }
+    if (current.name.length > 120 || current.windowTitle.length > 200) throw new Error('Invalid computer game setting');
+    if (current.executable && !(path.isAbsolute(current.executable) || path.win32.isAbsolute(current.executable))) throw new Error('Use an absolute game executable path');
+    if (current.cwd && !(path.isAbsolute(current.cwd) || path.win32.isAbsolute(current.cwd))) throw new Error('Use an absolute game working directory');
+    if (!Array.isArray(current.args) || current.args.length > 32 || current.args.some(arg => typeof arg !== 'string' || arg.length > 512 || /[\x00-\x1f]/.test(arg))) throw new Error('Invalid computer game arguments');
+    result.game = current;
+  }
+  return result;
 }
 
 export function computerEnvironment(supplied = process.env) {
@@ -244,7 +261,7 @@ export function createLineHost({ command, args, env, scriptPath, spawnImpl = spa
   };
 }
 
-export function createComputer({ directory, store, platform = process.platform, env = process.env, scriptPath = DEFAULT_SCRIPT, runHost, spawnImpl, timeoutMs = 20000 }) {
+export function createComputer({ directory, store, platform = process.platform, env = process.env, scriptPath = DEFAULT_SCRIPT, runHost, spawnImpl, startGame, timeoutMs = 20000 }) {
   const shots = path.join(directory, 'computer');
   let capture = null;
   let elements = null;
@@ -271,6 +288,16 @@ export function createComputer({ directory, store, platform = process.platform, 
     if (runHost) return runHost(payload, signal);
     return ensureHost().request(payload, signal);
   };
+  const launch = startGame ?? ((executable, args, options) => new Promise((resolve, reject) => {
+    const child = spawn(executable, args, options);
+    const failed = error => reject(error);
+    child.once('error', failed);
+    child.once('spawn', () => {
+      child.off('error', failed);
+      child.unref();
+      resolve();
+    });
+  }));
   async function screenshot(signal, attachments, actor) {
     await mkdir(shots, { recursive: true });
     const file = path.join(shots, `${randomUUID()}.png`);
@@ -330,6 +357,27 @@ export function createComputer({ directory, store, platform = process.platform, 
     const action = validateComputerAction({ ...args });
     const actor = exec.agent ?? null;
     exec.signal?.throwIfAborted();
+    if (action.action === 'launch_game') {
+      const game = store.get().computer?.game;
+      if (!game?.executable) throw new Error('Computer: 設定 → アカウント → ブラウザーと画面操作でゲーム起動プロファイルを保存してください。');
+      try {
+        await launch(game.executable, [...game.args], {
+          ...(game.cwd ? { cwd: game.cwd } : {}),
+          detached: true,
+          env: computerEnvironment(env),
+          shell: false,
+          stdio: 'ignore',
+          windowsHide: false,
+        });
+      } catch {
+        throw new Error('Computer: ゲームを起動できませんでした。実行ファイルと作業フォルダーを確認してください。');
+      }
+      capture = null;
+      elements = null;
+      last = { action: 'launch_game', at: new Date().toISOString() };
+      const name = game.name || path.win32.basename(game.executable);
+      return { action: 'launch_game', title: game.windowTitle || name, text: `${name} の起動を要求しました。windows または screenshot で結果を確認してください。` };
+    }
     if (action.action === 'inspect' || ELEMENT_ACTIONS.has(action.action)) {
       if (ELEMENT_ACTIONS.has(action.action)) {
         if (!elements || elements.actor !== actor || elements.snapshotId !== action.snapshotId || Date.now() - elements.stamp > 60000) throw new Error('Computer: 画面情報が古いか別セッションのものです。inspect で再取得してください。');
@@ -393,7 +441,7 @@ export function createComputer({ directory, store, platform = process.platform, 
   return {
     status() {
       const enabled = store.get().computer?.enabled === true;
-      return { enabled, available: available || Boolean(runHost), platform, last, capture: capture ? { width: capture.imageWidth, height: capture.imageHeight, screenWidth: capture.width, screenHeight: capture.height, at: capture.at } : null };
+      return { enabled, available: available || Boolean(runHost), platform, game: structuredClone(store.get().computer?.game ?? defaultComputer().game), last, capture: capture ? { width: capture.imageWidth, height: capture.imageHeight, screenWidth: capture.width, screenHeight: capture.height, at: capture.at } : null };
     },
     run(args, exec = {}) {
       const task = queue.catch(() => {}).then(() => perform(args, exec));

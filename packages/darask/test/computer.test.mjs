@@ -28,12 +28,17 @@ const PNG = Buffer.from([
 ]);
 
 test('computer settings are opt-in and reject unknown keys', () => {
-  assert.deepEqual(defaultComputer(), { enabled: false });
+  assert.deepEqual(defaultComputer(), { enabled: false, game: { name: '', executable: '', args: [], cwd: '', windowTitle: '' } });
   assert.equal(validateConfig({}).computer.enabled, false);
   assert.equal(validateConfig({ computer: { enabled: true } }).computer.enabled, true);
+  assert.deepEqual(validateConfig({ computer: { game: { name: 'TWA', executable: 'C:\\Games\\TWA\\game.exe', args: ['-windowed'], cwd: 'C:\\Games\\TWA', windowTitle: 'TWA' } } }).computer.game, {
+    name: 'TWA', executable: 'C:\\Games\\TWA\\game.exe', args: ['-windowed'], cwd: 'C:\\Games\\TWA', windowTitle: 'TWA',
+  });
   assert.throws(() => validateComputer({ enabled: 'yes' }));
   assert.throws(() => validateComputer({ enabled: true, extra: 1 }));
   assert.throws(() => validateConfig({ computer: { enabled: true, inject: true } }));
+  assert.throws(() => validateConfig({ computer: { game: { executable: 'game.exe' } } }), /absolute/);
+  assert.throws(() => validateConfig({ computer: { game: { args: ['ok', 'bad\narg'] } } }));
 });
 
 test('computer actions validate coordinates, keys, and text before any host call', () => {
@@ -109,6 +114,30 @@ test('computer tool refuses work until enabled and serializes host operations', 
   assert.ok(ops.includes('screenshot'));
 });
 
+test('computer launches only the locally configured game profile without a shell', async t => {
+  const location = await directory(t);
+  const store = createStore(location);
+  await store.load();
+  await store.save({ computer: { enabled: true, game: {
+    name: 'TWA', executable: 'C:\\Games\\TWA\\game.exe', args: ['-windowed'], cwd: 'C:\\Games\\TWA', windowTitle: 'TWA Client',
+  } } });
+  const launches = [];
+  const computer = createComputer({
+    directory: location, store, platform: 'win32', env: {}, runHost: async () => ({ ok: true }),
+    startGame: async (...args) => launches.push(args),
+  });
+  t.after(() => computer.dispose());
+  const result = await computer.run({ action: 'launch_game' });
+  assert.equal(result.title, 'TWA Client');
+  assert.equal(launches.length, 1);
+  assert.equal(launches[0][0], 'C:\\Games\\TWA\\game.exe');
+  assert.deepEqual(launches[0][1], ['-windowed']);
+  assert.deepEqual(launches[0][2], {
+    cwd: 'C:\\Games\\TWA', detached: true, env: {}, shell: false, stdio: 'ignore', windowsHide: false,
+  });
+  assert.match(result.text, /windows または screenshot/);
+});
+
 test('disabled computer status stays in the service snapshot and enable is persisted', async t => {
   const location = await directory(t);
   const store = createStore(location);
@@ -125,7 +154,12 @@ test('disabled computer status stays in the service snapshot and enable is persi
   assert.equal(before.computer.enabled, false);
   const after = await service.action({ action: 'enableComputer', provider: 'computer' });
   assert.equal(after.computer.enabled, true);
+  const configured = await service.action({ action: 'saveComputerGame', provider: 'computer', config: {
+    name: 'TWA', executable: 'C:\\Games\\TWA\\game.exe', args: [], cwd: '', windowTitle: 'TWA',
+  } });
+  assert.equal(configured.computer.game.name, 'TWA');
   assert.equal(JSON.parse(await readFile(path.join(location, 'preferences.json'), 'utf8')).computer.enabled, true);
+  assert.equal(JSON.parse(await readFile(path.join(location, 'preferences.json'), 'utf8')).computer.game.executable, 'C:\\Games\\TWA\\game.exe');
   assert.equal(validateConfig(JSON.parse(await readFile(path.join(location, 'preferences.json'), 'utf8'))).computer.enabled, true);
   assert.equal(defaultConfig().computer.enabled, false);
 });

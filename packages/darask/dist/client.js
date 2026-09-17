@@ -12788,6 +12788,14 @@ var dictionaries = {
     computerOff: "\u753B\u9762\u64CD\u4F5C\u3092\u505C\u6B62",
     computerReady: "\u6709\u52B9\u30FB\u30C4\u30FC\u30EB\u304B\u3089\u5229\u7528\u53EF",
     computerUnavailable: "\u3053\u306E OS \u3067\u306F\u753B\u9762\u64CD\u4F5C\u306B\u672A\u5BFE\u5FDC\u3067\u3059\u3002",
+    gameProfile: "\u30B2\u30FC\u30E0\u8D77\u52D5\u30D7\u30ED\u30D5\u30A1\u30A4\u30EB",
+    gameProfileHint: "\u3053\u306E PC \u3067\u8A31\u53EF\u3059\u308B\u30B2\u30FC\u30E0\u5B9F\u884C\u30D5\u30A1\u30A4\u30EB\u3092\u4E00\u3064\u8A2D\u5B9A\u3057\u307E\u3059\u3002\u30E2\u30C7\u30EB\u3084\u30EA\u30E2\u30FC\u30C8PC\u304B\u3089\u4EFB\u610F\u306E\u30B3\u30DE\u30F3\u30C9\u306F\u6307\u5B9A\u3067\u304D\u307E\u305B\u3093\u3002\u4E21\u65B9\u306EPC\u3067\u540C\u3058\u30B2\u30FC\u30E0\u540D\u3092\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    gameName: "\u30B2\u30FC\u30E0\u540D",
+    gameExecutable: "\u5B9F\u884C\u30D5\u30A1\u30A4\u30EB\uFF08\u7D76\u5BFE\u30D1\u30B9\uFF09",
+    gameArguments: "\u8D77\u52D5\u5F15\u6570\uFF081 \u884C\u306B 1 \u3064\uFF09",
+    gameWorkingDirectory: "\u4F5C\u696D\u30D5\u30A9\u30EB\u30C0\u30FC\uFF08\u4EFB\u610F\uFF09",
+    gameWindowTitle: "\u30B2\u30FC\u30E0\u30A6\u30A3\u30F3\u30C9\u30A6\u540D\uFF08\u4EFB\u610F\uFF09",
+    gameSave: "\u8D77\u52D5\u30D7\u30ED\u30D5\u30A1\u30A4\u30EB\u3092\u4FDD\u5B58",
     browserHint: "\u65E2\u5B9A\u306E\u30D6\u30E9\u30A6\u30B6\u306F Kitesurf \u3067\u3059\u3002\u516C\u958B HTTPS \u30DA\u30FC\u30B8\u3092\u64CD\u4F5C\u3057\u307E\u3059\u3002\u30ED\u30FC\u30AB\u30EB\u3084 Tailscale \u5185\u306E\u30DA\u30FC\u30B8\u306B\u306F\u63A5\u7D9A\u3067\u304D\u307E\u305B\u3093\u3002",
     browserRunHint: "Browser Run \u3092\u6307\u5B9A\u3057\u305F\u4F5C\u696D\u3067\u3001\u5BFE\u8A71\u64CD\u4F5C\u30FB\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8\u30FBPDF\u30FB\u672C\u6587\u53D6\u5F97\u3092\u4F7F\u3048\u307E\u3059\u3002Browser Rendering \u2014 Edit \u6A29\u9650\u306E API \u30C8\u30FC\u30AF\u30F3\u3092\u767B\u9332\u3057\u307E\u3059\u3002",
     cfAccount: "Cloudflare \u30A2\u30AB\u30A6\u30F3\u30C8 ID",
@@ -12964,6 +12972,14 @@ var dictionaries = {
     computerOff: "Disable screen control",
     computerReady: "Enabled; available to tools",
     computerUnavailable: "Screen control is not available on this OS.",
+    gameProfile: "Game launch profile",
+    gameProfileHint: "Configure one game executable allowed on this PC. Models and remote PCs cannot supply arbitrary commands. Use the same game name on both PCs.",
+    gameName: "Game name",
+    gameExecutable: "Executable (absolute path)",
+    gameArguments: "Launch arguments (one per line)",
+    gameWorkingDirectory: "Working directory (optional)",
+    gameWindowTitle: "Game window title (optional)",
+    gameSave: "Save launch profile",
     browserHint: "Kitesurf is the default browser for public HTTPS pages. It cannot reach localhost or private tailnet pages.",
     browserRunHint: "Select Browser Run for interactive automation, screenshots, PDFs, and page extraction. Register a token with Browser Rendering \u2014 Edit permission.",
     cfAccount: "Cloudflare account ID",
@@ -14292,11 +14308,28 @@ function TailscaleConnection({ data, action, pending, t }) {
 }
 function ComputerControl({ data, action, pending, t }) {
   const computer = data.computer ?? { enabled: false, available: true };
+  const game = computer.game ?? { name: "", executable: "", args: [], cwd: "", windowTitle: "" };
+  const [gameDraft, setGameDraft] = (0, import_react11.useState)(null);
+  const currentGame = gameDraft ?? { ...game, args: (game.args ?? []).join("\n") };
   const perform = (payload) => {
     void action(payload).catch(() => {
     });
   };
   const available = computer.available !== false;
+  const saveGame = async () => {
+    try {
+      await action({ action: "saveComputerGame", provider: "computer", config: {
+        name: currentGame.name,
+        executable: currentGame.executable,
+        args: currentGame.args.split("\n").map((value) => value.trim()).filter(Boolean),
+        cwd: currentGame.cwd,
+        windowTitle: currentGame.windowTitle
+      } });
+      setGameDraft(null);
+    } catch {
+    }
+  };
+  const editGame = (key, value) => setGameDraft((current) => ({ ...current ?? { ...game, args: (game.args ?? []).join("\n") }, [key]: value }));
   return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("article", { className: "darask-provider", children: [
     /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("header", { className: "darask-provider-header", children: [
       /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-provider-name", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: t("computerTitle") }) }),
@@ -14307,6 +14340,35 @@ function ComputerControl({ data, action, pending, t }) {
       /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-actions", children: [
         /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", variant: "outline", disabled: pending || !available || computer.enabled, onClick: () => perform({ action: "enableComputer", provider: "computer" }), children: t("computerOn") }),
         /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", disabled: pending || !computer.enabled, onClick: () => perform({ action: "disableComputer", provider: "computer" }), children: t("computerOff") })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "darask-details", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("gameProfile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "darask-fields", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "darask-muted", children: t("gameProfileHint") }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("gameName") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: currentGame.name, disabled: pending, onChange: (event) => editGame("name", event.target.value), autoComplete: "off" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("gameExecutable") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: currentGame.executable, disabled: pending, onChange: (event) => editGame("executable", event.target.value), autoComplete: "off", spellCheck: false })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("gameArguments") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("textarea", { rows: 3, value: currentGame.args, disabled: pending, onChange: (event) => editGame("args", event.target.value), spellCheck: false })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("gameWorkingDirectory") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: currentGame.cwd, disabled: pending, onChange: (event) => editGame("cwd", event.target.value), autoComplete: "off", spellCheck: false })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: t("gameWindowTitle") }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Input, { value: currentGame.windowTitle, disabled: pending, onChange: (event) => editGame("windowTitle", event.target.value), autoComplete: "off" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "darask-actions", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_dsh_client_ui_primitives10.Button, { size: "sm", variant: "primary", disabled: pending || gameDraft === null, onClick: () => {
+            void saveGame();
+          }, children: t("gameSave") }) })
+        ] })
       ] })
     ] })
   ] });

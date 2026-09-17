@@ -45,6 +45,8 @@ test('auto mode asks only for unsafe tools and skips sandbox escalation retries'
   assert.equal(autoApprovalAsk(exec('pwsh', { command: 'git push', sandbox_permissions: 'danger-full-access' })), null);
   assert.equal(autoApprovalAsk(exec('darask_computer', { action: 'screenshot' })), null);
   assert.match(autoApprovalAsk(exec('darask_computer', { action: 'click' })), /PC 画面/);
+  assert.match(autoApprovalAsk(exec('darask_computer', { action: 'launch_game_pair' })), /PC 画面/);
+  assert.equal(autoApprovalAsk(exec('darask_computer', { action: 'pair_screenshot' })), null);
   for (const action of ['invoke', 'set_value', 'select', 'toggle']) assert.match(autoApprovalAsk(exec('darask_computer', { action, node: 'remote' })), /PC 画面/);
   assert.equal(autoApprovalAsk(exec('darask_computer', { action: 'inspect', node: 'remote' })), null);
   assert.equal(autoApprovalAsk(exec('mcp__kitesurf__take_snapshot')), null);

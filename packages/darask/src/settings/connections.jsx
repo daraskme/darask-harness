@@ -18,8 +18,24 @@ export function TailscaleConnection({ data, action, pending, t }) {
 
 export function ComputerControl({ data, action, pending, t }) {
   const computer = data.computer ?? { enabled: false, available: true };
+  const game = computer.game ?? { name: '', executable: '', args: [], cwd: '', windowTitle: '' };
+  const [gameDraft, setGameDraft] = useState(null);
+  const currentGame = gameDraft ?? { ...game, args: (game.args ?? []).join('\n') };
   const perform = payload => { void action(payload).catch(() => {}) };
   const available = computer.available !== false;
+  const saveGame = async () => {
+    try {
+      await action({ action: 'saveComputerGame', provider: 'computer', config: {
+        name: currentGame.name,
+        executable: currentGame.executable,
+        args: currentGame.args.split('\n').map(value => value.trim()).filter(Boolean),
+        cwd: currentGame.cwd,
+        windowTitle: currentGame.windowTitle,
+      } });
+      setGameDraft(null);
+    } catch {}
+  };
+  const editGame = (key, value) => setGameDraft(current => ({ ...(current ?? { ...game, args: (game.args ?? []).join('\n') }), [key]: value }));
   return <article className="darask-provider">
     <header className="darask-provider-header"><div className="darask-provider-name"><h3>{t('computerTitle')}</h3></div><Tag tone={computer.enabled ? 'success' : 'neutral'}>{t(computer.enabled ? 'computerReady' : available ? 'disabled' : 'computerUnavailable')}</Tag></header>
     <div className="darask-usage">
@@ -28,6 +44,15 @@ export function ComputerControl({ data, action, pending, t }) {
         <Button size="sm" variant="outline" disabled={pending || !available || computer.enabled} onClick={() => perform({ action: 'enableComputer', provider: 'computer' })}>{t('computerOn')}</Button>
         <Button size="sm" disabled={pending || !computer.enabled} onClick={() => perform({ action: 'disableComputer', provider: 'computer' })}>{t('computerOff')}</Button>
       </div>
+      <details className="darask-details"><summary>{t('gameProfile')}</summary><div className="darask-fields">
+        <p className="darask-muted">{t('gameProfileHint')}</p>
+        <label className="darask-field"><span>{t('gameName')}</span><Input value={currentGame.name} disabled={pending} onChange={event => editGame('name', event.target.value)} autoComplete="off" /></label>
+        <label className="darask-field"><span>{t('gameExecutable')}</span><Input value={currentGame.executable} disabled={pending} onChange={event => editGame('executable', event.target.value)} autoComplete="off" spellCheck={false} /></label>
+        <label className="darask-field"><span>{t('gameArguments')}</span><textarea rows={3} value={currentGame.args} disabled={pending} onChange={event => editGame('args', event.target.value)} spellCheck={false} /></label>
+        <label className="darask-field"><span>{t('gameWorkingDirectory')}</span><Input value={currentGame.cwd} disabled={pending} onChange={event => editGame('cwd', event.target.value)} autoComplete="off" spellCheck={false} /></label>
+        <label className="darask-field"><span>{t('gameWindowTitle')}</span><Input value={currentGame.windowTitle} disabled={pending} onChange={event => editGame('windowTitle', event.target.value)} autoComplete="off" /></label>
+        <div className="darask-actions"><Button size="sm" variant="primary" disabled={pending || gameDraft === null} onClick={() => { void saveGame() }}>{t('gameSave')}</Button></div>
+      </div></details>
     </div>
   </article>;
 }
