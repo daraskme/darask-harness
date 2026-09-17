@@ -56,6 +56,14 @@ npm run dev            # = packages/darask/scripts/dev.mjs。ハーネスの roo
 
 `hashline_read` は各行を `行番号:ハッシュ→内容` で返し、`hashline_edit` はそのアンカーで `replace` / `insert_after` / `write` を一括適用します。ハッシュが合わない行は stale として拒否し、±15 行以内に一意な移動先があれば候補を提示します。全操作を元のスナップショットに対して検証してから適用するため、部分適用は起きません。`hashline_grep` は `ctx.fs` 上でディレクトリを走査し、同じアンカー形式で一致行と前後文脈を返します。
 
+## リモート PC と対人ゲーム
+
+`darask_computer` はハブ PC (`node: local`) と、認証済みの登録済み PC を同じ操作経路から扱います。ゲームは各 PC の「設定 → アカウント → ブラウザーと画面操作」で、実行ファイル・引数・作業フォルダーを起動プロファイルとして保存します。モデルやリモート要求から任意のコマンドやパスは指定できず、保存済みプロファイルだけを `shell: false` で起動します。
+
+二台での検証は `pcs → launch_game_pair → pair_screenshot` の順に開始します。`pair_screenshot` が返す画像と `snapshotId` は PC ごとに分かれるため、その後の操作では同じ node と `snapshotId` を組み合わせます。片方だけ起動した場合も自動再送しません。ロビー表示だけでは成功とせず、一方の入力が相手側へ反映されることを両方向の画面で確認して、対人動作の成功と判定します。
+
+実機検証には、Computer Use を有効にしたログイン済み Windows PC 二台、双方で動く同じゲーム、接続済み Tailscale、ゲーム固有のロビー／参加手順が必要です。Linux ではゲームプロファイルの設定画面を検証できますが、ネイティブ画面操作は実行できません。
+
 ## ステータスライン
 
 セッションヘッダーに `deepseek-chat │ 42% (54K/128K) │ $0.0123 │ 12s` の形式で表示します。`$DSH_HOME/darask/status-line.json` で上書きできます (grok-build の `[ui.status_line]` と同じ語彙):
@@ -73,6 +81,12 @@ npm run dev            # = packages/darask/scripts/dev.mjs。ハーネスの roo
 ## ハブ更新の配布
 
 dsh-darask の `host-update` はこの monorepo でも動作します。開発モードの PC はハーネスのチェックアウトを `git merge --ff-only` し、インストール済み PC には `packages/darask` を `npm pack` したアーカイブ (`dsh-darask-*.tgz`) を配布します。配布単位をハーネス全体にするのは今後の課題です (下記)。
+
+## dsh-darask の移行状況
+
+移設時点の `daraskme/dsh-darask` の既定ブランチと照合し、ソース、テスト、スキル、vendor、生成物、ライセンス、固定依存は `packages/darask` とルート lockfile へ移行済みです。開発起動、更新制御、ロケール検査、画面 bundle は monorepo 配置に合わせて調整しています。パッケージ名 `dsh-darask` は、既存プロファイル、更新アーカイブ、インストーラーとの互換性のため意図的に維持します。
+
+リポジトリ運用まで完全に一本化した状態ではありません。インストール済みリモート PC への配布とセットアップは現在も `dsh-darask` パッケージ単位で、パッケージ内の移行スクリプト・メタデータ・一部の単体導入ドキュメントは旧リポジトリを参照します。旧コミット履歴とリリースタグも `darask-harness` の履歴へは移さず、旧リポジトリ側に保持しています。
 
 ## 今後の課題
 
