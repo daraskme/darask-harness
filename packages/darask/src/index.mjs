@@ -4,7 +4,7 @@ import { resolveDshHome } from '@deepseek-ai/dsh-home-paths';
 import { createStore } from './store.mjs';
 import { createService } from './service.mjs';
 import { createRoutes, createOpenRouterCallbackRoute } from './http.mjs';
-import { candidates, MODEL_ROUTES } from './config.mjs';
+import { candidatesForPurpose, MODEL_ROUTES } from './config.mjs';
 import { enableClaudeRoute } from './claude-route.mjs';
 import { fileURLToPath } from 'node:url';
 import * as mcpClient from '@deepseek-ai/dsh-mcp-client';
@@ -39,7 +39,7 @@ import { OpenAICodexProxyManager, readOpenAICodexRateLimits, resolveOpenAICodexP
 import { createAddonStore } from './addons/store.mjs';
 import { createAddons, registerAddons, createAddonRoutes } from './addons/register.mjs';
 import { openAiModelCatalog } from './providers/openai.mjs';
-import { visibleModelCatalog } from './model-catalogs.mjs';
+import { updateModelCatalogIfRegistered, visibleModelCatalog } from './model-catalogs.mjs';
 
 const release = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
 
@@ -190,8 +190,8 @@ export async function apply(ctx, config) {
     const openrouter = current?.providers?.openrouter ?? {};
     const openrouterModels = visibleModelCatalog('openrouter', visibility);
     if (JSON.stringify(openrouter.models) !== JSON.stringify(openrouterModels) || openrouter.displayName !== 'OpenRouter') await ctx.settings.update('llm-pi-ai', { providers: { openrouter: { ...openrouter, displayName: 'OpenRouter', models: openrouterModels } } });
-    await ctx.settings.update('llm-openai-codex', { models: visibility?.codex ?? visibleModelCatalog('codex').map(model => model.id) });
-    await ctx.settings.update('llm-grok', { models: visibility?.grok ?? visibleModelCatalog('grok').map(model => model.id) });
+    await updateModelCatalogIfRegistered(ctx.settings, 'llm-openai-codex', visibility?.codex ?? visibleModelCatalog('codex').map(model => model.id));
+    await updateModelCatalogIfRegistered(ctx.settings, 'llm-grok', visibility?.grok ?? visibleModelCatalog('grok').map(model => model.id));
   };
   const service = createService({ store, directory, credentials: ctx.credentials, tailscale, browserRun, localModel, computer, enableLocalRoute, enableClaudeRoute: () => enableClaudeRoute({ settings: ctx.settings, credentials: ctx.credentials, visibleModels: store.get().modelVisibility?.claude }), enableOpenRouterRoute: ref => enablePiAiKey('openrouter', ref), enableOpenAiRoute: ref => enablePiAiKey('openai', ref), syncOpenAiModels: syncModelCatalogs, compatibility: () => ({ dsh: '0.1.5-rc.2', subagentPackagesRequired: false, cursor: 'isolated-cli', grok: 'isolated-cli', routing: 'before-request', claudeUsage: 'statusLine', kitesurf: config.kitesurf, computer: store.get().computer?.enabled ? 'desktop' : 'opt-in' }) });
   await syncModelCatalogs(service.snapshots.openai?.usage);
@@ -205,7 +205,8 @@ export async function apply(ctx, config) {
     let request = original;
     if (current.routingEnabled) {
       signal.throwIfAborted();
-      const choices = candidates(current, service.snapshots);
+      const purpose = addons.api.currentObservation?.()?.intent?.id;
+      const choices = candidatesForPurpose(current, service.snapshots, purpose);
       let routed;
       for (const id of choices) {
         const provider = MODEL_ROUTES[id];

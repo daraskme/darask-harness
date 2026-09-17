@@ -30,6 +30,7 @@ test('intent router maps 7+1 classes and extracts hard constraints', () => {
   assert.equal(classifyIntent('bug を直して').id, 'medium');
   assert.equal(classifyIntent('hello').id, 'simple');
   assert.equal(effortFor(classifyIntent('調査して比較して')), 'high');
+  assert.equal(classifyIntent('Webで検索して根拠を探して').id, 'research');
   const constraints = detectConstraints('Do not expand the request.\n秘密は書くな');
   assert.ok(constraints.length >= 1);
   assert.match(cognitiveGate({ intent: classifyIntent('refactor the module'), constraints }), /refactor/);

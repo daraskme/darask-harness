@@ -35,6 +35,12 @@ export function visibleModelCatalog(provider, visibility) {
   return catalog.filter(model => selected.has(model.id));
 }
 
+export async function updateModelCatalogIfRegistered(settings, namespace, models) {
+  if (settings.get(namespace) === undefined) return false;
+  await settings.update(namespace, { models });
+  return true;
+}
+
 export function validateModelVisibility(value, base = defaultModelVisibility()) {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(provider => !(provider in MODEL_CATALOGS))) throw new Error('Invalid model visibility');
   const result = structuredClone(base);

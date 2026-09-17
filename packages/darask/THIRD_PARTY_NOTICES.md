@@ -10,6 +10,7 @@ DARASK 独自の統合コードは `LICENSE` の MIT License で配布します�
 | Codex Connect | [franksong2702/dsh-codex-connect](https://github.com/franksong2702/dsh-codex-connect) 0.1.0-alpha.4.35 | Apache-2.0 / Copyright 2026 Frank Song。Yan-Zero の著作物を含む | npm 依存。元の LICENSE、NOTICE、`docs/licenses/pi-ai-oauth.txt` を保持 |
 | Bridge Gateway | [daraskme/dsh-bridge-gateway](https://github.com/daraskme/dsh-bridge-gateway/tree/9c53f3982ffd1337a59ba240b8f4dadd2b726178) 0.1.7 | MIT / Copyright 2024 wenbin-wb | `vendor/dsh-bridge-gateway` と bundled dependency。元の LICENSE を保持 |
 | Chrome DevTools MCP | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) 1.9.0 | Apache-2.0。元の配布物の LICENSE / NOTICE を参照 | npm 依存。Kitesurf / Browser Run 接続に使用 |
+| Vercel AI SDK / AI Gateway | [vercel/ai](https://github.com/vercel/ai) 7.0.105 / `@ai-sdk/gateway` 4.0.85 | Apache-2.0 / Copyright Vercel, Inc. | npm 依存。`typesafe-ai/jev` の評価 API に使用 |
 | jsQR | [cozmo/jsQR](https://github.com/cozmo/jsQR) 1.4.0 | Apache-2.0 / Copyright 2017 Cozmo | QR 読み取り用のクライアントバンドルに組み込み。原文は `vendor/licenses/jsqr-LICENSE` |
 | qrcode | [soldair/node-qrcode](https://github.com/soldair/node-qrcode) 1.5.4 | MIT / Copyright 2012 Ryan Day | npm 依存。DSH の接続 QR をローカルで生成 |
 | oh-my-deepseek-harness | [yuanchenglu/oh-my-deepseek-harness](https://github.com/yuanchenglu/oh-my-deepseek-harness) | MIT / Copyright 2026 yuanchenglu | 意図ルーティング・認知ゲート・計画/記憶/チェックポイントを DSH 向けに再実装 |
