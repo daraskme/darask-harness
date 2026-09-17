@@ -11,7 +11,7 @@
 // which owns accept (fold into baseline) and reject (revert on disk).
 
 import { execFile } from 'node:child_process';
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { promisify } from 'node:util';
 import z from '@deepseek-ai/schemastery';
@@ -250,8 +250,8 @@ export function apply(ctx, config) {
     }
     return next();
   };
-  ctx.on('fs/write-intent', intentListener);
-  ctx.on('fs/edit-intent', intentListener);
+  ctx.on('fs/write-intent', intentListener, { prepend: true });
+  ctx.on('fs/edit-intent', intentListener, { prepend: true });
 
   const settle = callId => {
     const bucket = pendingWrites.get(callId);
@@ -383,12 +383,24 @@ export function apply(ctx, config) {
   // ---- /hunks command ------------------------------------------------------
 
   async function rejectHunk(entry, hunkId) {
-    const outcome = entry.tracker.reject(hunkId);
+    const policy = ctx.get?.('sandboxPolicy')?.resolve({ session: entry.session });
+    const mode = policy?.mode ?? ctx.get?.('shell')?.sandboxMode;
+    if (mode !== undefined && mode !== 'danger-full-access') throw new Error('Hunk rejection is unavailable under a confined sandbox policy.');
+    if (!policy && mode !== undefined) throw new Error('Cannot resolve the hunk rejection sandbox policy.');
+    const proposed = HunkTracker.fromSnapshot(entry.tracker.snapshot());
+    const outcome = proposed.reject(hunkId);
     if (!outcome) return false;
     const target = await targetFor(entry, outcome.key, outcome.path);
-    if (outcome.content === null) await rm(ctx.fs.processPath(target), { force: true });
-    else await ctx.fs.writeText(target, outcome.content);
-    const { version } = await readState(target);
+    const expected = entry.versions.get(outcome.key);
+    let version;
+    if (outcome.content === null) {
+      throw new Error('DSH does not provide guarded deletion. Review and delete this newly created file manually, then refresh hunks.');
+    } else {
+      const intent = expected === undefined ? { kind: 'createIfAbsent' } : { kind: 'replaceIfVersion', version: expected };
+      const written = await ctx.fs.writeText(target, outcome.content, intent, undefined, policy);
+      version = written.version;
+    }
+    entry.tracker = proposed;
     entry.versions.set(outcome.key, version);
     return true;
   }

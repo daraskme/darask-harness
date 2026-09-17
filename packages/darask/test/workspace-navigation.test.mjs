@@ -2,6 +2,21 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorkspaceNavigation, REMOTE_PANEL } from '../src/workspace-navigation.mjs';
 const response = (node, workspace) => ({ url: '/api/darask/remote?' + new URLSearchParams({ node, workspace }), host: { workspaces: [{ id: workspace, title: 'テスト' }] } });
+test('cold dashboard attach survives panel unmount and waits for matching remote session membership', async () => {
+  const f = fixture(), commands = [];
+  await f.navigation.open('win', 'project', { sessionId: 'wanted' });
+  f.navigation.observePanel(null);
+  f.navigation.attachFrame('win', 'project', command => commands.push(command));
+  f.navigation.receiveSessions({ node: 'win', workspace: 'project', sessions: [] });
+  f.navigation.receiveSessions({ node: 'win', workspace: 'project', sessions: [{ id: 'unrelated', title: 'Other' }] });
+  f.navigation.receiveSessions({ node: 'mac', workspace: 'project', sessions: [{ id: 'wanted', title: 'Wanted' }] });
+  assert.equal(commands.length, 0);
+  f.navigation.receiveSessions({ node: 'win', workspace: 'project', sessions: [{ id: 'wanted', title: 'Wanted' }] });
+  assert.deepEqual(commands, [{ type: 'darask-open-session', node: 'win', workspace: 'project', session: 'wanted' }]);
+  f.navigation.receiveSessions({ node: 'win', workspace: 'project', sessions: [{ id: 'wanted', title: 'Wanted' }] });
+  assert.equal(commands.length, 1);
+  f.navigation.dispose();
+});
 function fixture(request = async ({ node, workspaceId }) => response(node, workspaceId), initial = 'https://hub.test/') {
   let location = new URL(initial), panel = null, pending = new AbortController(); const visits = [];
   const browser = { get location() { return location; }, history: Object.fromEntries(['pushState', 'replaceState'].map(method => [method, (_state, _title, path) => { location = new URL(path, location); visits.push({ method, path }); }])) };

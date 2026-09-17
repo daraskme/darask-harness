@@ -11147,7 +11147,7 @@ function createWorkspaceNavigation({ getLayout, getWindow, request: request2 }) 
       });
       const current = typeof data.current === "string" ? data.current : null;
       const waiting = queued.get(key);
-      if (waiting && frames.has(key)) {
+      if (waiting && frames.has(key) && (waiting.type !== "darask-open-session" || sessions.some((session) => session.id === waiting.session))) {
         queued.delete(key);
         frames.get(key)(waiting);
       }
@@ -11215,15 +11215,20 @@ function createWorkspaceNavigation({ getLayout, getWindow, request: request2 }) 
       }
       publish();
     },
-    async open(node, workspace, { replace = false, newSession = false, force = false } = {}) {
+    async open(node, workspace, { replace = false, newSession = false, force = false, sessionId } = {}) {
       if (disposed) return;
       const key = keyOf(node, workspace), cached = opened.get(key);
+      const selection = typeof sessionId === "string" ? { type: "darask-open-session", node, workspace, session: sessionId } : void 0;
+      if (selection) queued.set(key, selection);
       activate(node, workspace, replace);
       if (!force && cached?.src && !cached.error) {
         if (newSession) {
           const command = { type: "darask-new-session", node, workspace };
           if (cached.sessions && frames.has(key)) frames.get(key)(command);
           else queued.set(key, command);
+        } else if (selection && cached.sessions?.some((session) => session.id === sessionId) && frames.has(key)) {
+          queued.delete(key);
+          frames.get(key)(selection);
         }
         return;
       }
@@ -11237,7 +11242,7 @@ function createWorkspaceNavigation({ getLayout, getWindow, request: request2 }) 
       const timer = setTimeout(() => controller.abort(Object.assign(new Error("Connection timed out"), { name: "TimeoutError" })), 45e3);
       const pending = { controller, timer, newSession };
       requests.set(key, pending);
-      queued.delete(key);
+      if (!selection) queued.delete(key);
       update(key, { node, workspace, loading: true, error: "", src: null });
       pending.promise = (async () => {
         try {
@@ -11254,6 +11259,7 @@ function createWorkspaceNavigation({ getLayout, getWindow, request: request2 }) 
           update(key, { node, workspace, title: selected.title, loading: false, error: "", src: target.pathname + target.search });
         } catch (error) {
           if (requests.get(key) !== pending || signal.aborted && signal.reason?.name !== "TimeoutError" || disposed) return;
+          queued.delete(key);
           update(key, { node, workspace, loading: false, error: error.name === "TimeoutError" || signal.reason?.name === "TimeoutError" ? "\u63A5\u7D9A\u306B\u6642\u9593\u304C\u304B\u304B\u3063\u3066\u3044\u307E\u3059\u3002\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002" : error.message, src: null });
         } finally {
           clearTimeout(timer);
@@ -11433,6 +11439,36 @@ function KeySharing({ nodes, secrets }) {
 // src/dashboard-client.jsx
 var import_react4 = __toESM(require("react"), 1);
 var import_dsh_client_ui_primitives4 = require("@deepseek-ai/dsh-client-ui-primitives");
+
+// src/dashboard-peek.mjs
+function createPeekReader(request2, update) {
+  let active;
+  return {
+    async read(target, offset, append) {
+      active?.abort();
+      const controller = new AbortController();
+      active = controller;
+      update((current) => ({ ...current, loading: true, error: "" }));
+      try {
+        const value = await request2(
+          { action: "read", node: target.node, cwd: target.cwd, sessionId: target.id, offset, limit: 50 },
+          AbortSignal.any([controller.signal, AbortSignal.timeout(2e4)])
+        );
+        if (active !== controller) return;
+        update((current) => ({ items: append ? [...current.items, ...value.items] : value.items, loading: false, error: "", nextOffset: value.nextOffset ?? null, notice: value.notice ?? "" }));
+      } catch (error) {
+        if (active === controller) update((current) => ({ ...current, loading: false, error: error.message }));
+      } finally {
+        if (active === controller) active = void 0;
+      }
+    },
+    cancel() {
+      const controller = active;
+      active = void 0;
+      controller?.abort();
+    }
+  };
+}
 
 // src/dashboard.mjs
 var DASHBOARD_PANEL = "darask-dashboard";
@@ -11756,19 +11792,13 @@ function useColdSessions(groups2, opened, tick) {
 }
 function PeekPane({ target, onClose }) {
   const [state, setState] = (0, import_react4.useState)({ items: [], loading: true, error: "", nextOffset: null, notice: "" });
-  const read = async (offset, append) => {
-    setState((current) => ({ ...current, loading: true, error: "" }));
-    try {
-      const value = await post2({ action: "read", node: target.node, cwd: target.cwd, sessionId: target.id, offset, limit: 50 });
-      setState((current) => ({ items: append ? [...current.items, ...value.items] : value.items, loading: false, error: "", nextOffset: value.nextOffset ?? null, notice: value.notice ?? "" }));
-    } catch (e) {
-      setState((current) => ({ ...current, loading: false, error: e.message }));
-    }
-  };
+  const reader = (0, import_react4.useMemo)(() => createPeekReader(post2, setState), []);
+  const read = (offset, append) => reader.read(target, offset, append);
   (0, import_react4.useEffect)(() => {
     setState({ items: [], loading: true, error: "", nextOffset: null, notice: "" });
     void read(0, false);
-  }, [target.key]);
+    return () => reader.cancel();
+  }, [target.key, reader]);
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("aside", { className: "darask-dashboard-peek", "aria-label": "\u30BB\u30C3\u30B7\u30E7\u30F3\u5185\u5BB9\uFF08\u8AAD\u307F\u53D6\u308A\u5C02\u7528\uFF09", children: [
     /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("header", { children: [
       /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
@@ -11825,17 +11855,7 @@ function DashboardPanel({ navigation, openLocal, loadGroups, hostName, useSessio
   const cold = useColdSessions(groups2, opened, tick);
   const [prefs, setPrefs] = (0, import_react4.useState)(() => loadPrefs(window.localStorage));
   const [query, setQuery] = (0, import_react4.useState)(""), [peek, setPeek] = (0, import_react4.useState)(null);
-  const pendingOpen = (0, import_react4.useRef)(null);
   (0, import_react4.useEffect)(() => savePrefs(window.localStorage, prefs), [prefs]);
-  (0, import_react4.useEffect)(() => {
-    const target = pendingOpen.current;
-    if (!target) return;
-    const entry = opened.find((item) => item.node === target.node && item.workspace === target.workspaceId);
-    if (entry?.sessions?.some((session) => session.id === target.id)) {
-      pendingOpen.current = null;
-      navigation.openSession(target.id, target.node, target.workspaceId);
-    } else if (entry && !entry.loading && (entry.error || entry.sessions)) pendingOpen.current = null;
-  }, [opened, navigation]);
   const rows = (0, import_react4.useMemo)(() => [...localRows({ sessions, pending, workspaces, hostName, archived: workspaces?.archivedSessionIds }), ...remoteRows({ groups: groups2, opened, cold })], [sessions, pending, workspaces, hostName, groups2, opened, cold]);
   const view = (0, import_react4.useMemo)(() => buildDashboard(rows, prefs, query), [rows, prefs, query]);
   const update = (patch) => setPrefs((current) => ({ ...current, ...patch }));
@@ -11849,8 +11869,7 @@ function DashboardPanel({ navigation, openLocal, loadGroups, hostName, useSessio
       navigation.openSession(row.id, row.node, row.workspaceId);
       return;
     }
-    pendingOpen.current = row;
-    void navigation.open(row.node, row.workspaceId);
+    void navigation.open(row.node, row.workspaceId, { sessionId: row.id });
   };
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask darask-dashboard", "data-peek": peek ? "" : void 0, children: [
     /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "darask-dashboard-list", children: [
@@ -11907,7 +11926,7 @@ function DashboardPanel({ navigation, openLocal, loadGroups, hostName, useSessio
       ] }, group.id)),
       !view.groups.length && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-dashboard-empty", children: sessions?.phase === "ready" ? "\u6761\u4EF6\u306B\u5408\u3046\u30BB\u30C3\u30B7\u30E7\u30F3\u306F\u3042\u308A\u307E\u305B\u3093\u3002" : "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026" })
     ] }),
-    peek && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PeekPane, { target: peek, onClose: () => setPeek(null) })
+    peek && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PeekPane, { target: peek, onClose: () => setPeek(null) }, peek.key)
   ] });
 }
 function registerDashboardUi(ctx, { navigation, loadGroups }) {

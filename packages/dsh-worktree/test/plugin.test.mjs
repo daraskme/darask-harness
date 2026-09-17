@@ -192,3 +192,16 @@ test('the per-repository limit is enforced', async () => {
     await t.cleanup();
   }
 });
+
+test('remove and GC protect the invoking session worktree even when force is requested', async () => {
+  const t = await harness();
+  try {
+    const created = await t.call('worktree_create', { name: 'active' });
+    const agent = { session: { id: 'active-session', header: { cwd: created.path } } };
+    await assert.rejects(t.h.tools.get('worktree_remove').execute({ name: 'active', force: true }, { agent }), /current session workspace/);
+    const result = await t.h.commands.get('worktree').handler({ rawInput: 'gc --all', agent });
+    assert.match(result.text, /Removed 0/);
+    assert.match(result.text, /current session workspace/);
+    assert.equal((await stat(join(created.path, 'README.md'))).isFile(), true);
+  } finally { await t.cleanup(); }
+});

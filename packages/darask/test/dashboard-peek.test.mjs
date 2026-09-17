@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createPeekReader } from '../src/dashboard-peek.mjs';
+
+test('peek ignores stale success and failure after switching targets, cancelling or paging', async () => {
+  let state = { items: [] };
+  const requests = [];
+  const reader = createPeekReader((body, signal) => {
+    const pending = Promise.withResolvers();
+    requests.push({ ...pending, body, signal });
+    return pending.promise;
+  }, change => { state = change(state); });
+  const a = { node: 'pc-a', cwd: '/a', id: 'a' }, b = { node: 'pc-b', cwd: '/b', id: 'b' };
+  const first = reader.read(a, 0, false);
+  const second = reader.read(b, 0, false);
+  assert.equal(requests[0].signal.aborted, true);
+  requests[1].resolve({ items: ['B'], nextOffset: 50 });
+  await second;
+  requests[0].resolve({ items: ['A'] });
+  await first;
+  assert.deepEqual(state.items, ['B']);
+  const stalePage = reader.read(b, 50, true);
+  reader.cancel();
+  const fresh = reader.read(a, 0, false);
+  requests[2].reject(new Error('stale failure'));
+  await stalePage;
+  assert.equal(state.error, '');
+  assert.equal(state.loading, true);
+  requests[3].resolve({ items: ['A'], nextOffset: 50 });
+  await fresh;
+  const page = reader.read(a, 50, true);
+  requests[4].resolve({ items: ['A2'] });
+  await page;
+  assert.deepEqual(state.items, ['A', 'A2']);
+  assert.equal(state.nextOffset, null);
+  const unmounted = reader.read(b, 0, false);
+  reader.cancel();
+  const before = state;
+  requests[5].resolve({ items: ['B'] });
+  await unmounted;
+  assert.equal(state, before);
+});

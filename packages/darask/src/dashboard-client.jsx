@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Button, Input, StateDot, Switch } from '@deepseek-ai/dsh-client-ui-primitives';
 import { sessionActivity } from './session-activity.mjs';
+import { createPeekReader } from './dashboard-peek.mjs';
 import { DASHBOARD_PANEL, FILTERS, GROUPINGS, SORTS, buildDashboard, loadPrefs, localRows, remoteRows, rowChips, rowStatusLabel, savePrefs, stateLabel, stateOf, toggleCollapsed } from './dashboard.mjs';
 
 export const DASHBOARD_ENDPOINT = '/api/darask/sessions/dashboard';
@@ -82,14 +83,12 @@ function useColdSessions(groups, opened, tick) {
 
 function PeekPane({ target, onClose }) {
   const [state, setState] = useState({ items: [], loading: true, error: '', nextOffset: null, notice: '' });
-  const read = async (offset, append) => {
-    setState(current => ({ ...current, loading: true, error: '' }));
-    try {
-      const value = await post({ action: 'read', node: target.node, cwd: target.cwd, sessionId: target.id, offset, limit: 50 });
-      setState(current => ({ items: append ? [...current.items, ...value.items] : value.items, loading: false, error: '', nextOffset: value.nextOffset ?? null, notice: value.notice ?? '' }));
-    } catch (e) { setState(current => ({ ...current, loading: false, error: e.message })); }
-  };
-  useEffect(() => { setState({ items: [], loading: true, error: '', nextOffset: null, notice: '' }); void read(0, false); }, [target.key]);
+  const reader = useMemo(() => createPeekReader(post, setState), []);
+  const read = (offset, append) => reader.read(target, offset, append);
+  useEffect(() => {
+    setState({ items: [], loading: true, error: '', nextOffset: null, notice: '' }); void read(0, false);
+    return () => reader.cancel();
+  }, [target.key, reader]);
   return <aside className="darask-dashboard-peek" aria-label="セッション内容（読み取り専用）">
     <header><div><strong>{target.title}</strong><small>{target.hostName} · {target.workspaceTitle || target.cwd}</small></div><Button variant="ghost" size="sm" onClick={onClose} aria-label="閉じる">×</Button></header>
     {state.notice && <p className="darask-dashboard-notice">{state.notice}</p>}
@@ -124,15 +123,7 @@ export function DashboardPanel({ navigation, openLocal, loadGroups, hostName, us
   const cold = useColdSessions(groups, opened, tick);
   const [prefs, setPrefs] = useState(() => loadPrefs(window.localStorage));
   const [query, setQuery] = useState(''), [peek, setPeek] = useState(null);
-  const pendingOpen = useRef(null);
   useEffect(() => savePrefs(window.localStorage, prefs), [prefs]);
-  useEffect(() => {
-    const target = pendingOpen.current;
-    if (!target) return;
-    const entry = opened.find(item => item.node === target.node && item.workspace === target.workspaceId);
-    if (entry?.sessions?.some(session => session.id === target.id)) { pendingOpen.current = null; navigation.openSession(target.id, target.node, target.workspaceId); }
-    else if (entry && !entry.loading && (entry.error || entry.sessions)) pendingOpen.current = null;
-  }, [opened, navigation]);
   const rows = useMemo(() => [...localRows({ sessions, pending, workspaces, hostName, archived: workspaces?.archivedSessionIds }), ...remoteRows({ groups, opened, cold })], [sessions, pending, workspaces, hostName, groups, opened, cold]);
   const view = useMemo(() => buildDashboard(rows, prefs, query), [rows, prefs, query]);
   const update = patch => setPrefs(current => ({ ...current, ...patch }));
@@ -140,8 +131,7 @@ export function DashboardPanel({ navigation, openLocal, loadGroups, hostName, us
     if (row.placeholder) return;
     if (row.node === 'local') { openLocal(row.id); return; }
     if (row.observed) { navigation.openSession(row.id, row.node, row.workspaceId); return; }
-    pendingOpen.current = row;
-    void navigation.open(row.node, row.workspaceId);
+    void navigation.open(row.node, row.workspaceId, { sessionId: row.id });
   };
   return <div className="darask darask-dashboard" data-peek={peek ? '' : undefined}>
     <div className="darask-dashboard-list">
@@ -166,7 +156,7 @@ export function DashboardPanel({ navigation, openLocal, loadGroups, hostName, us
       </section>)}
       {!view.groups.length && <p className="darask-dashboard-empty">{sessions?.phase === 'ready' ? '条件に合うセッションはありません。' : '読み込み中…'}</p>}
     </div>
-    {peek && <PeekPane target={peek} onClose={() => setPeek(null)} />}
+    {peek && <PeekPane key={peek.key} target={peek} onClose={() => setPeek(null)} />}
   </div>;
 }
 

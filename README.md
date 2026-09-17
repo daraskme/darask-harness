@@ -104,7 +104,7 @@ memory.sqlite                 メタデータと FTS5 索引 (unicode61 + trigra
 上流の書き込み・編集ツールが通す `fs/write-intent` / `fs/edit-intent` ゲートで、そのセッションが初めて触るファイルの内容をベースラインとして保存し、ツールが `tools/result` で確定した後に再読込して差分を hunk (連続する変更行の塊) として保持します。各 hunk は `agentEdit { turn }` / `externalEditOnAgentFile` / `external` のいずれかに帰属し、追跡中ファイルはターン開始時と照会時に再読込して外部編集を検出します。再計算時は内容一致・重なりで旧 hunk と照合し、ID と帰属を引き継ぎます。
 
 - `hunks_status` (ターン別・ファイル別の保留 hunk 数、accept / reject 集計) と `hunks_diff` (ベースライン→現在の unified diff、`agent_only` でエージェント hunk のみ) はモデル向けの読み取り専用ツール。出力は `diffOutputMaxBytes` で打ち切ります。
-- `/hunks status|list [path]|diff [path]|accept <all|turn N|path|id>|reject <all|turn N|path|id> [--yes]|forget <path>`。accept は hunk をベースラインへ畳み込み、reject は `ctx.fs.writeText` で該当 hunk だけを元に戻します (作成ファイルの reject は削除)。複数 hunk の reject は `--yes` が必要です。
+- `/hunks status|list [path]|diff [path]|accept <all|turn N|path|id>|reject <all|turn N|path|id> [--yes]|forget <path>`。accept は hunk をベースラインへ畳み込み、reject は DSH の版数付き書き込みで該当 hunk を戻し、成功後に追跡状態を確定します。複数 hunk の reject は `--yes` が必要です。DSH 0.1.5-rc.2 に版数付き削除 API が無いため、新規ファイルの reject は拒否します（確認後に手動削除して再照会）。read-only / workspace-write の制限付きポリシーでは reject を無効にします。
 - 状態は `$DSH_HOME/darask/hunks/<session>.json` に一時ファイル → rename で保存し、再起動後も引き継ぎます (`persist: false` で無効)。`baseline: git-head` にすると初回のベースラインを `git show HEAD:<file>` から取ります。バイナリ (`FS_NOT_TEXT`)・`maxFileBytes` 超・非通常ファイルは hunk を計算せず種別だけ記録します。
 - 追跡はエージェントが触ったファイルに限ります (grok-build の `AgentOnly` 相当)。作業ツリー全体の dirty ファイル追跡と、hunk 単位の UI レビューは未実装です。
 
@@ -129,10 +129,11 @@ memory.sqlite                 メタデータと FTS5 索引 (unicode61 + trigra
 
 ## Git worktree
 
-`worktree_create` は `git rev-parse --show-toplevel` (リンク先 worktree からは主ツリーへ解決) で対象リポジトリを決め、`<repo>/.darask/worktrees/<name>` に `git worktree add -b wt/<name> <path> <base>` で作成します (`branch` に既存ブランチを渡すとチェックアウト)。`.darask/` は `.git/info/exclude` に登録するので主ツリーは clean のままです。`root` 設定で別の場所も指定できますが、sandbox のワークスペース外だと書き込みが拒否される旨を警告します。
+`worktree_create` は `git rev-parse --show-toplevel` (リンク先 worktree からは主ツリーへ解決) で対象リポジトリを決め、`<repo>/.darask/worktrees/<name>` に `git worktree add -b wt/<name> <path> <base>` で作成します (`branch` に既存ブランチを渡すとチェックアウト)。`.darask/` は `.git/info/exclude` に登録するので主ツリーは clean のままです。`root` 設定で別の場所も指定できます。現在の Git アダプターは sandbox を適用できないため、read-only / workspace-write の制限付きポリシーでは作成・削除・GC を拒否します。制限を無効にする代わりに、DSH の標準 shell ツールを利用してください。
 
 - レジストリ `$DSH_HOME/darask/worktrees/registry.json` には名前・パス・ブランチ・基点・所有セッション・時刻を残し、`worktree_list` / `/worktree list` は `git worktree list --porcelain` と `git status --porcelain` で dirty / missing / prunable / locked / stale を付けます。
-- `worktree_remove` は dirty な worktree を `force` 無しでは消しません。`delete_branch` でブランチも削除。レジストリに無い worktree は対象外です。
+- `worktree_remove` は dirty な worktree を `force` 無しでは消しません。`delete_branch` でブランチも削除。レジストリに無い worktree と呼び出し元セッションの現在のフォルダーを含む worktree は対象外です。
+- レジストリの読み直し・Git 操作・保存を、プロセス間の排他ディレクトリで直列化します。取得待ちが10秒を超えると拒否します。クラッシュで `registry.json.lock` が残った場合は、同じ DSH_HOME を使う全ハーネスを停止してから、この空のロックディレクトリだけを削除してください。自動で期限切れ扱いにして他の書き込みを追い越す処理は行いません。
 - `/worktree gc [--all]` は消失・prunable と (clean な) stale エントリを片付け、`git worktree prune` を実行します。名前は `[A-Za-z0-9._-]` 64 字まで、ブランチと基点は `git check-ref-format` 相当の検査で `-` 始まりや空白を拒否します。同一リポジトリの上限は `maxWorktrees` (既定 24)。
 
 ## エージェント ダッシュボード

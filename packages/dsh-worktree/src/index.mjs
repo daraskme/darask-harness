@@ -49,11 +49,25 @@ const execFileAsync = promisify(execFile);
 export function apply(ctx, config) {
   const resolved = { ...config, dshHome: resolveDshHome(config.dshHome) };
   const registry = new WorktreeRegistry(join(resolved.dshHome, 'darask', 'worktrees', 'registry.json'));
-  const sandboxPolicy = ctx.get('shell')?.sandboxMode !== undefined ? ctx.get('sandboxPolicy') : undefined;
+  const sandboxPolicy = ctx.get('sandboxPolicy');
+
+  function requireMutationPolicy(policy) {
+    const mode = policy?.mode ?? ctx.get('shell')?.sandboxMode;
+    if (mode !== undefined && mode !== 'danger-full-access') {
+      throw new Error('Worktree mutations are unavailable under a confined sandbox policy; this Git adapter cannot enforce that policy.');
+    }
+    if (!policy && ctx.get('shell')?.sandboxMode !== undefined) {
+      throw new Error('Cannot resolve the worktree sandbox policy.');
+    }
+  }
+
+  function protectCurrentWorkspace(entry, cwd) {
+    if (cwd && (samePath(entry.path, cwd) || isInside(entry.path, cwd))) throw new Error('Cannot remove the current session workspace.');
+  }
 
   async function git(cwd, args, { allowFailure = false } = {}) {
     try {
-      const { stdout } = await execFileAsync('git', args, { cwd, encoding: 'utf8', timeout: resolved.gitTimeoutMs, maxBuffer: 16 * 1024 * 1024, windowsHide: true });
+      const { stdout } = await execFileAsync('git', args, { cwd, encoding: 'utf8', timeout: resolved.gitTimeoutMs, maxBuffer: 16 * 1024 * 1024, windowsHide: true, env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' } });
       return { ok: true, stdout: stdout.replace(/\r\n/gu, '\n') };
     } catch (error) {
       if (allowFailure) return { ok: false, stdout: '', error };
@@ -149,6 +163,7 @@ export function apply(ctx, config) {
   }
 
   async function createWorktree({ cwd, session, policy }, args) {
+    requireMutationPolicy(policy);
     const repoRoot = await repoRootFor(cwd);
     const requestedName = typeof args.name === 'string' && args.name !== '' ? validateName(args.name) : undefined;
     const branch = validateBranch(typeof args.branch === 'string' && args.branch !== '' ? args.branch : defaultBranch(requestedName ?? `s${Date.now().toString(36)}`));
@@ -182,7 +197,7 @@ export function apply(ctx, config) {
     });
   }
 
-  async function gc(repoRoot, { all = false } = {}) {
+  async function gc(repoRoot, { all = false, cwd } = {}) {
     return registry.transaction(async entries => {
       const mine = entries.filter(entry => samePath(entry.repoRoot, repoRoot));
       const rows = await statusRows(repoRoot, mine);
@@ -193,6 +208,7 @@ export function apply(ctx, config) {
         const collectable = row.missing || row.prunable || ((all || row.stale) && !row.dirty);
         if (!collectable) { kept.push(row.name); continue; }
         try {
+          protectCurrentWorkspace(entry, cwd);
           await removeWorktree(repoRoot, entry, { force: row.missing || row.prunable, deleteBranch: false });
           entries.splice(entries.indexOf(entry), 1);
           removed.push(row.name);
@@ -280,11 +296,14 @@ export function apply(ctx, config) {
     },
     presentCall: args => ({ card: 'generic', title: `[worktree] remove ${args.name}${args.force ? ' --force' : ''}`, kind: 'worktree_remove' }),
     async execute(args, exec) {
-      const repoRoot = await repoRootFor(sessionCwd(exec).cwd);
+      const context = sessionCwd(exec);
+      requireMutationPolicy(context.policy);
+      const repoRoot = await repoRootFor(context.cwd);
       const name = validateName(args.name);
       return registry.transaction(async entries => {
         const entry = entries.find(item => samePath(item.repoRoot, repoRoot) && item.name === name);
         if (!entry) throw new Error(`unknown worktree ${name} (only worktrees created by worktree_create can be removed here; see worktree_list)`);
+        protectCurrentWorkspace(entry, context.session.header.cwd);
         const result = await removeWorktree(repoRoot, entry, { force: args.force === true, deleteBranch: args.delete_branch === true });
         entries.splice(entries.indexOf(entry), 1);
         return { name, path: entry.path, result };
@@ -298,6 +317,7 @@ export function apply(ctx, config) {
     const [sub = 'list', ...rest] = invocation.rawInput.trim().split(/\s+/u).filter(Boolean);
     const session = invocation.agent.session;
     const policy = sandboxPolicy?.resolve({ session });
+    if (['create', 'remove', 'gc'].includes(sub)) requireMutationPolicy(policy);
     const cwd = policy?.workspaceRoot ?? session.header.cwd;
     const repoRoot = await repoRootFor(cwd);
     switch (sub) {
@@ -316,6 +336,7 @@ export function apply(ctx, config) {
         const result = await registry.transaction(async entries => {
           const entry = entries.find(item => samePath(item.repoRoot, repoRoot) && item.name === name);
           if (!entry) throw new Error(`unknown worktree ${name}`);
+          protectCurrentWorkspace(entry, session.header.cwd);
           const text = await removeWorktree(repoRoot, entry, { force, deleteBranch });
           entries.splice(entries.indexOf(entry), 1);
           return text;
@@ -323,7 +344,7 @@ export function apply(ctx, config) {
         return { kind: 'success', text: `${name}: ${result}` };
       }
       case 'gc': {
-        const { removed, kept } = await gc(repoRoot, { all: rest.includes('--all') });
+        const { removed, kept } = await gc(repoRoot, { all: rest.includes('--all'), cwd: session.header.cwd });
         return { kind: 'success', text: `Removed ${removed.length} worktrees${removed.length > 0 ? ` (${removed.join(', ')})` : ''}; kept ${kept.length}${kept.length > 0 ? ` (${kept.join(', ')})` : ''}.` };
       }
       default:

@@ -98,7 +98,7 @@ export async function collectBaselineRules(cwd, resolved) {
     const absolute = isAbsolute(dir) ? dir : resolve(cwd, dir);
     push(await scanScopeDir(absolute, ['.'], { maxSourceBytes: resolved.maxSourceBytes }));
   }
-  for (const scope of ancestorScopeDirs(projectRoot, join(cwd, '.'))) {
+  for (const scope of ancestorScopeDirs(projectRoot, join(cwd, '__rules_scope__'))) {
     push(await scanScopeDir(scope, resolved.ruleDirs, { maxSourceBytes: resolved.maxSourceBytes }));
   }
   return { projectRoot, rules };
@@ -109,6 +109,12 @@ export function apply(ctx, config) {
   const readTools = new Set(resolved.readTools);
   const trackers = new WeakMap();
   const baselines = new WeakMap();
+  const discoveries = new WeakMap();
+  const discoveryFor = session => {
+    let state = discoveries.get(session);
+    if (!state) { state = { queue: Promise.resolve(), messages: [] }; discoveries.set(session, state); }
+    return state;
+  };
 
   const trackerFor = session => {
     let tracker = trackers.get(session);
@@ -116,7 +122,7 @@ export function apply(ctx, config) {
       tracker = new RuleTracker({ ruleDirs: resolved.ruleDirs, maxSourceBytes: resolved.maxSourceBytes });
       const injected = [];
       for (const text of sessionPluginTexts(session)) {
-        if (!text.startsWith(READ_MARKER)) continue;
+        if (!text.startsWith(`<!-- ${READ_MARKER} -->`)) continue;
         for (const line of text.split('\n')) if (line.startsWith('- ')) injected.push(line.slice(2).trim());
       }
       tracker.markInjected(injected);
@@ -150,17 +156,20 @@ export function apply(ctx, config) {
   ctx.on('agent/pre-step', async ({ agent, messages, signal }, next) => {
     const decision = await next();
     if (decision.kind === 'reject') return decision;
+    const discovery = discoveryFor(agent.session);
+    await discovery.queue;
     let desired;
     try {
       desired = await baselineFor(agent);
     } catch (error) {
       ctx.logger.warn('project rules baseline failed: %o', error);
-      return decision;
     }
     signal.throwIfAborted();
-    if (desired === undefined) return decision;
+    const additions = [...(desired ? [desired] : []), ...discovery.messages];
+    if (!additions.length) return decision;
+    discovery.messages = [];
     const lastClaimed = decision.messages.findLastIndex(message => messages.includes(message));
-    return { ...decision, messages: decision.messages.toSpliced(lastClaimed + 1, 0, desired) };
+    return { ...decision, messages: decision.messages.toSpliced(lastClaimed + 1, 0, ...additions) };
   });
 
   if (!resolved.injectOnRead) return;
@@ -172,13 +181,14 @@ export function apply(ctx, config) {
     const agent = exec.agent;
     const cwd = agent.session.header.cwd ?? process.cwd();
     const readPath = isAbsolute(requested) ? requested : resolve(cwd, requested);
-    void (async () => {
+    const discovery = discoveryFor(agent.session);
+    discovery.queue = discovery.queue.then(async () => {
       const projectRoot = await findProjectRoot(cwd, resolved.projectRootMarkers);
       const tracker = trackerFor(agent.session);
       const rules = await tracker.rulesForRead(projectRoot, readPath);
       const reminder = renderReadReminder(rules);
       if (reminder === undefined) return;
-      agent.inbox.prepend('next-step', pluginMessage(`<!-- ${READ_MARKER} -->\n${reminder}`));
-    })().catch(error => ctx.logger.warn('project rules on read failed: %o', error));
+      discovery.messages.push(pluginMessage(`<!-- ${READ_MARKER} -->\n${reminder}`));
+    }).catch(error => ctx.logger.warn('project rules on read failed: %o', error));
   });
 }

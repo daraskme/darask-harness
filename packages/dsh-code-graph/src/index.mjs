@@ -247,8 +247,8 @@ export function apply(ctx, config) {
     }
     return next();
   };
-  ctx.on('fs/write-intent', intentListener);
-  ctx.on('fs/edit-intent', intentListener);
+  ctx.on('fs/write-intent', intentListener, { prepend: true });
+  ctx.on('fs/edit-intent', intentListener, { prepend: true });
 
   ctx.on('tools/result', exec => {
     const bucket = pendingWrites.get(exec.callId);
