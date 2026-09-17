@@ -1,6 +1,6 @@
 ---
 name: dsh-dev
-description: DSH darask development, dashboard reload, and local runtime verification
+description: dsh-darask のソース編集、DSH ダッシュボードの再読み込み、ローカル実行検証に使う。
 ---
 
 # dsh-dev
