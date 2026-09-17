@@ -107,6 +107,7 @@ export function publicConfig(config) {
 export function createStatusLineService({ ctx, config, dshHome = resolveDshHome(), now = Date.now, runCommand = runStatusCommand }) {
   const userFile = config.userConfigFile !== '' ? resolve(config.userConfigFile) : join(dshHome, 'darask', USER_CONFIG_FILE);
   let cached = { at: 0, value: { ...config } };
+  const inFlight = new Map();
 
   async function effectiveConfig() {
     const at = now();
@@ -154,9 +155,19 @@ export function createStatusLineService({ ctx, config, dshHome = resolveDshHome(
     const visible = publicConfig(effective);
     const context = await contextFor(sessionId, trigger);
     if (context === null) return { error: 'session not found', status: 404 };
+    if (visible.type !== 'command') inFlight.delete(sessionId);
     if (visible.type === 'disabled') return { type: 'disabled', text: '', context };
     if (visible.type === 'command') {
-      const result = await runCommand(effective.command, context, { cwd: context.cwd, timeoutMs: effective.commandTimeoutMs });
+      const key = JSON.stringify([effective.command, effective.commandTimeoutMs, context.cwd, context.turn.number, context.turn.running, trigger]);
+      let pending = inFlight.get(sessionId);
+      if (pending?.key !== key) {
+        pending = { key, promise: undefined };
+        inFlight.set(sessionId, pending);
+        pending.promise = Promise.resolve()
+          .then(() => runCommand(effective.command, context, { cwd: context.cwd, timeoutMs: effective.commandTimeoutMs }))
+          .finally(() => { if (inFlight.get(sessionId) === pending) inFlight.delete(sessionId); });
+      }
+      const result = await pending.promise;
       return result.ok
         ? { type: 'command', text: result.text, context, ...(result.exitCode === undefined ? {} : { exitCode: result.exitCode }) }
         : { type: 'command', text: renderStatusLine(context, visible.items, { now: now() }), context, error: result.error };
