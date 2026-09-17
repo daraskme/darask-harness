@@ -37,7 +37,7 @@ test('Fusion lead matches Codex and Claude-family routes only', () => {
 });
 
 test('DeepSeek V4 Pro manages work and delegates only typed evaluation and live search', () => {
-  const route = { provider: 'vercel-ai-gateway', model: 'deepseek/deepseek-v4-pro' };
+  const route = { provider: 'deepseek-official', model: 'deepseek-v4-pro' };
   assert.equal(isDeepseekV4Lead(route), true);
   assert.equal(fusionPrompt({ agent: { options: route } }), DEEPSEEK_MANAGER_PROMPT);
   assert.match(DEEPSEEK_MANAGER_PROMPT, /darask_jev_evaluate/);

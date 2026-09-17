@@ -61,20 +61,21 @@ test('Accounts centralizes provider login; sidebar Usage displays available bala
   assert.equal(entries.filter(e => e.options.name === 'main' && e.options.key === 'darask-workspace').length, 1);
   assert.equal(entries.filter(e => e.options.name === 'main.persistent').length, 1);
   const providers = [
+    { id: 'deepseek', name: 'DeepSeek API', usage: { status: 'unavailable' }, model: 'deepseek-v4-pro' },
     { id: 'openai', name: 'OpenAI API', usage: { status: 'available', used: { amount: 1200, unit: 'tokens', scope: 'complimentary-daily' } } },
     { id: 'openrouter', name: 'OpenRouter', usage: { status: 'available', credits: { balance: 0, unit: 'USD' } } },
     { id: 'grok', name: 'Grok', usage: { status: 'available', windows: [{ id: 'weekly', remainingPercent: 64, label: 'Grok weekly' }] } },
     { id: 'cursor', name: 'Cursor', usage: { status: 'unsupported', windows: [] } },
     { id: 'codex', name: 'Codex', usage: { status: 'available', credits: { balance: '12.3456789' } } },
     { id: 'claude', name: 'Claude', usage: { status: 'unavailable' } },
-  ].map(p => ({ ...p, enabled: true, auth: 'authenticated', model: '', executable: '', capability: p.id === 'cursor' ? 'agent' : 'model' }));
+  ].map(p => ({ ...p, enabled: true, auth: 'authenticated', model: p.model ?? '', executable: '', capability: p.id === 'cursor' ? 'agent' : 'model' }));
   const props = { t: key => dictionary.ja[key], wide: true, action: async () => {}, load: async () => {},
     useDaraskStatus: () => ({ data: { providers, priority: providers.map(p => p.id), routingEnabled: false, purposeRoutes: { research: 'grok' }, jev: { model: 'typesafe-ai/jev', configured: false } }, pending: null, error: null, loading: false }) };
   const sidebar = renderToStaticMarkup(React.createElement(usage.component, props));
   for (const text of ['Usage', 'OpenAI API', 'OpenRouter', 'Grok', 'Codex', '残り 64%', '12.3456789', '0 USD', '1,200']) assert.ok(sidebar.includes(text), text);
   assert.ok(!sidebar.includes('Cursor')); assert.ok(!sidebar.includes('Claude')); assert.ok(!sidebar.includes('残り 0%'));
   const panel = renderToStaticMarkup(React.createElement(accounts.component, props));
-  for (const text of ['アカウント', 'OpenAI API', 'データ共有の危険', 'OpenRouter', 'Grok', 'Cursor', 'Codex', 'Claude', 'ログイン', '会話モデル・CLI への作業委任', 'モデル選択に表示', 'OpenRouter · OpenAI Sol', 'Codex · Astra', 'Claude Fable 5.1']) assert.ok(panel.includes(text), text);
+  for (const text of ['アカウント', 'DeepSeek API', 'DeepSeek公式APIキー', 'DeepSeek V4 Pro', 'OpenAI API', 'データ共有の危険', 'OpenRouter', 'Grok', 'Cursor', 'Codex', 'Claude', 'ログイン', '会話モデル・CLI への作業委任', 'モデル選択に表示', 'OpenRouter · OpenAI Sol', 'Codex · Astra', 'Claude Fable 5.1']) assert.ok(panel.includes(text), text);
   for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行']) assert.ok(panel.includes(text), text);
   assert.match(panel, /<select[^>]*><option value="">通常の優先順位<\/option>.*?<option value="grok" selected="">Grok<\/option>/);
   assert.ok(!panel.includes('<progress'));

@@ -16,7 +16,7 @@
 
 ## 検証
 
-- 変更後は `npm run check` (ワークスペース全体の build + test)。
+- 変更後は `npm run check` (ワークスペース全体の build + test)。検証に成功した変更は都度コミットして `origin/main` へ push し、反映に必要なら DSH を再起動する。
 - `dist/client.js`、`vendor/dsh-bridge-gateway/client/client.js`、`packages/dsh-status-line/dist/client.js` は build で作る。手で編集しない。
 - Windows の PowerShell では `node --test test/*.test.mjs` のワイルドカードが展開されない。単体実行はファイルを明示するか `npm test --workspace <name>` を使う。
 - 開発モードは `npm run dev`。チェックアウト直下 (Git toplevel) がハーネスの root として DSH プロファイルへ link される。

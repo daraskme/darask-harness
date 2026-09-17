@@ -76,7 +76,11 @@ export function ProviderCard({ provider, value, index, count, edit, move, action
         <div className="darask-card-section-body">
           {provider.id === 'codex' ? <CodexAccounts provider={provider} action={action} pending={pending} Usage={Usage} t={t} /> : provider.id === 'local' ? (
             <label className="darask-field"><span>{t('localKey')}</span><Input type="password" value={keys.localApiKey} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, localApiKey: event.target.value }))} autoComplete="new-password" /></label>
-          ) : provider.id === 'gateway' ? <><p className="darask-muted">{t('gatewayHint')}</p><Button size="sm" disabled={pending} onClick={() => perform('refresh')}>{t('refresh')}</Button></> : provider.id === 'openai' ? <>
+          ) : provider.id === 'deepseek' ? <>
+            <div className="darask-actions"><Button size="sm" disabled={pending || !auth.connected} onClick={() => perform('logout')}>{t('removeDeepseekKey')}</Button><Button size="sm" disabled={pending} onClick={() => perform('refresh')}>{t('refresh')}</Button></div>
+            <p className="darask-muted">{t('deepseekHint')}</p>
+            <label className="darask-field"><span>{t('deepseekApiKey')}</span><Input type="password" value={keys.deepseekApiKey} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, deepseekApiKey: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label>
+          </> : provider.id === 'openai' ? <>
             <div className="darask-actions">
               <Button size="sm" disabled={pending || !auth.connected} onClick={() => perform('logout')}>{t('logout')}</Button>
               <Button size="sm" disabled={pending} onClick={() => perform('refresh')}>{t('refresh')}</Button>

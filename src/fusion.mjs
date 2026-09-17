@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseSkillMarkdown } from './skill-dsh-dev.mjs';
 import { routeFromLookup } from './skill-unseen-gemma4.mjs';
-import { GATEWAY_MODEL, GATEWAY_ROUTE } from './config.mjs';
+import { DEEPSEEK_MODEL, DEEPSEEK_ROUTE } from './config.mjs';
 
 export const FUSION_SKILL_FILE = fileURLToPath(new URL('../skills/cognition-fusion/SKILL.md', import.meta.url));
 export const FUSION_SKILL_PROVIDER = 'darask-cognition-fusion';
@@ -47,7 +47,7 @@ export function isOpenAiSolLead(route) {
 }
 
 export function isDeepseekV4Lead(route) {
-  return String(route?.provider ?? '').trim().toLowerCase() === GATEWAY_ROUTE && String(route?.model ?? '').trim().toLowerCase() === GATEWAY_MODEL;
+  return String(route?.provider ?? '').trim().toLowerCase() === DEEPSEEK_ROUTE && String(route?.model ?? '').trim().toLowerCase() === DEEPSEEK_MODEL;
 }
 
 export function isFusionLeadRoute(route) {

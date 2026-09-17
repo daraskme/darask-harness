@@ -12696,7 +12696,9 @@ var dictionaries = {
     aiGatewayApiKey: "Vercel AI Gateway API \u30AD\u30FC",
     createAiGatewayKey: "API \u30AD\u30FC\u3092\u767A\u884C",
     removeAiGatewayKey: "\u4FDD\u5B58\u6E08\u307F\u30AD\u30FC\u3092\u524A\u9664",
-    gatewayHint: "Jev \u3068\u540C\u3058 Vercel AI Gateway API \u30AD\u30FC\u3092\u4F7F\u3044\u307E\u3059\u3002\u63A5\u7D9A\u5F8C\u306F DeepSeek V4 Pro \u304C\u53F8\u4EE4\u5854\u3068\u3057\u3066\u5168\u4F53\u3092\u7BA1\u7406\u3057\u307E\u3059\u3002",
+    deepseekApiKey: "DeepSeek\u516C\u5F0FAPI\u30AD\u30FC",
+    removeDeepseekKey: "\u4FDD\u5B58\u6E08\u307FDeepSeek\u30AD\u30FC\u3092\u524A\u9664",
+    deepseekHint: "DeepSeek\u516C\u5F0FAPI\u306E deepseek-v4-pro \u3092\u53F8\u4EE4\u5854\u3068\u3057\u3066\u4F7F\u3044\u307E\u3059\u3002Vercel AI Gateway\u30AD\u30FC\u306FJev\u8A55\u4FA1\u306B\u3060\u3051\u4F7F\u7528\u3057\u307E\u3059\u3002",
     priority: "\u4F7F\u7528\u3059\u308B\u512A\u5148\u9806\u4F4D",
     priorityHint: "\u4E0A\u307B\u3069\u512A\u5148\u3055\u308C\u307E\u3059\u3002\u5909\u66F4\u306F\u4FDD\u5B58\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059\u3002",
     up: "\u512A\u5148\u9806\u4F4D\u3092\u4E0A\u3052\u308B",
@@ -12881,7 +12883,9 @@ var dictionaries = {
     aiGatewayApiKey: "Vercel AI Gateway API key",
     createAiGatewayKey: "Create API key",
     removeAiGatewayKey: "Remove stored key",
-    gatewayHint: "Uses the same Vercel AI Gateway API key as Jev. Once connected, DeepSeek V4 Pro leads and manages the whole task.",
+    deepseekApiKey: "Official DeepSeek API key",
+    removeDeepseekKey: "Remove stored DeepSeek key",
+    deepseekHint: "Uses deepseek-v4-pro through the official DeepSeek API as the lead. The Vercel AI Gateway key is used only for Jev evaluation.",
     priority: "Provider priority",
     priorityHint: "Higher providers are preferred. Save to apply changes.",
     up: "Raise priority",
@@ -13586,8 +13590,8 @@ var import_dsh_client_ui_primitives11 = require("@deepseek-ai/dsh-client-ui-prim
 
 // src/model-catalogs.mjs
 var MODEL_CATALOGS = Object.freeze({
-  gateway: Object.freeze([
-    Object.freeze({ id: "deepseek/deepseek-v4-pro", name: "Vercel AI Gateway \xB7 DeepSeek V4 Pro" })
+  deepseek: Object.freeze([
+    Object.freeze({ id: "deepseek-v4-pro", name: "DeepSeek API \xB7 DeepSeek V4 Pro" })
   ]),
   openai: Object.freeze([
     Object.freeze({ id: "gpt-5.6-sol", name: "OpenAI API \xB7 Sol" }),
@@ -14148,9 +14152,17 @@ function ProviderCard({ provider, value, index, count, edit, move, action, pendi
         /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "darask-card-section-body", children: provider.id === "codex" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CodexAccounts, { provider, action, pending, Usage, t }) : provider.id === "local" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
           /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("localKey") }),
           /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.localApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, localApiKey: event.target.value })), autoComplete: "new-password" })
-        ] }) : provider.id === "gateway" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("gatewayHint") }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") })
+        ] }) : provider.id === "deepseek" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || !auth.connected, onClick: () => perform("logout"), children: t("removeDeepseekKey") }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending, onClick: () => perform("refresh"), children: t("refresh") })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("deepseekHint") }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("deepseekApiKey") }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.deepseekApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, deepseekApiKey: event.target.value })), autoComplete: "new-password", spellCheck: false }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t("keyHint") })
+          ] })
         ] }) : provider.id === "openai" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-actions", children: [
             /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Button, { size: "sm", disabled: pending || !auth.connected, onClick: () => perform("logout"), children: t("logout") }),
@@ -14463,7 +14475,7 @@ function DaraskPanel(props) {
   const state = props.useDaraskStatus((snapshot) => snapshot);
   const { t } = props;
   const [draft, setDraft] = (0, import_react12.useState)(null);
-  const emptyKeys = { openrouterApiKey: "", openrouterManagementKey: "", localApiKey: "", openaiApiKey: "", openaiAdminKey: "", aiGatewayApiKey: "" };
+  const emptyKeys = { deepseekApiKey: "", openrouterApiKey: "", openrouterManagementKey: "", localApiKey: "", openaiApiKey: "", openaiAdminKey: "", aiGatewayApiKey: "" };
   const [keys, setKeys] = (0, import_react12.useState)(emptyKeys);
   const [saved, setSaved] = (0, import_react12.useState)(false);
   const [tab, setTab] = (0, import_react12.useState)("ai");

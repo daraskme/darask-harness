@@ -4,21 +4,22 @@ import { defaultLocal, validateLocal } from './local-settings.mjs';
 import { complimentaryGroup, defaultOpenAi, OPENAI_DEFAULT_MODEL, validateOpenAi } from './providers/openai.mjs';
 import { defaultModelVisibility, validateModelVisibility } from './model-catalogs.mjs';
 
-export const GATEWAY_ROUTE = 'vercel-ai-gateway';
-export const GATEWAY_MODEL = 'deepseek/deepseek-v4-pro';
-export const IDS = Object.freeze(['gateway', 'grok', 'openai', 'openrouter', 'cursor', 'codex', 'claude', 'local']);
-export const NAMES = Object.freeze({ gateway: 'Vercel AI Gateway', openai: 'OpenAI API', openrouter: 'OpenRouter', grok: 'Grok Build', cursor: 'Cursor', codex: 'Codex', claude: 'Claude Code', local: 'ローカルモデル' });
-export const MODEL_ROUTES = Object.freeze({ gateway: GATEWAY_ROUTE, openai: 'openai', openrouter: 'openrouter', grok: 'grok', codex: 'openai-codex', claude: 'anthropic', local: 'darask-local' });
+export const DEEPSEEK_CREDENTIAL = 'DEEPSEEK_API_KEY';
+export const DEEPSEEK_ROUTE = 'deepseek-official';
+export const DEEPSEEK_MODEL = 'deepseek-v4-pro';
+export const IDS = Object.freeze(['deepseek', 'grok', 'openai', 'openrouter', 'cursor', 'codex', 'claude', 'local']);
+export const NAMES = Object.freeze({ deepseek: 'DeepSeek API', openai: 'OpenAI API', openrouter: 'OpenRouter', grok: 'Grok Build', cursor: 'Cursor', codex: 'Codex', claude: 'Claude Code', local: 'ローカルモデル' });
+export const MODEL_ROUTES = Object.freeze({ deepseek: DEEPSEEK_ROUTE, openai: 'openai', openrouter: 'openrouter', grok: 'grok', codex: 'openai-codex', claude: 'anthropic', local: 'darask-local' });
 export const PURPOSE_IDS = Object.freeze(['architecture', 'research', 'collaboration', 'refactor', 'new', 'medium', 'simple', 'spec_driven']);
 export function defaultPurposeRoutes() {
-  return Object.fromEntries(PURPOSE_IDS.map(id => [id, 'gateway']));
+  return Object.fromEntries(PURPOSE_IDS.map(id => [id, 'deepseek']));
 }
 export function defaultConfig() {
-  return { priority: [...IDS], routingEnabled: true, purposeRoutes: defaultPurposeRoutes(), modelVisibility: defaultModelVisibility(), local: defaultLocal(), computer: defaultComputer(), openai: defaultOpenAi(), providers: Object.fromEntries(IDS.map(id => [id, { enabled: id !== 'local', model: id === 'gateway' ? GATEWAY_MODEL : id === 'grok' ? 'grok-4.6' : id === 'openai' ? OPENAI_DEFAULT_MODEL : '', executable: '' }])) };
+  return { priority: [...IDS], routingEnabled: true, purposeRoutes: defaultPurposeRoutes(), modelVisibility: defaultModelVisibility(), local: defaultLocal(), computer: defaultComputer(), openai: defaultOpenAi(), providers: Object.fromEntries(IDS.map(id => [id, { enabled: id !== 'local', model: id === 'deepseek' ? DEEPSEEK_MODEL : id === 'grok' ? 'grok-4.6' : id === 'openai' ? OPENAI_DEFAULT_MODEL : '', executable: '' }])) };
 }
 export function validateConfig(input, base = defaultConfig()) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Invalid configuration');
-  const allowed = new Set(['priority', 'routingEnabled', 'purposeRoutes', 'modelVisibility', 'providers', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey', 'local', 'computer', 'openai']);
+  const allowed = new Set(['priority', 'routingEnabled', 'purposeRoutes', 'modelVisibility', 'providers', 'deepseekApiKey', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey', 'local', 'computer', 'openai']);
   if (Object.keys(input).some(key => !allowed.has(key))) throw new Error('Unknown configuration field');
   const result = structuredClone(base);
   if (input.local !== undefined) result.local = validateLocal(input.local, result.local);
@@ -27,10 +28,10 @@ export function validateConfig(input, base = defaultConfig()) {
   if (input.modelVisibility !== undefined) result.modelVisibility = validateModelVisibility(input.modelVisibility, result.modelVisibility);
   if (input.priority !== undefined) {
     // Legacy five-provider order gains local, then six-provider order gains OpenAI API first.
-    const priority = Array.isArray(input.priority) ? [...input.priority] : [];
+    const priority = Array.isArray(input.priority) ? input.priority.map(id => id === 'gateway' ? 'deepseek' : id) : [];
     if (priority.length === 5 && new Set(priority).size === 5 && priority.every(id => IDS.includes(id) && id !== 'local' && id !== 'openai')) priority.push('local');
-    if (priority.length === 6 && new Set(priority).size === 6 && priority.every(id => IDS.includes(id) && id !== 'openai' && id !== 'gateway')) priority.unshift('openai');
-    if (priority.length === 7 && new Set(priority).size === 7 && priority.every(id => IDS.includes(id) && id !== 'gateway')) priority.unshift('gateway');
+    if (priority.length === 6 && new Set(priority).size === 6 && priority.every(id => IDS.includes(id) && id !== 'openai' && id !== 'deepseek')) priority.unshift('openai');
+    if (priority.length === 7 && new Set(priority).size === 7 && priority.every(id => IDS.includes(id) && id !== 'deepseek')) priority.unshift('deepseek');
     if (priority.length !== IDS.length || new Set(priority).size !== IDS.length || priority.some(id => !IDS.includes(id))) throw new Error('Priority must contain each provider exactly once');
     result.priority = priority;
   }
@@ -40,14 +41,21 @@ export function validateConfig(input, base = defaultConfig()) {
   }
   if (input.purposeRoutes !== undefined) {
     if (!input.purposeRoutes || typeof input.purposeRoutes !== 'object' || Array.isArray(input.purposeRoutes) || Object.keys(input.purposeRoutes).some(id => !PURPOSE_IDS.includes(id))) throw new Error('Invalid purpose routes');
-    for (const [id, provider] of Object.entries(input.purposeRoutes)) {
+    for (const [id, configuredProvider] of Object.entries(input.purposeRoutes)) {
+      const provider = configuredProvider === 'gateway' ? 'deepseek' : configuredProvider;
       if (typeof provider !== 'string' || (provider && !MODEL_ROUTES[provider])) throw new Error('Invalid purpose route');
       result.purposeRoutes[id] = provider;
     }
   }
   if (input.providers !== undefined) {
-    if (!input.providers || typeof input.providers !== 'object' || Array.isArray(input.providers) || Object.keys(input.providers).some(id => !IDS.includes(id))) throw new Error('Invalid providers');
-    for (const [id, value] of Object.entries(input.providers)) {
+    if (!input.providers || typeof input.providers !== 'object' || Array.isArray(input.providers)) throw new Error('Invalid providers');
+    const providers = { ...input.providers };
+    if (providers.gateway !== undefined) {
+      if (providers.deepseek === undefined) providers.deepseek = { ...providers.gateway, model: providers.gateway.model === 'deepseek/deepseek-v4-pro' ? DEEPSEEK_MODEL : providers.gateway.model };
+      delete providers.gateway;
+    }
+    if (Object.keys(providers).some(id => !IDS.includes(id))) throw new Error('Invalid providers');
+    for (const [id, value] of Object.entries(providers)) {
       if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(k => !['enabled', 'model', 'executable'].includes(k))) throw new Error('Invalid provider setting');
       if (value.enabled !== undefined && typeof value.enabled !== 'boolean') throw new Error('Invalid provider enabled value');
       for (const key of ['model', 'executable']) {
@@ -63,7 +71,7 @@ export function validateConfig(input, base = defaultConfig()) {
   const cursor = result.providers.cursor.executable;
   const grok = result.providers.grok.executable;
   if (cursor && grok && path.win32.normalize(cursor).toLowerCase() === path.win32.normalize(grok).toLowerCase()) throw new Error('Cursor and Grok must use different executables');
-  for (const key of ['openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey']) {
+  for (const key of ['deepseekApiKey', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey']) {
     if (input[key] !== undefined && (typeof input[key] !== 'string' || input[key].length > 8192 || /[\s\x00-\x1f]/.test(input[key]))) throw new Error('Invalid API key');
   }
   return result;

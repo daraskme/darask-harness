@@ -5,7 +5,7 @@ import { createStore } from './store.mjs';
 import { createService } from './service.mjs';
 import { JEV_CREDENTIAL } from './jev.mjs';
 import { createRoutes, createOpenRouterCallbackRoute } from './http.mjs';
-import { candidatesForPurpose, GATEWAY_ROUTE, MODEL_ROUTES } from './config.mjs';
+import { DEEPSEEK_CREDENTIAL, candidatesForPurpose, MODEL_ROUTES } from './config.mjs';
 import { enableClaudeRoute } from './claude-route.mjs';
 import { fileURLToPath } from 'node:url';
 import * as mcpClient from '@deepseek-ai/dsh-mcp-client';
@@ -190,10 +190,6 @@ export async function apply(ctx, config) {
     if (ctx.settings.get('llm-pi-ai') === undefined) throw new Error('DSH llm-pi-ai settings are unavailable.');
     await ctx.settings.update('llm-pi-ai', { providers: { [provider]: { apiKeyEnv: ref } } });
   };
-  const enableGatewayRoute = async () => {
-    if (ctx.settings.get('llm-pi-ai') === undefined) throw new Error('DSH llm-pi-ai settings are unavailable.');
-    await ctx.settings.update('llm-pi-ai', { providers: { [GATEWAY_ROUTE]: { apiKeyEnv: JEV_CREDENTIAL, displayName: 'Vercel AI Gateway', models: visibleModelCatalog('gateway', store.get().modelVisibility) } } });
-  };
   const syncModelCatalogs = async usage => {
     const visibility = store.get().modelVisibility;
     const current = ctx.settings.get('llm-pi-ai');
@@ -207,12 +203,15 @@ export async function apply(ctx, config) {
     const openrouter = current?.providers?.openrouter ?? {};
     const openrouterModels = visibleModelCatalog('openrouter', visibility);
     if (JSON.stringify(openrouter.models) !== JSON.stringify(openrouterModels) || openrouter.displayName !== 'OpenRouter') await ctx.settings.update('llm-pi-ai', { providers: { openrouter: { ...openrouter, displayName: 'OpenRouter', models: openrouterModels } } });
+    await updateModelCatalogIfRegistered(ctx.settings, 'llm-deepseek', visibleModelCatalog('deepseek', visibility));
     await updateModelCatalogIfRegistered(ctx.settings, 'llm-openai-codex', visibility?.codex ?? visibleModelCatalog('codex').map(model => model.id));
     await updateModelCatalogIfRegistered(ctx.settings, 'llm-grok', visibility?.grok ?? visibleModelCatalog('grok').map(model => model.id));
   };
-  await enableGatewayRoute();
-  const gatewayConfigured = Boolean((await ctx.credentials.resolve(JEV_CREDENTIAL))?.value);
-  const service = createService({ store, directory, credentials: ctx.credentials, tailscale, browserRun, localModel, computer, enableLocalRoute, enableGatewayRoute, gatewayConfigured, enableClaudeRoute: () => enableClaudeRoute({ settings: ctx.settings, credentials: ctx.credentials, visibleModels: store.get().modelVisibility?.claude }), enableOpenRouterRoute: ref => enablePiAiKey('openrouter', ref), enableOpenAiRoute: ref => enablePiAiKey('openai', ref), syncOpenAiModels: syncModelCatalogs, compatibility: () => ({ dsh: '0.1.5-rc.2', subagentPackagesRequired: false, cursor: 'isolated-cli', grok: 'isolated-cli', routing: 'before-request', claudeUsage: 'statusLine', kitesurf: config.kitesurf, computer: store.get().computer?.enabled ? 'desktop' : 'opt-in' }) });
+  const piAi = ctx.settings.get('llm-pi-ai');
+  if (piAi?.providers?.['vercel-ai-gateway'] !== undefined) await ctx.settings.mutate('llm-pi-ai', [{ op: 'unset', path: ['providers', 'vercel-ai-gateway'] }]);
+  const deepseekConfigured = Boolean((await ctx.credentials.resolve(DEEPSEEK_CREDENTIAL))?.value);
+  const jevConfigured = Boolean((await ctx.credentials.resolve(JEV_CREDENTIAL))?.value);
+  const service = createService({ store, directory, credentials: ctx.credentials, tailscale, browserRun, localModel, computer, enableLocalRoute, deepseekConfigured, jevConfigured, enableClaudeRoute: () => enableClaudeRoute({ settings: ctx.settings, credentials: ctx.credentials, visibleModels: store.get().modelVisibility?.claude }), enableOpenRouterRoute: ref => enablePiAiKey('openrouter', ref), enableOpenAiRoute: ref => enablePiAiKey('openai', ref), syncOpenAiModels: syncModelCatalogs, compatibility: () => ({ dsh: '0.1.5-rc.2', subagentPackagesRequired: false, cursor: 'isolated-cli', grok: 'isolated-cli', routing: 'before-request', claudeUsage: 'statusLine', kitesurf: config.kitesurf, computer: store.get().computer?.enabled ? 'desktop' : 'opt-in' }) });
   await syncModelCatalogs(service.snapshots.openai?.usage);
   serviceRef = service;
   const tailState = await tailscale.status();

@@ -6,7 +6,7 @@ import { localServerArgs, createLocalModel, parseLocalLog } from '../src/local-m
 
 test('local upgrade preserves the entire existing priority and never starts a model implicitly', () => {
   const config = validateConfig({ priority: ['cursor', 'codex', 'grok', 'claude', 'openrouter'] });
-  assert.deepEqual(config.priority, ['gateway', 'openai', 'cursor', 'codex', 'grok', 'claude', 'openrouter', 'local']);
+  assert.deepEqual(config.priority, ['deepseek', 'openai', 'cursor', 'codex', 'grok', 'claude', 'openrouter', 'local']);
   assert.equal(config.local.autoStart, false);
   assert.equal(config.local.gpuLayers, 999);
   assert.equal(config.providers.local.enabled, false);
@@ -53,7 +53,7 @@ test('local log parser maps llama-server load stages without inventing percents'
 });
 
 test('local status uses real model presence and real metrics; it neither launches nor invents remaining credits', async () => {
-  const config = validateConfig({ providers: { gateway: { enabled: false }, grok: { enabled: false }, local: { model: LOCAL_MODEL_ID, enabled: true }, openai: { enabled: false } } });
+  const config = validateConfig({ providers: { deepseek: { enabled: false }, grok: { enabled: false }, local: { model: LOCAL_MODEL_ID, enabled: true }, openai: { enabled: false } } });
   const seen = [];
   const adapter = createLocalModel({ store: { get: () => config }, directory: '.', credentials: { resolve: async () => ({ value: 'fixture' }) }, spawn: () => { throw new Error('must not spawn'); },
     fetch: async (url, init) => {

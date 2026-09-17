@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { candidates, candidatesForPurpose, defaultConfig, GATEWAY_MODEL, GATEWAY_ROUTE, MODEL_ROUTES, PURPOSE_IDS, validateConfig } from '../src/config.mjs';
+import { candidates, candidatesForPurpose, DEEPSEEK_CREDENTIAL, DEEPSEEK_MODEL, DEEPSEEK_ROUTE, defaultConfig, MODEL_ROUTES, PURPOSE_IDS, validateConfig } from '../src/config.mjs';
 import { createStore } from '../src/store.mjs';
 import { createOpenRouterCallbackRoute, createRoutes } from '../src/http.mjs';
 import { createService, normalizeClaudeStatusline } from '../src/service.mjs';
@@ -31,16 +31,31 @@ test('configuration rejects incomplete priority, unknown keys, and command injec
   ]) assert.throws(() => validateConfig(input));
 });
 
-test('default orchestration uses Gateway DeepSeek lead with Grok search fallback', () => {
+test('default orchestration uses official DeepSeek lead with Grok search fallback', () => {
   const config = defaultConfig();
   assert.equal(config.routingEnabled, true);
-  assert.deepEqual(config.priority.slice(0, 2), ['gateway', 'grok']);
-  assert.equal(MODEL_ROUTES.gateway, GATEWAY_ROUTE);
-  assert.equal(config.providers.gateway.model, GATEWAY_MODEL);
+  assert.deepEqual(config.priority.slice(0, 2), ['deepseek', 'grok']);
+  assert.equal(MODEL_ROUTES.deepseek, DEEPSEEK_ROUTE);
+  assert.equal(config.providers.deepseek.model, DEEPSEEK_MODEL);
   assert.equal(config.providers.grok.model, 'grok-4.6');
-  for (const purpose of PURPOSE_IDS) assert.equal(config.purposeRoutes[purpose], 'gateway');
-  assert.equal(candidatesForPurpose(config, { gateway: { auth: 'authenticated' } }, 'research')[0], 'gateway');
-  assert.equal(candidatesForPurpose(config, { gateway: { auth: 'unauthenticated' } }, 'research')[0], 'grok');
+  for (const purpose of PURPOSE_IDS) assert.equal(config.purposeRoutes[purpose], 'deepseek');
+  assert.equal(candidatesForPurpose(config, { deepseek: { auth: 'authenticated' } }, 'research')[0], 'deepseek');
+  assert.equal(candidatesForPurpose(config, { deepseek: { auth: 'unauthenticated' } }, 'research')[0], 'grok');
+});
+
+test('saved Vercel conversation settings migrate to official DeepSeek without sharing the Jev key', () => {
+  const config = validateConfig({
+    priority: ['gateway', 'grok', 'openai', 'openrouter', 'cursor', 'codex', 'claude', 'local'],
+    purposeRoutes: { research: 'gateway' },
+    modelVisibility: { gateway: ['deepseek/deepseek-v4-pro'] },
+    providers: { gateway: { enabled: true, model: 'deepseek/deepseek-v4-pro', executable: '' } },
+    aiGatewayApiKey: 'jev-only-key',
+  });
+  assert.equal(config.priority[0], 'deepseek');
+  assert.equal(config.purposeRoutes.research, 'deepseek');
+  assert.deepEqual(config.modelVisibility.deepseek, ['deepseek-v4-pro']);
+  assert.equal(config.providers.deepseek.model, 'deepseek-v4-pro');
+  assert.ok(!JSON.stringify(config).includes('jev-only-key'));
 });
 
 test('configuration keeps Cursor and Grok executable identities separate', () => {
@@ -57,7 +72,7 @@ test('configuration keeps Cursor and Grok executable identities separate', () =>
 
 test('routing respects capability and user priority without treating unknown usage as zero', () => {
   const config = validateConfig({ priority: ['cursor', 'codex', 'grok', 'claude', 'openrouter'],
-    providers: { gateway: { enabled: false }, openai: { enabled: false }, codex: { model: 'model-a' }, grok: { model: 'model-b' }, openrouter: { model: 'model-c' } } });
+    providers: { deepseek: { enabled: false }, openai: { enabled: false }, codex: { model: 'model-a' }, grok: { model: 'model-b' }, openrouter: { model: 'model-c' } } });
   assert.deepEqual(candidates(config, {}), ['codex', 'grok', 'openrouter']);
   assert.deepEqual(candidates(config, {}, 'agent'), ['cursor', 'grok', 'claude']);
   assert.ok(MODEL_ROUTES.claude === 'anthropic');
@@ -69,7 +84,7 @@ test('purpose routing prefers its configured conversation model and preserves pr
     priority: ['openai', 'openrouter', 'codex', 'grok', 'claude', 'cursor', 'local'],
     purposeRoutes: { research: 'grok', architecture: 'claude' },
     providers: {
-      gateway: { enabled: false },
+      deepseek: { enabled: false },
       openai: { model: 'gpt-model' },
       openrouter: { model: 'router-model' },
       grok: { model: 'grok-model' },
@@ -84,7 +99,7 @@ test('purpose routing prefers its configured conversation model and preserves pr
 
 test('routing excludes only fresh confirmed exhaustion and rechecks expired limits', () => {
   const now = Date.parse('2026-09-14T10:00:00Z');
-  const config = validateConfig({ providers: { gateway: { enabled: false }, grok: { model: 'grok-model' }, openai: { enabled: false } } });
+  const config = validateConfig({ providers: { deepseek: { enabled: false }, grok: { model: 'grok-model' }, openai: { enabled: false } } });
   const snapshot = (age, reset, status = 'available') => ({ grok: { auth: 'authenticated', usage: {
     status, updatedAt: new Date(now - age).toISOString(), windows: [{ remainingPercent: 0, resetsAt: reset }], credits: null,
   } } });
@@ -186,6 +201,30 @@ test('service shares concurrent refreshes and leaves Grok/Codex auth to their bu
   assert.equal(service.snapshots.codex.auth, 'unknown');
   assert.deepEqual(service.snapshot().modelVisibility.openai, ['gpt-5.6-sol', 'gpt-5.6-luna']);
   await assert.rejects(service.action({ action: 'login', provider: 'codex' }, 'http://localhost'), /bundled provider/u);
+});
+
+test('service keeps the official DeepSeek key separate from the Jev Gateway key', async t => {
+  const location = await directory(t);
+  const store = createStore(location);
+  await store.load();
+  const values = new Map();
+  const credentials = {
+    resolve: async key => values.has(key) ? { value: values.get(key) } : undefined,
+    set: async (key, value) => values.set(key, value),
+    unset: async key => values.delete(key),
+  };
+  const service = createService({ directory: location, store, credentials, enableOpenRouterRoute: async () => {},
+    cliFactory: () => ({ status: async () => ({ auth: 'unknown', usage: { status: 'unavailable', windows: [], credits: null } }), dispose: async () => {} }),
+    fetch: async () => { throw new Error('No provider status request expected'); },
+  });
+  t.after(() => service.dispose());
+  await service.action({ action: 'save', config: { deepseekApiKey: 'official-deepseek-key', aiGatewayApiKey: 'jev-gateway-key' } });
+  assert.equal(values.get(DEEPSEEK_CREDENTIAL), 'official-deepseek-key');
+  assert.equal(values.get('AI_GATEWAY_API_KEY'), 'jev-gateway-key');
+  assert.equal(service.snapshot().providers.find(provider => provider.id === 'deepseek').auth, 'authenticated');
+  await service.action({ action: 'logout', provider: 'deepseek' });
+  assert.equal(values.has(DEEPSEEK_CREDENTIAL), false);
+  assert.equal(values.get('AI_GATEWAY_API_KEY'), 'jev-gateway-key');
 });
 
 test('Claude statusLine exposes only known subscription windows without inventing credits', () => {

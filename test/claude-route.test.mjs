@@ -43,7 +43,7 @@ test('Claude subscription credentials become an Anthropic conversation route wit
   assert.equal(records[0].kind, 'grant');
   assert.equal(records[0].type, 'oauth');
   assert.ok(String(records[0].key).includes(CLAUDE_LLM_PROVIDER));
-  const config = validateConfig({ providers: { gateway: { enabled: false }, grok: { enabled: false }, claude: { model: 'claude-sonnet-4-5' }, openai: { enabled: false } } });
+  const config = validateConfig({ providers: { deepseek: { enabled: false }, grok: { enabled: false }, claude: { model: 'claude-sonnet-4-5' }, openai: { enabled: false } } });
   assert.deepEqual(candidates(config, { claude: { auth: 'authenticated' } }), ['claude']);
   assert.equal(await enableClaudeRoute({
     settings, credentials, home: '/tmp/missing-home',

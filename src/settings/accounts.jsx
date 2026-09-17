@@ -23,7 +23,7 @@ export function DaraskPanel(props) {
   const state = props.useDaraskStatus(snapshot => snapshot)
   const { t } = props
   const [draft, setDraft] = useState(null)
-  const emptyKeys = { openrouterApiKey: '', openrouterManagementKey: '', localApiKey: '', openaiApiKey: '', openaiAdminKey: '', aiGatewayApiKey: '' }
+  const emptyKeys = { deepseekApiKey: '', openrouterApiKey: '', openrouterManagementKey: '', localApiKey: '', openaiApiKey: '', openaiAdminKey: '', aiGatewayApiKey: '' }
   const [keys, setKeys] = useState(emptyKeys)
   const [saved, setSaved] = useState(false)
   const [tab, setTab] = useState('ai')

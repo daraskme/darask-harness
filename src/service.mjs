@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { IDS, NAMES, MODEL_ROUTES, validateConfig } from './config.mjs';
+import { DEEPSEEK_CREDENTIAL, IDS, NAMES, MODEL_ROUTES, validateConfig } from './config.mjs';
 import { createCliProvider } from './providers/cli.mjs';
 import { createOpenRouterProvider } from './providers/openrouter.mjs';
 import { createOpenAiProvider, defaultOpenAi } from './providers/openai.mjs';
@@ -18,10 +18,10 @@ export function normalizeClaudeStatusline(input) {
   }
   return { status: windows.length ? 'available' : 'unavailable', source: 'Claude Code statusLine', updatedAt: input.updatedAt, windows, credits: null, stale: Date.now() - Date.parse(input.updatedAt) > 120000, message: windows.length ? null : 'Claude Code has not supplied subscription limits.' };
 }
-export function createService({ store, credentials, enableOpenRouterRoute, enableOpenAiRoute, enableGatewayRoute, gatewayConfigured = false, syncOpenAiModels, enableLocalRoute, enableClaudeRoute, directory, cliFactory = createCliProvider, fetch, tailscale, browserRun, localModel, computer, compatibility = () => ({}), jev = createJev({ credentials }) }) {
+export function createService({ store, credentials, enableOpenRouterRoute, enableOpenAiRoute, deepseekConfigured = false, jevConfigured = false, syncOpenAiModels, enableLocalRoute, enableClaudeRoute, directory, cliFactory = createCliProvider, fetch, tailscale, browserRun, localModel, computer, compatibility = () => ({}), jev = createJev({ credentials }) }) {
   const providers = {};
   const snapshots = Object.fromEntries(IDS.map(id => [id, { auth: 'unknown', usage: blank(id) }]));
-  snapshots.gateway = { auth: gatewayConfigured ? 'authenticated' : 'unauthenticated', usage: blank('Vercel AI Gateway') };
+  snapshots.deepseek = { auth: deepseekConfigured ? 'authenticated' : 'unauthenticated', usage: blank('DeepSeek API') };
   const openrouter = createOpenRouterProvider({ credentials, enableRoute: enableOpenRouterRoute, fetch });
   const openai = createOpenAiProvider({ credentials, enableRoute: enableOpenAiRoute, fetch });
   let refreshing;
@@ -31,7 +31,7 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
   let tailscaleState;
   let browserRunState;
   let computerState;
-  let jevState = { model: 'typesafe-ai/jev', configured: gatewayConfigured };
+  let jevState = { model: 'typesafe-ai/jev', configured: jevConfigured };
   async function cli(id) {
     const executable = store.get().providers[id].executable;
     const old = providers[id];
@@ -70,7 +70,8 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
       computerState = computer?.status();
       try { jevState = await jev.status(); }
       catch { jevState = { model: 'typesafe-ai/jev', configured: false, error: 'AI Gateway の認証状態を確認できません。' }; }
-      snapshots.gateway = { auth: jevState.configured ? 'authenticated' : 'unauthenticated', usage: blank('Vercel AI Gateway') };
+      try { snapshots.deepseek = { auth: (await credentials.resolve(DEEPSEEK_CREDENTIAL))?.value ? 'authenticated' : 'unauthenticated', usage: blank('DeepSeek API') }; }
+      catch { snapshots.deepseek = { auth: 'unknown', usage: { ...blank('DeepSeek API'), status: 'error', message: 'DeepSeek API の認証状態を確認できません。' } }; }
       if (localModel) snapshots.local = await localModel.status();
       if (enableClaudeRoute) await enableClaudeRoute();
     })().finally(() => { refreshing = undefined; });
@@ -109,15 +110,17 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
           }
         } else if (provider === 'jev' && action === 'logout') {
           await jev.remove();
+        } else if (provider === 'deepseek' && action === 'logout') {
+          await credentials.unset(DEEPSEEK_CREDENTIAL);
         } else if (action === 'save') {
           const validated = validateConfig(payload.config, store.get());
           if (localModel && snapshots.local?.localRuntime?.owned && (JSON.stringify(validated.local) !== JSON.stringify(store.get().local) || JSON.stringify(validated.providers.local) !== JSON.stringify(store.get().providers.local))) throw new Error('ローカルモデルを停止してから実行設定を変更してください。');
           if (enableLocalRoute && (payload.config.local || payload.config.providers?.local || payload.config.localApiKey)) await enableLocalRoute(validated, payload.config.localApiKey);
           await openrouter.saveKeys(payload.config);
           await openai.saveKeys(payload.config);
+          if (payload.config.deepseekApiKey) await credentials.set(DEEPSEEK_CREDENTIAL, payload.config.deepseekApiKey);
           await jev.save(payload.config);
           await store.save(payload.config);
-          if (enableGatewayRoute && (payload.config.aiGatewayApiKey || payload.config.providers?.gateway || payload.config.modelVisibility?.gateway)) await enableGatewayRoute();
         } else if (action === 'refresh') {
           // Refresh is shared across concurrent clients below.
         } else {

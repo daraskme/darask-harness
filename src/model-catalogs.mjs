@@ -1,6 +1,6 @@
 export const MODEL_CATALOGS = Object.freeze({
-  gateway: Object.freeze([
-    Object.freeze({ id: 'deepseek/deepseek-v4-pro', name: 'Vercel AI Gateway · DeepSeek V4 Pro' }),
+  deepseek: Object.freeze([
+    Object.freeze({ id: 'deepseek-v4-pro', name: 'DeepSeek API · DeepSeek V4 Pro' }),
   ]),
   openai: Object.freeze([
     Object.freeze({ id: 'gpt-5.6-sol', name: 'OpenAI API · Sol' }),
@@ -45,9 +45,15 @@ export async function updateModelCatalogIfRegistered(settings, namespace, models
 }
 
 export function validateModelVisibility(value, base = defaultModelVisibility()) {
-  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(provider => !(provider in MODEL_CATALOGS))) throw new Error('Invalid model visibility');
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid model visibility');
+  const migrated = { ...value };
+  if (migrated.gateway !== undefined) {
+    if (migrated.deepseek === undefined) migrated.deepseek = Array.isArray(migrated.gateway) ? migrated.gateway.map(model => model === 'deepseek/deepseek-v4-pro' ? 'deepseek-v4-pro' : model) : migrated.gateway;
+    delete migrated.gateway;
+  }
+  if (Object.keys(migrated).some(provider => !(provider in MODEL_CATALOGS))) throw new Error('Invalid model visibility');
   const result = structuredClone(base);
-  for (const [provider, models] of Object.entries(value)) {
+  for (const [provider, models] of Object.entries(migrated)) {
     const allowed = new Set(MODEL_CATALOGS[provider].map(model => model.id));
     if (!Array.isArray(models) || models.some(model => typeof model !== 'string' || !allowed.has(model)) || new Set(models).size !== models.length) throw new Error('Invalid visible models');
     result[provider] = [...models];

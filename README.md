@@ -77,19 +77,27 @@ npm run dev -- --dsh-root "D:\Apps\DSH"
 
 | 役割 | 経路 |
 |---|---|
-| 会話、計画、ツール選択、全体管理、コード、統合、最終回答 | Vercel AI Gatewayの `deepseek/deepseek-v4-pro` |
-| 型付き分類、ルーティング、採点、検証 | `typesafe-ai/jev` |
+| 会話、計画、ツール選択、全体管理、コード、統合、最終回答 | DeepSeek公式APIの `deepseek-v4-pro` |
+| 型付き分類、ルーティング、採点、検証 | Vercel AI Gatewayの `typesafe-ai/jev` |
 | 最新Web検索、ページ調査、X検索 | Grok 4.6の `web_search` / `x_search` |
 
 DeepSeek V4 Proが司令塔となり、必要な場合だけJevまたはGrokへ委任します。Jevは会話・ブラウザー操作・コード実装には使いません。Grok検索やJevが利用できない場合、DeepSeekが安全に処理を継続し、実行していない処理を実行済みとは報告しません。
 
-### Vercel AI Gateway
+### DeepSeek公式API
+
+1. DeepSeek Platformで公式APIキーを発行します。
+2. **設定 → アカウント → AIアカウント → DeepSeek API** の「DeepSeek公式APIキー」に入力します。
+3. モデルが `deepseek-v4-pro` であることを確認し、変更を保存します。
+
+キーは `DEEPSEEK_API_KEY` としてDSHの資格情報ストアへ保存します。Vercel AI Gatewayを経由せず、DSH標準の `deepseek-official` プロバイダーから `https://api.deepseek.com` を使用します。
+
+### Vercel AI Gateway（Jev専用）
 
 1. [Vercel AI Gateway API Keys](https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys&title=AI+Gateway+API+Keys) でキーを発行します。
 2. **設定 → アカウント → AIアカウント → Jev評価** にキーを入力します。
 3. 変更を保存します。
 
-同じ `AI_GATEWAY_API_KEY` をJevとDeepSeek V4 Proが共有します。キーはDSHの資格情報ストアへ保存し、設定ファイルや画面の状態応答には含めません。Jev呼び出しはZero Data Retentionを要求します。
+`AI_GATEWAY_API_KEY` はJev評価にだけ使用し、DeepSeekの会話リクエストには使用しません。キーはDSHの資格情報ストアへ保存し、設定ファイルや画面の状態応答には含めません。Jev呼び出しはZero Data Retentionを要求します。
 
 ### Grok検索
 
