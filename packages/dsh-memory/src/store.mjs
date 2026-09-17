@@ -3,7 +3,7 @@
 // progress, leases and the FTS5 search index. Files are the source of truth;
 // the database is rebuilt from the inbox on open when it falls behind.
 
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 
@@ -25,7 +25,7 @@ export const MAX_TOPIC_CONTENT_BYTES = 32 * 1024;
 export const MAX_READ_BYTES = 64 * 1024;
 export const DEFAULT_SEARCH_LIMIT = 8;
 export const MAX_SEARCH_LIMIT = 25;
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS topics (
   path TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
-  updated_at INTEGER NOT NULL
+  updated_at INTEGER NOT NULL,
+  content_hash TEXT
 );
 CREATE TABLE IF NOT EXISTS capture_progress (
   session_id TEXT PRIMARY KEY,
@@ -68,7 +69,39 @@ CREATE TABLE IF NOT EXISTS dreams (
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS docs_words USING fts5(path UNINDEXED, kind UNINDEXED, title, terms, body, tokenize = 'unicode61 remove_diacritics 2');
 CREATE VIRTUAL TABLE IF NOT EXISTS docs_trigram USING fts5(path UNINDEXED, kind UNINDEXED, title, terms, body, tokenize = 'trigram');
+CREATE TABLE IF NOT EXISTS doc_ids (id INTEGER PRIMARY KEY, path TEXT NOT NULL UNIQUE);
 `;
+
+function initializeSchema(db) {
+  db.exec('BEGIN IMMEDIATE');
+  try {
+    db.exec(SCHEMA);
+    const version = db.prepare("SELECT value FROM meta WHERE key = 'schema_version'").get()?.value;
+    if (version === '1') {
+      db.exec(`
+        ALTER TABLE topics ADD COLUMN content_hash TEXT;
+        INSERT INTO doc_ids (id, path) SELECT MAX(rowid), path FROM docs_words GROUP BY path;
+        CREATE TEMP TABLE migrating_docs AS
+          SELECT d.rowid AS id, d.path, d.kind, d.title, d.terms, d.body
+          FROM doc_ids i JOIN docs_words d ON d.rowid = i.id;
+        DELETE FROM docs_words;
+        DELETE FROM docs_trigram;
+        INSERT INTO docs_words (rowid, path, kind, title, terms, body)
+          SELECT id, path, kind, title, terms, body FROM migrating_docs;
+        INSERT INTO docs_trigram (rowid, path, kind, title, terms, body)
+          SELECT id, path, kind, title, terms, body FROM migrating_docs;
+        DROP TABLE migrating_docs;
+      `);
+    } else if (version !== undefined && version !== String(SCHEMA_VERSION)) {
+      throw new Error(`unsupported memory schema version: ${version}`);
+    }
+    db.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)').run('schema_version', String(SCHEMA_VERSION));
+    db.exec('COMMIT');
+  } catch (error) {
+    db.exec('ROLLBACK');
+    throw error;
+  }
+}
 
 let sqliteModule;
 async function loadSqlite() {
@@ -145,20 +178,37 @@ export class MemoryScopeStore {
     for (const dir of SCOPE_DIRS) await mkdir(join(scopeDir, dir), { recursive: true });
     const { DatabaseSync } = await loadSqlite();
     const db = new DatabaseSync(join(scopeDir, STATE_FILE));
-    db.exec('PRAGMA journal_mode = WAL;');
-    db.exec('PRAGMA busy_timeout = 5000;');
-    db.exec(SCHEMA);
-    const store = new MemoryScopeStore(scopeDir, scope ?? 'workspace', db, { now, manifestBudget });
-    store.db.prepare('INSERT OR IGNORE INTO meta (key, value) VALUES (?, ?)').run('schema_version', String(SCHEMA_VERSION));
-    await store.reconcile();
-    return store;
+    try {
+      db.exec('PRAGMA journal_mode = WAL;');
+      db.exec('PRAGMA busy_timeout = 5000;');
+      initializeSchema(db);
+      const store = new MemoryScopeStore(scopeDir, scope ?? 'workspace', db, { now, manifestBudget });
+      await store.reconcile();
+      return store;
+    } catch (error) {
+      db.close();
+      throw error;
+    }
   }
 
   close() {
     this.db.close();
   }
 
-  /** Index inbox/topic files the database does not know about (crash between rename and insert). */
+  /** @private */
+  transaction(action) {
+    this.db.exec('SAVEPOINT memory_write');
+    try {
+      const result = action();
+      this.db.exec('RELEASE memory_write');
+      return result;
+    } catch (error) {
+      this.db.exec('ROLLBACK TO memory_write; RELEASE memory_write');
+      throw error;
+    }
+  }
+
+  /** Recover inbox additions and topic changes after interrupted file/database writes. */
   async reconcile() {
     const known = new Set(this.db.prepare('SELECT path FROM observations').all().map(row => row.path));
     const inboxDir = join(this.scopeDir, 'observations', '_inbox');
@@ -181,43 +231,74 @@ export class MemoryScopeStore {
         throughTurn: Number(parsed.meta.through_turn ?? 0),
       }, parsed.body);
     }
-    const knownTopics = new Set(this.db.prepare('SELECT path FROM topics').all().map(row => row.path));
+    const knownTopics = new Map(this.db.prepare('SELECT path, content_hash FROM topics').all().map(row => [row.path, row.content_hash]));
     const topicsDir = join(this.scopeDir, 'topics');
     for (const entry of await readdir(topicsDir)) {
       const rel = `topics/${entry}`;
-      if (!isTopicPath(rel) || knownTopics.has(rel)) continue;
-      this.indexTopicRow(rel, await readFile(join(topicsDir, entry), 'utf8'));
+      if (!isTopicPath(rel)) continue;
+      let content;
+      try {
+        content = await readFile(join(topicsDir, entry), 'utf8');
+      } catch (error) {
+        if (error?.code === 'ENOENT') continue;
+        throw error;
+      }
+      const hash = createHash('sha256').update(content).digest('hex');
+      if (knownTopics.get(rel) !== hash) this.indexTopicRow(rel, content);
+      knownTopics.delete(rel);
     }
+    for (const rel of knownTopics.keys()) this.removeTopicRow(rel);
   }
 
   /** @private */
   indexObservationRow(rel, draft, job, body) {
-    this.db.prepare(`INSERT OR REPLACE INTO observations (path, type, topic_hint, statement, keywords, aliases, session_id, from_turn, through_turn, created_at, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`).run(
-      rel, draft.type, draft.topicHint ?? null, draft.statement, JSON.stringify(draft.keywords), JSON.stringify(draft.aliases),
-      job.sessionId, job.fromTurn, job.throughTurn, draft.createdAt,
-    );
-    this.replaceDoc(rel, 'observation', draft.statement, [...draft.keywords, ...draft.aliases, draft.topicHint ?? ''].join(' '), body ?? draft.body ?? '');
+    this.transaction(() => {
+      this.db.prepare(`INSERT OR REPLACE INTO observations (path, type, topic_hint, statement, keywords, aliases, session_id, from_turn, through_turn, created_at, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`).run(
+        rel, draft.type, draft.topicHint ?? null, draft.statement, JSON.stringify(draft.keywords), JSON.stringify(draft.aliases),
+        job.sessionId, job.fromTurn, job.throughTurn, draft.createdAt,
+      );
+      this.replaceDoc(rel, 'observation', draft.statement, [...draft.keywords, ...draft.aliases, draft.topicHint ?? ''].join(' '), body ?? draft.body ?? '');
+    });
   }
 
   /** @private */
   indexTopicRow(rel, content) {
     const { title, description } = topicMetadata(content);
-    this.db.prepare('INSERT OR REPLACE INTO topics (path, title, description, updated_at) VALUES (?, ?, ?, ?)').run(rel, title || basename(rel, '.md'), description ?? null, this.now());
-    this.replaceDoc(rel, 'topic', title, description ?? '', content);
+    this.transaction(() => {
+      this.db.prepare('INSERT OR REPLACE INTO topics (path, title, description, updated_at, content_hash) VALUES (?, ?, ?, ?, ?)').run(rel, title || basename(rel, '.md'), description ?? null, this.now(), createHash('sha256').update(content).digest('hex'));
+      this.replaceDoc(rel, 'topic', title, description ?? '', content);
+    });
+  }
+
+  /** @private */
+  removeTopicRow(rel) {
+    this.transaction(() => {
+      this.db.prepare('DELETE FROM topics WHERE path = ?').run(rel);
+      this.removeDoc(rel);
+    });
   }
 
   /** @private */
   replaceDoc(path, kind, title, terms, body) {
-    for (const table of ['docs_words', 'docs_trigram']) {
-      this.db.prepare(`DELETE FROM ${table} WHERE path = ?`).run(path);
-      this.db.prepare(`INSERT INTO ${table} (path, kind, title, terms, body) VALUES (?, ?, ?, ?, ?)`).run(path, kind, title, terms, body);
-    }
+    this.transaction(() => {
+      const existing = this.db.prepare('SELECT id FROM doc_ids WHERE path = ?').get(path);
+      const id = existing?.id ?? this.db.prepare('INSERT INTO doc_ids (path) VALUES (?)').run(path).lastInsertRowid;
+      for (const table of ['docs_words', 'docs_trigram']) {
+        if (existing) this.db.prepare(`DELETE FROM ${table} WHERE rowid = ?`).run(id);
+        this.db.prepare(`INSERT INTO ${table} (rowid, path, kind, title, terms, body) VALUES (?, ?, ?, ?, ?, ?)`).run(id, path, kind, title, terms, body);
+      }
+    });
   }
 
   /** @private */
   removeDoc(path) {
-    for (const table of ['docs_words', 'docs_trigram']) this.db.prepare(`DELETE FROM ${table} WHERE path = ?`).run(path);
+    this.transaction(() => {
+      const row = this.db.prepare('SELECT id FROM doc_ids WHERE path = ?').get(path);
+      if (!row) return;
+      for (const table of ['docs_words', 'docs_trigram']) this.db.prepare(`DELETE FROM ${table} WHERE rowid = ?`).run(row.id);
+      this.db.prepare('DELETE FROM doc_ids WHERE id = ?').run(row.id);
+    });
   }
 
   /** Persist observation drafts as immutable inbox files; returns their scope-relative paths. */
@@ -441,8 +522,7 @@ export class MemoryScopeStore {
     for (const rel of deletes) {
       checkLease();
       await rm(resolveContained(this.scopeDir, rel).absolute, { force: true });
-      this.db.prepare('DELETE FROM topics WHERE path = ?').run(rel);
-      this.removeDoc(rel);
+      this.removeTopicRow(rel);
     }
     const archived = [];
     for (const rel of claimed) {
@@ -462,8 +542,10 @@ export class MemoryScopeStore {
     } catch (error) {
       if (!error || error.code !== 'ENOENT') throw error;
     }
-    this.db.prepare(`UPDATE observations SET path = ?, status = 'consolidated', archived_at = ? WHERE path = ?`).run(target, this.now(), rel);
-    this.removeDoc(rel);
+    this.transaction(() => {
+      this.db.prepare(`UPDATE observations SET path = ?, status = 'consolidated', archived_at = ? WHERE path = ?`).run(target, this.now(), rel);
+      this.removeDoc(rel);
+    });
     return target;
   }
 
@@ -482,7 +564,9 @@ export class MemoryScopeStore {
   async clear() {
     for (const topic of this.topics()) await rm(resolveContained(this.scopeDir, topic.path).absolute, { force: true });
     for (const row of this.db.prepare('SELECT path FROM observations').all()) await rm(resolveContained(this.scopeDir, row.path).absolute, { force: true });
-    for (const table of ['observations', 'topics', 'capture_progress', 'docs_words', 'docs_trigram']) this.db.exec(`DELETE FROM ${table}`);
+    this.transaction(() => {
+      for (const table of ['observations', 'topics', 'capture_progress', 'docs_words', 'docs_trigram', 'doc_ids']) this.db.exec(`DELETE FROM ${table}`);
+    });
     await this.regenerateManifest();
   }
 
