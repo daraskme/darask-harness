@@ -170,7 +170,7 @@ export function StatusLine(props) {
     };
     void tick();
     return () => { controller.abort(); clearTimeout(timer); };
-  }, [config.type, config.commandRefreshIntervalMs, sessionId, running, status?.turns, status?.lastEventAt]);
+  }, [config.type, config.commandRefreshIntervalMs, sessionId, running, status?.turns, status?.turn?.number]);
 
   if (config.type === 'disabled') return null;
   const padding = config.padding > 0 ? { padding: `0 ${config.padding * 4}px` } : undefined;
