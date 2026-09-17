@@ -1,0 +1,46 @@
+{
+  "note": "npm 上の tree-sitter 文法パッケージから WASM と tags.scm (MIT) だけを取り出して grammars/ に置く。scripts/fetch-grammars.mjs が npm pack で取得する。",
+  "packages": [
+    {
+      "name": "tree-sitter-javascript",
+      "version": "0.25.0",
+      "files": {
+        "tree-sitter-javascript.wasm": "javascript.wasm",
+        "queries/tags.scm": "javascript.tags.scm"
+      }
+    },
+    {
+      "name": "tree-sitter-typescript",
+      "version": "0.23.2",
+      "files": {
+        "tree-sitter-typescript.wasm": "typescript.wasm",
+        "tree-sitter-tsx.wasm": "tsx.wasm",
+        "queries/tags.scm": "typescript.tags.scm"
+      }
+    },
+    {
+      "name": "tree-sitter-python",
+      "version": "0.25.0",
+      "files": {
+        "tree-sitter-python.wasm": "python.wasm",
+        "queries/tags.scm": "python.tags.scm"
+      }
+    },
+    {
+      "name": "tree-sitter-go",
+      "version": "0.25.0",
+      "files": {
+        "tree-sitter-go.wasm": "go.wasm",
+        "queries/tags.scm": "go.tags.scm"
+      }
+    },
+    {
+      "name": "tree-sitter-rust",
+      "version": "0.24.0",
+      "files": {
+        "tree-sitter-rust.wasm": "rust.wasm",
+        "queries/tags.scm": "rust.tags.scm"
+      }
+    }
+  ]
+}

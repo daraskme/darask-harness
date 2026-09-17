@@ -13,6 +13,7 @@ darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.ym
 ├─ src/                    host 側の glue (preset を $DSH_HOME/.agent-presets へ配置)
 └─ packages/
    ├─ darask/              dsh-darask (パッケージ名は互換のため dsh-darask のまま)
+   ├─ dsh-code-graph/      @darask/dsh-code-graph — tree-sitter (WASM) による定義・参照索引 (code_definitions / code_references / code_outline / code_symbols)
    ├─ dsh-hashline/        @darask/dsh-hashline — grok-build の hashline read/edit/grep 移植
    ├─ dsh-hunk-tracker/    @darask/dsh-hunk-tracker — セッション変更の hunk 追跡 (ターン帰属 / 外部編集検出 / accept・reject)
    ├─ dsh-memory/          @darask/dsh-memory — クロスセッション記憶 (観測キャプチャ / Dream 統合 / memory_search・memory_get)
@@ -32,6 +33,7 @@ darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.ym
 | ステータスライン (モデル、コンテキスト使用率、トークン、コスト、ターン経過時間、セッション名): 表示項目の設定と外部コマンド契約 (JSON on stdin) | grok-build `ui.status_line` | `packages/dsh-status-line`。上流の `tokenUsage` / `contextPressure` / `sessionStats` projection を参照し、独自 projection はモデル・ターン・料金だけ |
 | クロスセッション記憶 (Memory v2): 完了ターンからツール無しの補助モデル呼び出しで観測を抽出し、global / workspace スコープの不変ファイル + SQLite FTS5 索引 + `MEMORY.md` 目次として保存。Dream (統合) ジョブで観測をトピックへ集約・アーカイブ | grok-build Memory v2 (`memory/`) | `packages/dsh-memory` (`session/event` を購読、`memory_search` / `memory_get` ツール、`/memory` コマンド)。セッション永続化・compaction は上流のまま |
 | 変更追跡 (Hunk tracker): エージェント編集をターン帰属付きの hunk として保持し、外部編集 (`external` / `externalEditOnAgentFile`) と区別。作成・削除・バイナリ・巨大ファイルを個別に扱い、accept でベースラインへ畳み込み、reject でディスクを復元 | grok-build `xai-hunk-tracker` | `packages/dsh-hunk-tracker` (上流ファイルツールの `fs/write-intent` / `fs/edit-intent` / `tools/result` を観測。ファイルツール自体は置き換えない)。`hunks_status` / `hunks_diff` ツール、`/hunks` コマンド |
+| コードグラフ (Codebase graph): tree-sitter の tags クエリで JS / TS / TSX / Python / Go / Rust の定義・参照をワークスペース単位に索引し、go-to-definition / find-references / アウトライン / 名前検索を言語サーバー無しで提供。バイナリ・巨大ファイル除外、git ls-files による候補列挙、増分再索引 | grok-build `xai-codebase-graph` | `packages/dsh-code-graph` (WASM 文法は npm の tree-sitter 各言語パッケージから `npm run build` で取得。`ctx.fs` 経由で読み、`fs/write-intent` / `tools/result` でエージェント編集を追従)。`code_*` ツール、`/code-graph` コマンド。上流 LSP・grep は置き換えない |
 | Auto 権限プリセット | dsh-darask | `cordis.patch.yml` の `permission` 行 |
 
 ## 導入
@@ -101,6 +103,17 @@ memory.sqlite                 メタデータと FTS5 索引 (unicode61 + trigra
 - 状態は `$DSH_HOME/darask/hunks/<session>.json` に一時ファイル → rename で保存し、再起動後も引き継ぎます (`persist: false` で無効)。`baseline: git-head` にすると初回のベースラインを `git show HEAD:<file>` から取ります。バイナリ (`FS_NOT_TEXT`)・`maxFileBytes` 超・非通常ファイルは hunk を計算せず種別だけ記録します。
 - 追跡はエージェントが触ったファイルに限ります (grok-build の `AgentOnly` 相当)。作業ツリー全体の dirty ファイル追跡と、hunk 単位の UI レビューは未実装です。
 
+## コードグラフ (Codebase graph)
+
+`npm run build` が `packages/dsh-code-graph/grammars.json` に固定した tree-sitter 文法パッケージ (`tree-sitter-javascript` / `-typescript` / `-python` / `-go` / `-rust`、いずれも MIT) を `npm pack` で取得し、WASM と `queries/tags.scm` だけを `grammars/` へ展開します (ネイティブビルドは走らず、`grammars/` は git 管理外)。取得できない言語は実行時にスキップされ、`/code-graph languages` で状態を確認できます。
+
+最初の照会時にワークスペース (`git ls-files --cached --others --exclude-standard`、git 外では `node_modules` 等を除く再帰走査) を索引し、その後は `staleAfterMs` 経過後の照会で stat 版数を比較して変わったファイルだけ再解析します。エージェントの書き込みは `fs/write-intent` / `fs/edit-intent` と `tools/result` から検出して即時に再索引します。外部エディターでの追加・削除は次の走査または `/code-graph reindex` で反映されます。
+
+- `code_definitions` (定義へジャンプ。`path` を渡すと同一ファイル → 近いディレクトリの順で並ぶ)、`code_references` (呼び出し・生成・型参照・impl。名前一致なので同名シンボルは全て並び、`include_definitions` で定義も併記)、`code_outline` (1 ファイルの定義一覧と包含関係)、`code_symbols` (部分一致の名前検索)。いずれも読み取り専用です。
+- `/code-graph status|reindex|languages|outline <path>|find <symbol>`。
+- 索引は `$DSH_HOME/darask/code-graph/<workspace-hash>.json` に一時ファイル → rename で保存し、再起動後は stat 版数が一致するファイルを再解析せずに使います (`persist: false` で無効)。`maxFileBytes` (既定 5 MiB) 超・バイナリ・非通常ファイルは除外、`maxFiles` 超のワークスペースは先頭 (パス順) だけ索引して status に警告を出します。
+- grok-build の scope graph (字句スコープでの解決) と ACP `workspace.code_goto_*` RPC は移植していません。参照は名前一致で、型解決はしません。
+
 ## ハブ更新の配布
 
 dsh-darask の `host-update` はこの monorepo でも動作します。開発モードの PC はハーネスのチェックアウトを `git merge --ff-only` し、インストール済み PC には `packages/darask` を `npm pack` したアーカイブ (`dsh-darask-*.tgz`) を配布します。配布単位をハーネス全体にするのは今後の課題です (下記)。
@@ -108,7 +121,7 @@ dsh-darask の `host-update` はこの monorepo でも動作します。開発�
 ## 今後の課題
 
 - 配布単位を `darask-harness` パッケージにし、リモート PC のインストーラーもハーネスを導入する。
-- grok-build の Codebase graph、Agent Dashboard の DSH プラグイン化。Hunk tracker の全 dirty ファイル追跡と UI レビュー。
+- grok-build の Agent Dashboard の DSH プラグイン化。Hunk tracker の全 dirty ファイル追跡と UI レビュー。Code graph のスコープ解決 (同名シンボルの絞り込み) と言語追加。
 - Memory の埋め込み検索・クエリ拡張 (現状は語彙検索のみ)。
 - dsh-darask 内で上流と重なる補助 UI の整理。
 

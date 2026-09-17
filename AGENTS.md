@@ -13,6 +13,7 @@
 - `packages/dsh-status-line` は上流 projection (`tokenUsage` / `contextPressure` / `sessionStats` / `title`) を参照する。コンテキスト使用率の再計算を自前で持たない。`src/status.mjs` はブラウザーでも読まれるので Node 専用 API や zod を import しない (host 専用は `projection.mjs` / `command.mjs` / `index.mjs`)。外部コマンドは利用者設定ファイルだけから受け取り、モデル出力や HTTP リクエストでは指定できない。
 - `packages/dsh-memory` は host 専用 (`node:sqlite` / `node:fs` / `node:crypto`)。上流のセッション永続化・compaction を置き換えない。モデル出力 (観測・Dream 計画) は必ず `observation.mjs` / `prompts.mjs` の厳密パーサーを通し、未知フィールドは拒否する。ファイル書き込みは `resolveContained` で scope ディレクトリ内に閉じ、`writeAtomic` (同一ディレクトリの一時ファイル → rename) 以外で書かない。注入するメモリー文脈には「過去の文脈であり実ソースで検証する」旨の警告を残す。
 - `packages/dsh-hunk-tracker` は上流ファイルツール (`dsh-tool-fs` / `str-replace-editor` / hashline) を置き換えず、`fs/write-intent` / `fs/edit-intent` / `tools/result` / `session/event` の観測だけで帰属を決める。`diff.mjs` / `tracker.mjs` は I/O を持たず単体テストできる状態を保つ。ディスクへ書くのは `/hunks reject` だけで、モデル向けツール (`hunks_status` / `hunks_diff`) は読み取り専用にする。
+- `packages/dsh-code-graph` は上流の LSP・grep・ファイルツールを置き換えない読み取り専用の索引。ソースは `ctx.fs` 経由で読み (sandbox / リモート対応)、`index-store.mjs` / `extract.mjs` / `tar.mjs` は I/O や DSH 依存を持たず単体テストできる状態を保つ。文法 WASM と tags.scm は `grammars.json` に固定した npm パッケージから `scripts/fetch-grammars.mjs` が取り出す (`grammars/` は git 管理外、ネイティブビルドは走らせない)。言語を追加するときは `grammars.json` と `languages.mjs` の両方を更新し、`extract.test.mjs` に最小サンプルを足す。
 - 依存は固定バージョン。`*` / `latest` / 範囲指定は使わない。
 
 ## 検証

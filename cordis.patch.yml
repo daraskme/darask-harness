@@ -76,5 +76,12 @@
     # 状態は $DSH_HOME/darask/hunks/<session>.json。baseline: session | git-head。
     - id: darask-hunk-tracker
       name: '@darask/dsh-hunk-tracker'
+    # grok-build 由来: Codebase graph。tree-sitter (WASM) の tags クエリで JS / TS / TSX / Python / Go / Rust の
+    # 定義・参照をワークスペース単位に索引し、code_definitions / code_references / code_outline / code_symbols
+    # ツールと /code-graph コマンド (status・reindex・languages・outline・find) を提供。ファイルは ctx.fs 経由で
+    # 読み、エージェント編集は fs/write-intent・tools/result から増分再索引。LSP・grep は上流のまま。
+    # 索引は $DSH_HOME/darask/code-graph/<workspace-hash>.json。文法 WASM は npm run build で取得。
+    - id: darask-code-graph
+      name: '@darask/dsh-code-graph'
     - id: darask-harness
       name: darask-harness
