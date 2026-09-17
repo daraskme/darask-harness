@@ -14,6 +14,9 @@
 - `packages/dsh-memory` は host 専用 (`node:sqlite` / `node:fs` / `node:crypto`)。上流のセッション永続化・compaction を置き換えない。モデル出力 (観測・Dream 計画) は必ず `observation.mjs` / `prompts.mjs` の厳密パーサーを通し、未知フィールドは拒否する。ファイル書き込みは `resolveContained` で scope ディレクトリ内に閉じ、`writeAtomic` (同一ディレクトリの一時ファイル → rename) 以外で書かない。注入するメモリー文脈には「過去の文脈であり実ソースで検証する」旨の警告を残す。
 - `packages/dsh-hunk-tracker` は上流ファイルツール (`dsh-tool-fs` / `str-replace-editor` / hashline) を置き換えず、`fs/write-intent` / `fs/edit-intent` / `tools/result` / `session/event` の観測だけで帰属を決める。`diff.mjs` / `tracker.mjs` は I/O を持たず単体テストできる状態を保つ。ディスクへ書くのは `/hunks reject` だけで、モデル向けツール (`hunks_status` / `hunks_diff`) は読み取り専用にする。
 - `packages/dsh-code-graph` は上流の LSP・grep・ファイルツールを置き換えない読み取り専用の索引。ソースは `ctx.fs` 経由で読み (sandbox / リモート対応)、`index-store.mjs` / `extract.mjs` / `tar.mjs` は I/O や DSH 依存を持たず単体テストできる状態を保つ。文法 WASM と tags.scm は `grammars.json` に固定した npm パッケージから `scripts/fetch-grammars.mjs` が取り出す (`grammars/` は git 管理外、ネイティブビルドは走らせない)。言語を追加するときは `grammars.json` と `languages.mjs` の両方を更新し、`extract.test.mjs` に最小サンプルを足す。
+- `packages/dsh-monitor` はプロセス管理を持たない。起動は `ctx.shell.resolve` → `ctx.shell.start` (bash / pwsh 選択・sandbox・資格情報スクラブは上流)、登録は `ctx.jobs.start` (所有・一覧・出力・停止・セッション破棄時の取り消しは上流 `tool-jobs` / `jobs-local`)。独自の一覧・停止ツールや完了通知を足さない (完了は上流通知に任せ、終了時の最終行は inject のみ)。`events.mjs` (行分割・打ち切り・トークンバケット・抑制追跡) は I/O を持たず単体テストできる状態を保つ。
+- `packages/dsh-worktree` は git CLI (`execFile`、引数配列) だけを使い、シェル文字列を組まない。名前・ブランチ・基点は `registry.mjs` の検査を必ず通し、`-` 始まりを拒否する。削除・gc の対象はレジストリに登録した worktree に限り、dirty は `force` 無しで消さない。CoW / overlay / 共有 `node_modules` などファイルシステム依存の最適化は入れない。
+- プロンプトキュー・割り込み・キュー編集は上流 `Agent.inbox` (`nextTurn` / `nextStep`、`replace` / `remove` / `splice`、`cancel({ keepInbox })`) を使う。独自キューを作らない。
 - 依存は固定バージョン。`*` / `latest` / 範囲指定は使わない。
 
 ## 検証

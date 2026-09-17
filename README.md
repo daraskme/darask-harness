@@ -17,8 +17,10 @@ darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.ym
    ├─ dsh-hashline/        @darask/dsh-hashline — grok-build の hashline read/edit/grep 移植
    ├─ dsh-hunk-tracker/    @darask/dsh-hunk-tracker — セッション変更の hunk 追跡 (ターン帰属 / 外部編集検出 / accept・reject)
    ├─ dsh-memory/          @darask/dsh-memory — クロスセッション記憶 (観測キャプチャ / Dream 統合 / memory_search・memory_get)
+   ├─ dsh-monitor/         @darask/dsh-monitor — 長時間スクリプトの行イベント監視 (monitor ツール、レート制限・自動停止)
    ├─ dsh-rules/           @darask/dsh-rules — .grok/.claude/.cursor rules ディレクトリと glob 条件ルール
-   └─ dsh-status-line/     @darask/dsh-status-line — モデル/コンテキスト/コスト/経過時間のステータスライン
+   ├─ dsh-status-line/     @darask/dsh-status-line — モデル/コンテキスト/コスト/経過時間のステータスライン
+   └─ dsh-worktree/        @darask/dsh-worktree — Git worktree のライフサイクル (worktree_create / worktree_list / worktree_remove、/worktree gc)
 ```
 
 ### どこから何を採ったか
@@ -34,6 +36,9 @@ darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.ym
 | クロスセッション記憶 (Memory v2): 完了ターンからツール無しの補助モデル呼び出しで観測を抽出し、global / workspace スコープの不変ファイル + SQLite FTS5 索引 + `MEMORY.md` 目次として保存。Dream (統合) ジョブで観測をトピックへ集約・アーカイブ | grok-build Memory v2 (`memory/`) | `packages/dsh-memory` (`session/event` を購読、`memory_search` / `memory_get` ツール、`/memory` コマンド)。セッション永続化・compaction は上流のまま |
 | 変更追跡 (Hunk tracker): エージェント編集をターン帰属付きの hunk として保持し、外部編集 (`external` / `externalEditOnAgentFile`) と区別。作成・削除・バイナリ・巨大ファイルを個別に扱い、accept でベースラインへ畳み込み、reject でディスクを復元 | grok-build `xai-hunk-tracker` | `packages/dsh-hunk-tracker` (上流ファイルツールの `fs/write-intent` / `fs/edit-intent` / `tools/result` を観測。ファイルツール自体は置き換えない)。`hunks_status` / `hunks_diff` ツール、`/hunks` コマンド |
 | コードグラフ (Codebase graph): tree-sitter の tags クエリで JS / TS / TSX / Python / Go / Rust の定義・参照をワークスペース単位に索引し、go-to-definition / find-references / アウトライン / 名前検索を言語サーバー無しで提供。バイナリ・巨大ファイル除外、git ls-files による候補列挙、増分再索引 | grok-build `xai-codebase-graph` | `packages/dsh-code-graph` (WASM 文法は npm の tree-sitter 各言語パッケージから `npm run build` で取得。`ctx.fs` 経由で読み、`fs/write-intent` / `tools/result` でエージェント編集を追従)。`code_*` ツール、`/code-graph` コマンド。上流 LSP・grep は置き換えない |
+| バックグラウンド監視 (monitor): 長時間スクリプトの stdout 各行をイベントとして即時配信 (実行中は inject、待機中は followup で起床)、行 500 字 / バッチ 3,000 字の打ち切り、トークンバケット (10 件 / 2 秒補充) による抑制と追い付き通知、30 秒継続過負荷での自動停止、既定 10 時間・`persistent` で無期限 | grok-build `monitor` ツール | `packages/dsh-monitor`。プロセスは上流 `ctx.shell` (bash / pwsh、sandbox 適用) で起動し `ctx.jobs` に登録するだけで、一覧・出力・停止は上流 `job_list` / `job_output` / `job_kill` をそのまま使う |
+| Git worktree ライフサイクル: 名前付き worktree を `<repo>/.darask/worktrees/<name>` に作成 (`.git/info/exclude` 登録)、所有セッション・基点・時刻のレジストリ、dirty / missing / prunable / stale 判定、dirty を `force` 無しで消さない削除、消失・stale エントリの gc | grok-build `xai-fast-worktree` のライフサイクル部分 | `packages/dsh-worktree` (git CLI のみ。Btrfs / CoW / overlay / NFS / SQLite メタデータは非対象)。`worktree_*` ツール、`/worktree` コマンド |
+| プロンプトキュー・割り込み (待機中プロンプト、次ステップへの steering、並べ替え・削除、キャンセル時の保持) | DSH 上流 `Agent.inbox` (`nextTurn` / `nextStep`、`append` / `prepend` / `replace` / `remove` / `splice`、`cancel(..., { keepInbox })`) | grok-build `prompt_queue` / `queue_mutation` 相当は上流に既にあるため移植しない |
 | Auto 権限プリセット | dsh-darask | `cordis.patch.yml` の `permission` 行 |
 
 ## 導入
@@ -114,6 +119,22 @@ memory.sqlite                 メタデータと FTS5 索引 (unicode61 + trigra
 - 索引は `$DSH_HOME/darask/code-graph/<workspace-hash>.json` に一時ファイル → rename で保存し、再起動後は stat 版数が一致するファイルを再解析せずに使います (`persist: false` で無効)。`maxFileBytes` (既定 5 MiB) 超・バイナリ・非通常ファイルは除外、`maxFiles` 超のワークスペースは先頭 (パス順) だけ索引して status に警告を出します。
 - grok-build の scope graph (字句スコープでの解決) と ACP `workspace.code_goto_*` RPC は移植していません。参照は名前一致で、型解決はしません。
 
+## バックグラウンド監視 (monitor)
+
+`monitor` ツールは、長時間動くスクリプト (PR のポーリング、`tail -F app.log | grep --line-buffered ERROR`、ビルド完了待ち等) を上流のシェル実行器で起動し、`ctx.jobs` にジョブとして登録します。stdout の各行が 1 イベントで、`<monitor-event description="..." job_id="...">` に包んで所有エージェントへ届けます。エージェントがターン実行中なら次ステップの文脈に注入し、待機中なら followup として起床させます (起床はユーザー入力までの連続回数を `maxConsecutiveWakes` で制限)。
+
+- 行は 500 字、1 バッチは 3,000 字で打ち切り。イベントはトークンバケット (容量 10、2 秒に 1 件補充) で抑制し、再開時に `[N events suppressed ...]` を前置します。抑制が 30 秒続くとプロセスを停止し、フィルターを強めるよう伝えます。
+- 既定の期限は 10 時間 (`timeout_ms` で短縮)。`persistent: true` は期限なしで、セッション終了か `job_kill` まで動きます。終了時は最後の行を 1 回注入し、完了通知は上流 `tool-jobs` に任せます (二重起床しない)。
+- 一覧・未読行の取得・停止は上流の `job_list` / `job_output` / `job_kill`。ジョブは所有セッションにだけ見え、セッション破棄で取り消されます。sandbox が有効ならそのポリシーで実行し、`PYTHONUNBUFFERED=1` を渡します。
+
+## Git worktree
+
+`worktree_create` は `git rev-parse --show-toplevel` (リンク先 worktree からは主ツリーへ解決) で対象リポジトリを決め、`<repo>/.darask/worktrees/<name>` に `git worktree add -b wt/<name> <path> <base>` で作成します (`branch` に既存ブランチを渡すとチェックアウト)。`.darask/` は `.git/info/exclude` に登録するので主ツリーは clean のままです。`root` 設定で別の場所も指定できますが、sandbox のワークスペース外だと書き込みが拒否される旨を警告します。
+
+- レジストリ `$DSH_HOME/darask/worktrees/registry.json` には名前・パス・ブランチ・基点・所有セッション・時刻を残し、`worktree_list` / `/worktree list` は `git worktree list --porcelain` と `git status --porcelain` で dirty / missing / prunable / locked / stale を付けます。
+- `worktree_remove` は dirty な worktree を `force` 無しでは消しません。`delete_branch` でブランチも削除。レジストリに無い worktree は対象外です。
+- `/worktree gc [--all]` は消失・prunable と (clean な) stale エントリを片付け、`git worktree prune` を実行します。名前は `[A-Za-z0-9._-]` 64 字まで、ブランチと基点は `git check-ref-format` 相当の検査で `-` 始まりや空白を拒否します。同一リポジトリの上限は `maxWorktrees` (既定 24)。
+
 ## ハブ更新の配布
 
 dsh-darask の `host-update` はこの monorepo でも動作します。開発モードの PC はハーネスのチェックアウトを `git merge --ff-only` し、インストール済み PC には `packages/darask` を `npm pack` したアーカイブ (`dsh-darask-*.tgz`) を配布します。配布単位をハーネス全体にするのは今後の課題です (下記)。
@@ -122,6 +143,7 @@ dsh-darask の `host-update` はこの monorepo でも動作します。開発�
 
 - 配布単位を `darask-harness` パッケージにし、リモート PC のインストーラーもハーネスを導入する。
 - grok-build の Agent Dashboard の DSH プラグイン化。Hunk tracker の全 dirty ファイル追跡と UI レビュー。Code graph のスコープ解決 (同名シンボルの絞り込み) と言語追加。
+- worktree の CoW 複製 (Btrfs / APFS clonefile) と `node_modules` の共有 (現状は plain `git worktree add`)。
 - Memory の埋め込み検索・クエリ拡張 (現状は語彙検索のみ)。
 - dsh-darask 内で上流と重なる補助 UI の整理。
 
