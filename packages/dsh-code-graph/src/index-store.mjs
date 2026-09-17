@@ -111,6 +111,8 @@ export class CodeIndex {
   /** Case-insensitive substring search over definition names; exact and prefix matches rank first. */
   search(query, { kind, limit = 50 } = {}) {
     const needle = query.toLowerCase();
+    const matches = new Map();
+    const candidates = new Set();
     const scored = [];
     for (const [name, paths] of this.#defsByName) {
       const lower = name.toLowerCase();
@@ -119,14 +121,17 @@ export class CodeIndex {
       else if (lower.startsWith(needle)) score = 1;
       else if (lower.includes(needle)) score = 2;
       else continue;
-      for (const path of paths) {
-        for (const def of this.#files.get(path).definitions) {
-          if (def.name !== name || (kind && def.kind !== kind)) continue;
-          scored.push({ score, item: { path, ...def } });
-        }
+      matches.set(name, { score, order: matches.size });
+      for (const path of paths) candidates.add(path);
+    }
+    for (const path of candidates) {
+      for (const def of this.#files.get(path).definitions) {
+        const match = matches.get(def.name);
+        if (!match || (kind && def.kind !== kind)) continue;
+        scored.push({ ...match, item: { path, ...def } });
       }
     }
-    scored.sort((a, b) => a.score - b.score || a.item.name.length - b.item.name.length || a.item.path.localeCompare(b.item.path) || a.item.line - b.item.line);
+    scored.sort((a, b) => a.score - b.score || a.item.name.length - b.item.name.length || a.item.path.localeCompare(b.item.path) || a.item.line - b.item.line || a.order - b.order);
     return scored.slice(0, limit).map(entry => entry.item);
   }
 
