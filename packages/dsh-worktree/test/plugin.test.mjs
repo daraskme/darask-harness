@@ -164,22 +164,23 @@ test('/worktree command: list, create, remove, gc of vanished and stale entries'
   }
 });
 
-test('sandboxed sessions get a warning when the configured root leaves the workspace', async () => {
-  const t = await harness({ sandbox: true, config: { root: '../outside-trees' } });
-  try {
-    const created = await t.call('worktree_create', { name: 'out' });
-    assert.ok(samePath(created.path, join(t.base, 'outside-trees', 'out')));
-    assert.match(created.warning, /outside the sandbox workspace root/u);
-    const exclude = await readFile(join(t.repo, '.git', 'info', 'exclude'), 'utf8').catch(() => '');
-    assert.doesNotMatch(exclude, /outside-trees|\.darask/u, 'no exclude entry when root is outside the repo');
-    const inside = await harness({ sandbox: true });
+test('sandboxed sessions refuse worktree creation inside and outside the workspace without side effects', async () => {
+  for (const config of [{ root: '../outside-trees' }, {}]) {
+    const t = await harness({ sandbox: true, config });
     try {
-      assert.equal((await inside.call('worktree_create', { name: 'in' })).warning, undefined);
+      const excludePath = join(t.repo, '.git', 'info', 'exclude');
+      const exclude = await readFile(excludePath, 'utf8');
+      const worktrees = await git(t.repo, 'worktree', 'list', '--porcelain');
+      const branches = await git(t.repo, 'for-each-ref', 'refs/heads');
+      await assert.rejects(t.call('worktree_create', { name: 'blocked' }), /confined sandbox policy/u);
+      assert.equal(await readFile(excludePath, 'utf8'), exclude);
+      assert.equal(await git(t.repo, 'worktree', 'list', '--porcelain'), worktrees);
+      assert.equal(await git(t.repo, 'for-each-ref', 'refs/heads'), branches);
+      await assert.rejects(stat(join(t.repo, config.root ?? '.darask/worktrees')), { code: 'ENOENT' });
+      await assert.rejects(stat(join(t.base, 'home', 'darask', 'worktrees', 'registry.json')), { code: 'ENOENT' });
     } finally {
-      await inside.cleanup();
+      await t.cleanup();
     }
-  } finally {
-    await t.cleanup();
   }
 });
 
@@ -191,4 +192,17 @@ test('the per-repository limit is enforced', async () => {
   } finally {
     await t.cleanup();
   }
+});
+
+test('remove and GC protect the invoking session worktree even when force is requested', async () => {
+  const t = await harness();
+  try {
+    const created = await t.call('worktree_create', { name: 'active' });
+    const agent = { session: { id: 'active-session', header: { cwd: created.path } } };
+    await assert.rejects(t.h.tools.get('worktree_remove').execute({ name: 'active', force: true }, { agent }), /current session workspace/);
+    const result = await t.h.commands.get('worktree').handler({ rawInput: 'gc --all', agent });
+    assert.match(result.text, /Removed 0/);
+    assert.match(result.text, /current session workspace/);
+    assert.equal((await stat(join(created.path, 'README.md'))).isFile(), true);
+  } finally { await t.cleanup(); }
 });

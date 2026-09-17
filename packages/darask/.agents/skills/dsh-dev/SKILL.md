@@ -5,6 +5,34 @@ description: dsh-darask のソース編集、DSH プラグインの起動・翻�
 
 # dsh-dev
 
+## Dashboard runtime testing
+
+- Register a local folder with the workspace chooser. A `/goal` command can show
+  output while the upstream session summary is still `blank`; it is not a reliable
+  dashboard-row fixture. To test nonblank rows without model credentials, submit
+  distinctive ordinary text in separate sessions and expect a missing-credential
+  turn error. Report that limitation rather than claiming successful model turns.
+- Open the `ダッシュボード` sidebar panel. Its preference key is
+  `darask-dashboard:prefs`; reopening the panel after a browser reload may be
+  necessary because upstream restores the conversation panel.
+- Use authenticated page-context fetch for `/api/darask/sessions/dashboard`.
+  The local payload uses `node: "local"` and `cwd` (not `workspace`); `read` also
+  takes `sessionId`. For forbidden-field tests, include otherwise-valid fields
+  so a missing `cwd` cannot accidentally satisfy a rejection assertion.
+- JavaScript cannot set the browser's forbidden `Origin` header. If using CDP
+  interception for this check, scope it to one marked request, leave cookies
+  untouched, and disable interception afterward. An upstream plain-text
+  `forbidden` response proves rejection but does not isolate the plugin guard.
+- Confirm responsive breakpoints with `innerWidth`/`matchMedia`, not the outer
+  window width: browser zoom and Windows display scaling can differ. Restore
+  browser zoom and maximize before recording the primary flow.
+
+### Devin Secrets Needed
+
+- None for local dashboard list/navigation/preferences/user-text peek coverage.
+- `DEEPSEEK_API_KEY` is needed for successful DeepSeek model turns; real running,
+  assistant-output, tool, and usage-dependent states require suitable credentials.
+
 編集前にリポジトリ直下の `AGENTS.md` を読み、そのルールに従う。DSH の runtime skill には同ファイルの内容も付与される。作業中にルールが変更された場合は読み直す。
 
 ## ソースと検索

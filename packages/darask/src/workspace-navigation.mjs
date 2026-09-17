@@ -44,7 +44,9 @@ export function createWorkspaceNavigation({ getLayout, getWindow, request }) {
         });
       const current = typeof data.current === 'string' ? data.current : null;
       const waiting = queued.get(key);
-      if (waiting && frames.has(key)) { queued.delete(key); frames.get(key)(waiting); }
+      if (waiting && frames.has(key) && (waiting.type !== 'darask-open-session' || sessions.some(session => session.id === waiting.session))) {
+        queued.delete(key); frames.get(key)(waiting);
+      }
       // An empty hydrate must not close retained session tabs before the remote
       // session store has actually loaded.
       if (!sessions.length && entry.sessions?.length) return;
@@ -88,14 +90,19 @@ export function createWorkspaceNavigation({ getLayout, getWindow, request }) {
       if (selectedKey === key) { selectedKey = null; getLayout().selectPanel(null); writeUrl(null, null, true); }
       publish();
     },
-    async open(node, workspace, { replace = false, newSession = false, force = false } = {}) {
+    async open(node, workspace, { replace = false, newSession = false, force = false, sessionId } = {}) {
       if (disposed) return;
       const key = keyOf(node, workspace), cached = opened.get(key);
+      const selection = typeof sessionId === 'string' ? { type: 'darask-open-session', node, workspace, session: sessionId } : undefined;
+      if (selection) queued.set(key, selection);
       activate(node, workspace, replace);
       if (!force && cached?.src && !cached.error) {
         if (newSession) {
           const command = { type: 'darask-new-session', node, workspace };
           if (cached.sessions && frames.has(key)) frames.get(key)(command); else queued.set(key, command);
+        }
+        else if (selection && cached.sessions?.some(session => session.id === sessionId) && frames.has(key)) {
+          queued.delete(key); frames.get(key)(selection);
         }
         return;
       }
@@ -104,7 +111,8 @@ export function createWorkspaceNavigation({ getLayout, getWindow, request }) {
       clearTimeout(requests.get(key)?.timer);
       const controller = new AbortController(), signal = controller.signal;
       const timer = setTimeout(() => controller.abort(Object.assign(new Error('Connection timed out'), { name: 'TimeoutError' })), 45000);
-      const pending = { controller, timer, newSession }; requests.set(key, pending); queued.delete(key);
+      const pending = { controller, timer, newSession }; requests.set(key, pending);
+      if (!selection) queued.delete(key);
       update(key, { node, workspace, loading: true, error: '', src: null });
       pending.promise = (async () => {
         try {
@@ -120,6 +128,7 @@ export function createWorkspaceNavigation({ getLayout, getWindow, request }) {
           update(key, { node, workspace, title: selected.title, loading: false, error: '', src: target.pathname + target.search });
         } catch (error) {
           if (requests.get(key) !== pending || signal.aborted && signal.reason?.name !== 'TimeoutError' || disposed) return;
+          queued.delete(key);
           update(key, { node, workspace, loading: false, error: error.name === 'TimeoutError' || signal.reason?.name === 'TimeoutError' ? '接続に時間がかかっています。もう一度お試しください。' : error.message, src: null });
         } finally { clearTimeout(timer); if (requests.get(key) === pending) requests.delete(key); }
       })();

@@ -324,10 +324,15 @@ export class MemoryScopeStore {
   /** Acquire a named lease unless another live owner holds it. */
   acquireLease(name, owner, ttlMs) {
     const now = this.now();
+    const result = this.db.prepare(`INSERT INTO leases (name, owner, expires_at) VALUES (?, ?, ?)
+      ON CONFLICT(name) DO UPDATE SET owner = excluded.owner, expires_at = excluded.expires_at
+      WHERE leases.owner = excluded.owner OR leases.expires_at <= ?`).run(name, owner, now + ttlMs, now);
+    return Number(result.changes) === 1;
+  }
+
+  assertLease(name, owner) {
     const row = this.db.prepare('SELECT owner, expires_at FROM leases WHERE name = ?').get(name);
-    if (row && row.owner !== owner && Number(row.expires_at) > now) return false;
-    this.db.prepare('INSERT OR REPLACE INTO leases (name, owner, expires_at) VALUES (?, ?, ?)').run(name, owner, now + ttlMs);
-    return true;
+    if (!row || row.owner !== owner || Number(row.expires_at) <= this.now()) throw new MemoryPathError('memory lease expired or changed owner');
   }
 
   releaseLease(name, owner) {
@@ -352,7 +357,9 @@ export class MemoryScopeStore {
    * Apply a validated Dream plan: topic operations, then archive every claimed
    * observation. Topic content is bounded and confined to `topics/<slug>.md`.
    */
-  async applyDreamPlan(plan, claimedPaths) {
+  async applyDreamPlan(plan, claimedPaths, { leaseOwner } = {}) {
+    const checkLease = () => { if (leaseOwner !== undefined) this.assertLease('dream', leaseOwner); };
+    checkLease();
     const claimed = new Set(claimedPaths);
     for (const path of claimed) if (!isInboxPath(path)) throw new MemoryPathError(`claimed observation is not in the inbox: ${path}`);
     const writes = new Map();
@@ -398,22 +405,28 @@ export class MemoryScopeStore {
         case 'rename': {
           const from = validateRelativePath(op.from);
           if (!exists(from)) throw new MemoryPathError(`${where}: source topic does not exist`);
+          const to = validateRelativePath(op.to);
+          if (to !== from && exists(to)) throw new MemoryPathError(`${where}: destination topic already exists`);
           const content = writes.get(from) ?? (await readFile(resolveContained(this.scopeDir, from).absolute, 'utf8'));
           remove(from);
-          stage(op.to, content);
+          stage(to, content);
           break;
         }
         case 'merge':
           if (!Array.isArray(op.sources) || op.sources.length === 0) throw new MemoryPathError(`${where} requires sources`);
           checkEvidence(op.evidence, where);
           for (const source of op.sources) remove(source);
+          if (exists(validateRelativePath(op.into))) throw new MemoryPathError(`${where}: destination topic already exists`);
           stage(op.into, op.content);
           break;
         case 'split':
           if (!Array.isArray(op.into) || op.into.length === 0) throw new MemoryPathError(`${where} requires targets`);
           checkEvidence(op.evidence, where);
           remove(op.from);
-          for (const target of op.into) stage(target.path, target.content);
+          for (const target of op.into) {
+            if (exists(validateRelativePath(target.path))) throw new MemoryPathError(`${where}: destination topic already exists`);
+            stage(target.path, target.content);
+          }
           break;
         default:
           throw new MemoryPathError(`${where}: unsupported operation`);
@@ -421,16 +434,21 @@ export class MemoryScopeStore {
     }
 
     for (const [rel, content] of writes) {
+      checkLease();
       await writeAtomic(resolveContained(this.scopeDir, rel).absolute, content);
       this.indexTopicRow(rel, content);
     }
     for (const rel of deletes) {
+      checkLease();
       await rm(resolveContained(this.scopeDir, rel).absolute, { force: true });
       this.db.prepare('DELETE FROM topics WHERE path = ?').run(rel);
       this.removeDoc(rel);
     }
     const archived = [];
-    for (const rel of claimed) archived.push(await this.archiveObservation(rel));
+    for (const rel of claimed) {
+      checkLease();
+      archived.push(await this.archiveObservation(rel));
+    }
     return { written: [...writes.keys()], deleted: [...deletes], archived };
   }
 

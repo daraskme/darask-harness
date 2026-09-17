@@ -2,8 +2,10 @@
 // persisted registry (a JSON list of worktrees this plugin created, keyed by
 // repository), and `git worktree list --porcelain` parsing.
 
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rename, rmdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
+import { setTimeout } from 'node:timers/promises';
 
 export const NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/u;
 const RESERVED = new Set(['.', '..', 'head', 'con', 'prn', 'aux', 'nul']);
@@ -76,10 +78,9 @@ export function samePath(a, b) {
   return process.platform === 'win32' ? norm(a).toLowerCase() === norm(b).toLowerCase() : norm(a) === norm(b);
 }
 
-/** JSON registry of plugin-created worktrees; single-writer, atomic replace. */
+/** JSON registry of plugin-created worktrees; cross-process lock, atomic replace. */
 export class WorktreeRegistry {
   #file;
-  #entries;
   #queue = Promise.resolve();
 
   constructor(file) {
@@ -87,15 +88,13 @@ export class WorktreeRegistry {
   }
 
   async load() {
-    if (this.#entries !== undefined) return this.#entries;
     try {
       const parsed = JSON.parse(await readFile(this.#file, 'utf8'));
-      this.#entries = Array.isArray(parsed?.worktrees) ? parsed.worktrees.filter(entry => typeof entry?.path === 'string' && typeof entry?.repoRoot === 'string' && typeof entry?.name === 'string') : [];
+      return Array.isArray(parsed?.worktrees) ? parsed.worktrees.filter(entry => typeof entry?.path === 'string' && typeof entry?.repoRoot === 'string' && typeof entry?.name === 'string') : [];
     } catch (error) {
       if (error?.code !== 'ENOENT') throw error;
-      this.#entries = [];
+      return [];
     }
-    return this.#entries;
   }
 
   async forRepo(repoRoot) {
@@ -105,20 +104,34 @@ export class WorktreeRegistry {
   /** Serialize registry mutations (and the git operations that accompany them). */
   transaction(work) {
     const run = this.#queue.then(async () => {
-      const entries = await this.load();
-      const result = await work(entries);
-      await this.#persist();
-      return result;
+      await mkdir(dirname(this.#file), { recursive: true });
+      const lock = `${this.#file}.lock`, deadline = Date.now() + 10_000;
+      for (;;) {
+        try { await mkdir(lock); break; }
+        catch (error) {
+          if (error?.code !== 'EEXIST') throw error;
+          if (Date.now() >= deadline) throw new Error(`Worktree registry is locked: ${lock}. If a writer crashed, stop all harness instances before removing the lock directory.`);
+          await setTimeout(50);
+        }
+      }
+      try {
+        const entries = await this.load();
+        const result = await work(entries);
+        await this.#persist(entries);
+        return result;
+      } finally { await rmdir(lock); }
     });
     this.#queue = run.then(() => undefined, () => undefined);
     return run;
   }
 
-  async #persist() {
+  async #persist(entries) {
     await mkdir(dirname(this.#file), { recursive: true });
-    const tmp = `${this.#file}.${process.pid}.tmp`;
-    await writeFile(tmp, JSON.stringify({ version: 1, worktrees: this.#entries }, null, 2));
-    await rename(tmp, this.#file);
+    const tmp = `${this.#file}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(tmp, JSON.stringify({ version: 1, worktrees: entries }, null, 2), { flag: 'wx' });
+      await rename(tmp, this.#file);
+    } finally { await rm(tmp, { force: true }); }
   }
 }
 

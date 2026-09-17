@@ -92,7 +92,6 @@ export function sliceTurnEvents(events, fromTurn, throughTurn) {
 export function apply(ctx, config) {
   const resolved = { ...config, dshHome: resolveDshHome(config.dshHome) };
   const manifestBudget = { maxBytes: resolved.manifestMaxBytes, maxEntries: resolved.manifestMaxEntries };
-  const owner = `${process.pid}:${randomUUID()}`;
   const stores = new Map();
   const captureQueues = new Map();
   const injected = new WeakMap();
@@ -222,6 +221,7 @@ export function apply(ctx, config) {
 
   async function dream(store, session, route, { force = false } = {}) {
     if (!force && !dreamEligible(store)) return { status: 'skipped', reason: 'not-eligible' };
+    const owner = `${process.pid}:${randomUUID()}`;
     if (!store.acquireLease('dream', owner, resolved.dreamLeaseMs)) return { status: 'skipped', reason: 'lease-held' };
     const claimed = store.pendingObservations(resolved.dreamMaxClaimed);
     if (claimed.length === 0) { store.releaseLease('dream', owner); return { status: 'skipped', reason: 'nothing-pending' }; }
@@ -240,7 +240,7 @@ export function apply(ctx, config) {
         timeoutMs: resolved.dreamTimeoutMs,
       });
       const plan = parseDreamPlan(text);
-      const result = await store.applyDreamPlan(plan, claimed.map(observation => observation.path));
+      const result = await store.applyDreamPlan(plan, claimed.map(observation => observation.path), { leaseOwner: owner });
       await store.pruneArchive(resolved.archiveRetentionDays * 24 * 60 * 60 * 1000);
       await store.regenerateManifest();
       store.recordDream({ id: dreamId, finishedAt: Date.now(), operations: plan.operations.length, status: 'completed' });
