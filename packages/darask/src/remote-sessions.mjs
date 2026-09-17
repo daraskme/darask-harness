@@ -99,10 +99,11 @@ export function createRemoteSessions({ hub, query, fetch: fetchImpl = globalThis
     const input = validate(raw, true), host = hub.info();
     if (host.id !== input.expectedHost) throw fail();
     signal?.throwIfAborted();
-    const rows = await listed(input, signal);
-    if (input.action === 'list') return { host: hostView(host), cwd: input.cwd, items: rows.slice(input.offset, input.offset + input.limit).map(summary), nextOffset: input.offset + input.limit < rows.length ? input.offset + input.limit : null };
+    if (input.action === 'list') {
+      const rows = await listed(input, signal);
+      return { host: hostView(host), cwd: input.cwd, items: rows.slice(input.offset, input.offset + input.limit).map(summary), nextOffset: input.offset + input.limit < rows.length ? input.offset + input.limit : null };
+    }
     if (input.action === 'search') return { host: hostView(host), cwd: input.cwd, ...(await searchRows(input, signal)) };
-    if (!rows.some(row => row.header.id === input.sessionId)) throw fail();
     // Public observation API retains one immutable cut and does not promote it.
     // Native cold replay may read the full source log; only the bounded window is exported.
     const observation = await query.observeSession(input.sessionId, { signal, projectionMode: 'none' });
