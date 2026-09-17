@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Input, Switch, Tag } from '@deepseek-ai/dsh-client-ui-primitives'
+import { openCodexAuthorization } from './settings/client-effects.mjs'
 
 function CodexConnection({ refresh }) {
   const [node, setNode] = useState(''), [nodes, setNodes] = useState([]), [ready, setReady] = useState(false)
@@ -62,6 +63,7 @@ export function CodexAccounts({ provider, action, pending, Usage, t }) {
   const [callback, setCallback] = useState('')
   const [removing, setRemoving] = useState(null)
   const [feedback, setFeedback] = useState('')
+  const [loginUrl, setLoginUrl] = useState(''), [popupBlocked, setPopupBlocked] = useState(false)
   const rows = provider.accounts ?? []
   const signingIn = provider.login?.status === 'running'
   const perform = async payload => {
@@ -73,15 +75,26 @@ export function CodexAccounts({ provider, action, pending, Usage, t }) {
     } catch { setFeedback('操作を完了できませんでした。DSH の接続を確認してください。') }
     return false
   }
+  const beginLogin = async () => {
+    setFeedback(''); setLoginUrl(''); setPopupBlocked(false)
+    try {
+      const launched = await openCodexAuthorization(() => action({ provider: 'codex', action: 'login' }))
+      if (launched.result?.login?.status === 'failed') { setFeedback('操作を完了できませんでした。状態を更新し、もう一度お試しください。'); return }
+      setLoginUrl(launched.url ?? '')
+      if (launched.url && !launched.opened) setPopupBlocked(true)
+    } catch { setFeedback('操作を完了できませんでした。DSH の接続を確認してください。') }
+  }
+  const authorizationUrl = signingIn ? provider.login?.url ?? loginUrl : ''
   return <div className="darask-codex-accounts">
     <CodexConnection refresh={() => perform({ action: 'refresh' })} />
     {provider.authenticationSource && <p className="darask-meta">認証元: 🌐 {provider.authenticationSource} — この PC でも共有アカウントを使用します。</p>}
     <CodexImages />
-    <div className="darask-actions"><Button size="sm" variant="outline" disabled={pending || signingIn || rows.length >= 16} onClick={() => void perform({ action: 'login' })}>アカウントを追加</Button>
+    <div className="darask-actions"><Button size="sm" variant="outline" disabled={pending || signingIn || rows.length >= 16} onClick={() => void beginLogin()}>アカウントを追加</Button>
       <Button size="sm" disabled={pending} onClick={() => void perform({ action: 'refresh' })}>状態を更新</Button>
       {signingIn && <Button size="sm" disabled={pending} onClick={() => void perform({ action: 'cancelLogin' })}>追加ログインを中止</Button>}</div>
     <p className="darask-muted">最大16アカウントを保存できます。「使用する」で以後の Codex リクエストに使うアカウントを選びます。Usage は各アカウントから約1分ごとに取得します。</p>
     {signingIn && <p className="darask-muted">別のアカウントを追加する場合は、認証ページでアカウントを切り替えるか、下の認証リンクをプライベートウインドウで開いてください。</p>}
+    {signingIn && authorizationUrl && <div className="darask-login" role="status">{popupBlocked && <p>ブラウザーが認証画面を自動で開けませんでした。ポップアップを許可するか、次のリンクを開いてください。</p>}<a href={authorizationUrl} target="_blank" rel="noopener noreferrer">ChatGPT の認証画面を開く ↗</a></div>}
     {feedback && <p role="alert" className="darask-error">{feedback}</p>}
     {rows.map(row => <section className="darask-codex-account" key={row.accountKey}>
       <div className="darask-codex-heading"><strong>{row.displayName}</strong>{row.active && <Tag tone="success">使用中</Tag>}</div>

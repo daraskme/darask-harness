@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import vm from 'node:vm';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { openCodexAuthorization } from '../src/settings/client-effects.mjs';
 const require = createRequire(import.meta.url);
 const primitives = {
   Button: ({ variant, size, children, ...props }) => React.createElement('button', props, children),
@@ -14,6 +15,28 @@ const primitives = {
   Menu: ({ anchor }) => anchor,
   StateDot: ({ state }) => React.createElement('span', { 'data-state': state, className: 'state-dot' }),
 };
+test('Codex login reserves a browser tab before awaiting the authorization URL and preserves a blocked-popup fallback', async () => {
+  let resolve
+  const response = new Promise(done => { resolve = done })
+  const events = []
+  const popup = { opener: {}, location: { replace(url) { events.push(['replace', url]) } }, close() { events.push('close') } }
+  const pending = openCodexAuthorization(() => { events.push('action'); return response }, { open(url, target) { events.push(['open', url, target]); return popup } })
+  assert.deepEqual(events, [['open', 'about:blank', '_blank'], 'action'])
+  resolve({ login: { status: 'running', url: 'https://auth.openai.com/authorize?state=fixture' } })
+  assert.deepEqual(await pending, { result: { login: { status: 'running', url: 'https://auth.openai.com/authorize?state=fixture' } }, url: 'https://auth.openai.com/authorize?state=fixture', opened: true })
+  assert.equal(popup.opener, null)
+  assert.deepEqual(events.at(-1), ['replace', 'https://auth.openai.com/authorize?state=fixture'])
+  const blocked = await openCodexAuthorization(async () => ({ login: { status: 'running', url: 'https://auth.openai.com/authorize' } }), { open: () => null })
+  assert.equal(blocked.opened, false)
+  assert.equal(blocked.url, 'https://auth.openai.com/authorize')
+})
+test('DARASK switches expose clearly distinct ON/OFF, focus, and disabled states', () => {
+  const css = readFileSync(new URL('../src/client.css', import.meta.url), 'utf8');
+  assert.match(css, /button\[role="switch"\]::before \{ content: "OFF"/);
+  assert.match(css, /button\[role="switch"\]\[aria-checked="true"\]::before \{ content: "ON"/);
+  assert.match(css, /button\[role="switch"\]:focus-visible/);
+  assert.match(css, /button\[role="switch"\]:disabled/);
+});
 test('Accounts centralizes provider login; sidebar Usage displays available balances above Settings', async () => {
   let plugin, dictionary; const entries = [], disposers = [];
   vm.runInNewContext(readFileSync(new URL('../dist/client.js', import.meta.url), 'utf8'), {
@@ -68,20 +91,27 @@ test('Accounts centralizes provider login; sidebar Usage displays available bala
     { id: 'cursor', name: 'Cursor', usage: { status: 'unsupported', windows: [] } },
     { id: 'codex', name: 'Codex', usage: { status: 'available', credits: { balance: '12.3456789' } } },
     { id: 'claude', name: 'Claude', usage: { status: 'unavailable' } },
-  ].map(p => ({ ...p, enabled: true, auth: 'authenticated', model: p.model ?? '', executable: '', capability: p.id === 'cursor' ? 'agent' : 'model' }));
+  ].map(p => ({ ...p, usage: p.id === 'claude' ? { ...p.usage, message: 'Subscription usage is supplied by Claude Code statusLine during a session; account status does not expose a balance.' } : p.usage, enabled: true, auth: 'authenticated', model: p.model ?? '', executable: '', capability: p.id === 'cursor' ? 'agent' : 'model' }));
   const props = { t: key => dictionary.ja[key], wide: true, action: async () => {}, load: async () => {},
-    useDaraskStatus: () => ({ data: { providers, priority: providers.map(p => p.id), routingEnabled: false, purposeRoutes: { research: 'grok' }, jev: { model: 'typesafe-ai/jev', configured: false } }, pending: null, error: null, loading: false }) };
+    useDaraskStatus: () => ({ data: { providers, priority: providers.map(p => p.id), routingEnabled: false, purposeRoutes: { research: 'grok' }, jev: { model: 'typesafe-ai/jev', configured: false }, bitwarden: { configured: false, targets: [{ ref: 'DEEPSEEK_API_KEY', label: 'DeepSeek API', automatic: true }, { ref: 'AI_GATEWAY_API_KEY', label: 'Vercel AI Gateway', automatic: true }, { ref: 'DARASK_R2_ACCESS_KEY_ID', label: 'R2 Access Key ID', automatic: true }, { ref: 'DARASK_R2_SECRET_ACCESS_KEY', label: 'R2 Secret Access Key', automatic: true }, { ref: 'DARASK_CLOUDFLARE_BROWSER_RUN', label: 'Cloudflare Browser Run', automatic: true }], config: { enabled: false, executable: '', secretIds: {} } } }, pending: null, error: null, loading: false }) };
   const sidebar = renderToStaticMarkup(React.createElement(usage.component, props));
-  for (const text of ['Usage', 'OpenAI API', 'OpenRouter', 'Grok', 'Codex', '残り 64%', '12.3456789', '0 USD', '1,200']) assert.ok(sidebar.includes(text), text);
-  assert.ok(!sidebar.includes('Cursor')); assert.ok(!sidebar.includes('Claude')); assert.ok(!sidebar.includes('残り 0%'));
+  for (const text of ['Usage', 'OpenAI API', 'OpenRouter', 'Grok', 'Codex', 'Claude', '残り 64%', '12.3456789', '0 USD', '1,200', 'Claude Code のステータス表示連携を設定すると、取得できる利用枠を表示します。']) assert.ok(sidebar.includes(text), text);
+  assert.ok(!sidebar.includes('Cursor')); assert.ok(!sidebar.includes('残り 0%'));
   const panel = renderToStaticMarkup(React.createElement(accounts.component, props));
   for (const text of ['アカウント', 'DeepSeek API', 'DeepSeek公式APIキー', 'DeepSeek V4 Pro', 'OpenAI API', 'データ共有の危険', 'OpenRouter', 'Grok', 'Cursor', 'Codex', 'Claude', 'ログイン', '会話モデル・CLI への作業委任', 'モデル選択に表示', 'OpenRouter · OpenAI Sol', 'Codex · Astra', 'Claude Fable 5.1']) assert.ok(panel.includes(text), text);
-  for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行', 'Bitwarden Secrets Manager', 'Machine Accountアクセストークン', 'bws CLIの実行ファイル']) assert.ok(panel.includes(text), text);
+  for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行', 'Bitwarden Secrets Manager', 'Machine Accountアクセストークン', 'bws CLIの実行ファイル', 'Bitwarden Secrets Manager全体の設定方法', 'DeepSeek APIキーの取得・保存方法', 'Vercel AI Gateway APIキーの取得・保存方法', 'Cloudflare R2資格情報の取得・保存方法', 'Cloudflare Browser Runの設定方法', 'DARASK_R2_ACCESS_KEY_ID', 'DARASK_R2_SECRET_ACCESS_KEY', 'Browser Rendering', 'DARASK_CLOUDFLARE_BROWSER_RUN', '32文字のCloudflareアカウントID', 'bitwarden.com/help/secrets-manager-quick-start', 'api-docs.deepseek.com', 'vercel.com/docs/ai-gateway', 'developers.cloudflare.com/r2/api/tokens', 'developers.cloudflare.com/browser-run/get-started']) assert.ok(panel.includes(text), text);
+  assert.ok(panel.indexOf('DeepSeek公式APIキー') < panel.indexOf('Jev 評価'));
+  assert.ok(!panel.includes('placeholder="Secret UUID"'));
   assert.match(panel, /<select[^>]*><option value="">通常の優先順位<\/option>.*?<option value="grok" selected="">Grok<\/option>/);
   assert.ok(!panel.includes('<progress'));
   for (const label of ['QR でかんたん接続', 'QR で PC を追加', 'この PC の QR を表示']) assert.ok(panel.includes(label), label);
   for (const label of ['AI アカウント', 'PC・Tailscale', 'ブラウザー', 'PC 画面の操作', '画面操作を有効にする']) assert.ok(panel.includes(label), label);
   assert.match(panel, /id="darask-panel-pc"[^>]*hidden/);
+  providers.find(provider => provider.id === 'codex').login = { status: 'running', url: 'https://auth.openai.com/authorize?state=fixture' };
+  const codexLoginPanel = renderToStaticMarkup(React.createElement(accounts.component, props));
+  assert.ok(codexLoginPanel.includes('ChatGPT の認証画面を開く'));
+  assert.ok(codexLoginPanel.includes('https://auth.openai.com/authorize?state=fixture'));
+  delete providers.find(provider => provider.id === 'codex').login;
   assert.equal(plugin.hasUsage({ local: { promptTokens: 0 } }), true);
   assert.equal(plugin.hasUsage({ credits: { balance: null }, windows: [{ remainingPercent: NaN }] }), false);
   providers.find(p => p.id === 'codex').accounts = [

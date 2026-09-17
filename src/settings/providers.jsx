@@ -47,7 +47,7 @@ function LocalRuntimePanel({ provider, pending, t, perform }) {
 
 const OPENAI_DATA_CONTROLS = 'https://platform.openai.com/settings/organization/data-controls/sharing'
 
-export function ProviderCard({ provider, value, index, count, edit, move, action, pending, t, keys, setKeys, local, editLocal, openai, editOpenAi, visibleModels, editModels }) {
+export function ProviderCard({ provider, value, index, count, edit, move, action, pending, t, keys, setKeys, jev, local, editLocal, openai, editOpenAi, visibleModels, editModels }) {
   const auth = authentication(provider, t)
   const login = provider.login
   const loginUrl = safeUrl(login?.url)
@@ -80,6 +80,7 @@ export function ProviderCard({ provider, value, index, count, edit, move, action
             <div className="darask-actions"><Button size="sm" disabled={pending || !auth.connected} onClick={() => perform('logout')}>{t('removeDeepseekKey')}</Button><Button size="sm" disabled={pending} onClick={() => perform('refresh')}>{t('refresh')}</Button></div>
             <p className="darask-muted">{t('deepseekHint')}</p>
             <label className="darask-field"><span>{t('deepseekApiKey')}</span><Input type="password" value={keys.deepseekApiKey} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, deepseekApiKey: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label>
+            <div className="darask-jev-inline"><div className="darask-line"><div><strong>{t('jevTitle')}</strong><span className="darask-meta">typesafe-ai/jev · {t('jevType')}</span></div><Tag tone={jev?.configured ? 'success' : 'neutral'}>{jev?.configured ? t('configured') : t('disconnected')}</Tag></div><p className="darask-muted">{t('jevHint')}</p><label className="darask-field"><span>{t('aiGatewayApiKey')}</span><Input type="password" value={keys.aiGatewayApiKey} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, aiGatewayApiKey: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label><div className="darask-actions"><a href="https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys&title=AI+Gateway+API+Keys" target="_blank" rel="noopener noreferrer">{t('createAiGatewayKey')} ↗</a><Button size="sm" disabled={pending || !jev?.configured} onClick={() => { void action({ action: 'logout', provider: 'jev' }).catch(() => {}) }}>{t('removeAiGatewayKey')}</Button></div></div>
           </> : provider.id === 'openai' ? <>
             <div className="darask-actions">
               <Button size="sm" disabled={pending || !auth.connected} onClick={() => perform('logout')}>{t('logout')}</Button>

@@ -50,7 +50,7 @@ export function Usage({ usage, t, compact = false }) {
 function UsageList({ data, t, compact }) {
   const providers = (data?.providers ?? []).flatMap(provider => provider.id === 'codex' && provider.accounts?.length
     ? provider.accounts.map(account => ({ id: account.accountKey, name: `Codex · ${account.displayName}`, active: account.active, usage: account.usage }))
-    : hasUsage(provider.usage) ? [provider] : [])
+    : hasUsage(provider.usage) || (provider.id === 'claude' && provider.auth === 'authenticated') ? [provider] : [])
   const run = data?.browserRun
   const browserUsage = run?.configured && Number.isFinite(run.observedMs)
   return <>

@@ -6,6 +6,19 @@ import { ProviderCard } from './providers.jsx'
 import { PcConnections } from '../workspaces-client.jsx'
 import { TailscaleConnection, ComputerControl, BrowserConnections } from './connections.jsx'
 
+const BITWARDEN_GUIDES = {
+  DEEPSEEK_API_KEY: { title: 'bitwardenDeepseekSetup', steps: ['bitwardenDeepseekStep1', 'bitwardenDeepseekStep2', 'bitwardenDeepseekStep3'], values: ['bitwardenDeepseekValue'], href: 'https://api-docs.deepseek.com/', link: 'bitwardenDeepseekLink' },
+  AI_GATEWAY_API_KEY: { title: 'bitwardenGatewaySetup', steps: ['bitwardenGatewayStep1', 'bitwardenGatewayStep2', 'bitwardenGatewayStep3'], values: ['bitwardenGatewayValue'], href: 'https://vercel.com/docs/ai-gateway/authentication-and-byok/api-keys', link: 'bitwardenGatewayLink' },
+  DARASK_R2_ACCESS_KEY_ID: { title: 'bitwardenR2Setup', steps: ['bitwardenR2Step1', 'bitwardenR2Step2', 'bitwardenR2Step3', 'bitwardenR2Step4'], values: ['bitwardenR2AccessValue', 'bitwardenR2SecretValue'], href: 'https://developers.cloudflare.com/r2/api/tokens/', link: 'bitwardenR2Link' },
+  DARASK_R2_SECRET_ACCESS_KEY: { title: 'bitwardenR2Setup', steps: ['bitwardenR2Step1', 'bitwardenR2Step2', 'bitwardenR2Step3', 'bitwardenR2Step4'], values: ['bitwardenR2AccessValue', 'bitwardenR2SecretValue'], href: 'https://developers.cloudflare.com/r2/api/tokens/', link: 'bitwardenR2Link' },
+  DARASK_CLOUDFLARE_BROWSER_RUN: { title: 'bitwardenBrowserRunSetup', steps: ['bitwardenBrowserRunAccount', 'bitwardenBrowserRunToken', 'bitwardenBrowserRunSecret', 'bitwardenBrowserRunAccess'], values: ['bitwardenBrowserRunValue'], href: 'https://developers.cloudflare.com/browser-run/get-started/', link: 'bitwardenBrowserRunLink' },
+}
+
+function BitwardenGuide({ guide, t }) {
+  if (!guide) return null
+  return <details className="darask-bitwarden-guide"><summary>{t(guide.title)}</summary><ol>{guide.steps.map(step => <li key={step}>{t(step)}</li>)}</ol>{guide.values.map(value => <code key={value}>{t(value)}</code>)}<a href={guide.href} target="_blank" rel="noopener noreferrer">{t(guide.link)} ↗</a></details>
+}
+
 function configuration(data) {
   const providers = Array.isArray(data?.providers) ? data.providers : []
   const known = new Set(providers.map(provider => provider.id))
@@ -67,22 +80,6 @@ export function DaraskPanel(props) {
           </select></label>)}
         </div>
       </section>
-      <section className="darask-jev" aria-labelledby="darask-jev-title">
-        <div className="darask-provider-header">
-          <div className="darask-provider-name"><h3 id="darask-jev-title">{t('jevTitle')}</h3><span className="darask-meta">typesafe-ai/jev · {t('jevType')}</span></div>
-          <Tag tone={data.jev?.configured ? 'success' : 'neutral'}>{data.jev?.configured ? t('configured') : t('disconnected')}</Tag>
-        </div>
-        <div className="darask-card-section">
-          <div className="darask-card-section-body">
-            <p className="darask-muted">{t('jevHint')}</p>
-            <label className="darask-field"><span>{t('aiGatewayApiKey')}</span><Input type="password" value={keys.aiGatewayApiKey} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, aiGatewayApiKey: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label>
-            <div className="darask-actions">
-              <a href="https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys&title=AI+Gateway+API+Keys" target="_blank" rel="noopener noreferrer">{t('createAiGatewayKey')} ↗</a>
-              <Button size="sm" disabled={pending || !data.jev?.configured} onClick={() => { void props.action({ action: 'logout', provider: 'jev' }).catch(() => {}) }}>{t('removeAiGatewayKey')}</Button>
-            </div>
-          </div>
-        </div>
-      </section>
       <section className="darask-jev" aria-labelledby="darask-bitwarden-title">
         <div className="darask-provider-header">
           <div className="darask-provider-name"><h3 id="darask-bitwarden-title">Bitwarden Secrets Manager</h3><span className="darask-meta">{t('bitwardenType')}</span></div>
@@ -90,10 +87,11 @@ export function DaraskPanel(props) {
         </div>
         <div className="darask-card-section"><div className="darask-card-section-body">
           <p className="darask-muted">{t('bitwardenHint')}</p>
+          <details className="darask-bitwarden-guide darask-bitwarden-overview"><summary>{t('bitwardenSetup')}</summary><ol>{['bitwardenSetupStep1', 'bitwardenSetupStep2', 'bitwardenSetupStep3', 'bitwardenSetupStep4', 'bitwardenSetupStep5', 'bitwardenSetupStep6'].map(step => <li key={step}>{t(step)}</li>)}</ol><a href="https://bitwarden.com/help/secrets-manager-quick-start/" target="_blank" rel="noopener noreferrer">{t('bitwardenSetupLink')} ↗</a></details>
           <Switch checked={config.bitwarden?.enabled === true} disabled={pending} label={t('bitwardenEnabled')} onChange={enabled => change(current => ({ ...current, bitwarden: { ...current.bitwarden, enabled } }))} />
           <label className="darask-field"><span>{t('bitwardenExecutable')}</span><Input value={config.bitwarden?.executable ?? ''} disabled={pending} onChange={event => change(current => ({ ...current, bitwarden: { ...current.bitwarden, executable: event.target.value } }))} autoComplete="off" spellCheck={false} placeholder="C:\\Tools\\bws.exe" /><small>{t('bitwardenExecutableHint')}</small></label>
           <label className="darask-field"><span>{t('bitwardenToken')}</span><Input type="password" value={keys.bitwardenAccessToken} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, bitwardenAccessToken: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label>
-          <div className="darask-fields">{(data.bitwarden?.targets ?? []).map(target => <label className="darask-field" key={target.ref}><span>{target.label}</span><Input value={config.bitwarden?.secretIds?.[target.ref] ?? ''} disabled={pending} onChange={event => change(current => ({ ...current, bitwarden: { ...current.bitwarden, secretIds: { ...current.bitwarden.secretIds, [target.ref]: event.target.value.trim() } } }))} autoComplete="off" spellCheck={false} placeholder={t('bitwardenSecretId')} /><small>{target.ref}</small></label>)}</div>
+          <div className="darask-fields">{(data.bitwarden?.targets ?? []).filter(target => target.automatic).map(target => <div className="darask-field" key={target.ref}><span>{target.label}</span><small>{target.ref}</small><BitwardenGuide guide={BITWARDEN_GUIDES[target.ref]} t={t} /></div>)}</div>
           <div className="darask-actions"><Button size="sm" variant="primary" disabled={pending || dirty || !config.bitwarden?.enabled} onClick={() => { void props.action({ action: 'syncBitwarden', provider: 'bitwarden', config: config.bitwarden }).catch(() => {}) }}>{t('bitwardenSync')}</Button><Button size="sm" disabled={pending || !data.bitwarden?.configured} onClick={() => { void props.action({ action: 'removeBitwarden', provider: 'bitwarden', config: config.bitwarden }).catch(() => {}) }}>{t('bitwardenRemove')}</Button></div>
           {data.bitwarden?.lastSyncedAt && <small>{t('bitwardenLastSync')}: {new Date(data.bitwarden.lastSyncedAt).toLocaleString(t('dateLocale'))}</small>}
           {data.bitwarden?.error && <p className="darask-error" role="alert">{data.bitwarden.error}</p>}
@@ -104,7 +102,7 @@ export function DaraskPanel(props) {
         {config.priority.map((id, index) => {
           const provider = providers.get(id)
           if (!provider) return null
-          return <ProviderCard key={id} provider={provider} value={config.providers[id]} index={index} count={config.priority.length} pending={pending} t={t} action={props.action} keys={keys} setKeys={setKeys} local={config.local} openai={config.openai ?? { usageTier: 'unknown', preferComplimentary: true }} visibleModels={config.modelVisibility?.[id] ?? []} editModels={(providerId, modelId, shown) => change(current => { const selected = current.modelVisibility?.[providerId] ?? []; return { ...current, modelVisibility: { ...current.modelVisibility, [providerId]: shown ? [...new Set([...selected, modelId])] : selected.filter(id => id !== modelId) } } })} editLocal={patch => change(current => ({ ...current, local: { ...current.local, ...patch } }))} editOpenAi={patch => change(current => ({ ...current, openai: { ...(current.openai ?? { usageTier: 'unknown', preferComplimentary: true }), ...patch } }))}
+          return <ProviderCard key={id} provider={provider} value={config.providers[id]} index={index} count={config.priority.length} pending={pending} t={t} action={props.action} keys={keys} setKeys={setKeys} jev={data.jev} local={config.local} openai={config.openai ?? { usageTier: 'unknown', preferComplimentary: true }} visibleModels={config.modelVisibility?.[id] ?? []} editModels={(providerId, modelId, shown) => change(current => { const selected = current.modelVisibility?.[providerId] ?? []; return { ...current, modelVisibility: { ...current.modelVisibility, [providerId]: shown ? [...new Set([...selected, modelId])] : selected.filter(id => id !== modelId) } } })} editLocal={patch => change(current => ({ ...current, local: { ...current.local, ...patch } }))} editOpenAi={patch => change(current => ({ ...current, openai: { ...(current.openai ?? { usageTier: 'unknown', preferComplimentary: true }), ...patch } }))}
             edit={patch => change(current => ({ ...current, providers: { ...current.providers, [id]: { ...current.providers[id], ...patch } } }))}
             move={direction => change(current => { const priority = [...current.priority]; [priority[index], priority[index + direction]] = [priority[index + direction], priority[index]]; return { ...current, priority } })} />
         })}

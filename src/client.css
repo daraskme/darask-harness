@@ -100,6 +100,23 @@
 .darask-details summary { padding: 12px 0; cursor: pointer; color: var(--dsw-alias-label-secondary); font-size: 13px; }
 .darask-details summary:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: 2px; border-radius: 4px; }
 .darask-fields { padding: 0 0 16px; display: grid; gap: 16px; }
+.darask button[role="switch"] { width: 58px !important; height: 30px !important; padding: 3px !important; border: 2px solid var(--dsw-alias-border-l2) !important; border-radius: 15px !important; background: var(--dsw-alias-bg-layer-1) !important; box-shadow: inset 0 1px 2px #0002; transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease; }
+.darask button[role="switch"]::before { content: "OFF"; position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: var(--dsw-alias-label-secondary); font-size: 9px; font-weight: 700; line-height: 1; letter-spacing: .04em; }
+.darask button[role="switch"] > span { width: 20px !important; height: 20px !important; background: var(--dsw-alias-label-secondary) !important; box-shadow: 0 1px 3px #0004; transition: transform 140ms ease, background 140ms ease !important; }
+.darask button[role="switch"][aria-checked="true"] { border-color: var(--dsw-alias-brand-primary) !important; background: var(--dsw-alias-brand-primary) !important; box-shadow: inset 0 1px 2px #0003, 0 0 0 1px color-mix(in srgb, var(--dsw-alias-brand-primary) 30%, transparent); }
+.darask button[role="switch"][aria-checked="true"]::before { content: "ON"; left: 7px; right: auto; color: var(--dsw-alias-label-primary-foreground); }
+.darask button[role="switch"][aria-checked="true"] > span { transform: translateX(28px) !important; background: var(--dsw-alias-label-primary-foreground) !important; }
+.darask button[role="switch"]:hover:not(:disabled) { border-color: var(--dsw-alias-brand-primary) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsw-alias-brand-primary) 14%, transparent); }
+.darask button[role="switch"]:focus-visible { outline: 3px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 55%, transparent) !important; outline-offset: 3px !important; }
+.darask button[role="switch"]:disabled { opacity: .5; filter: grayscale(.35); cursor: not-allowed; }
+.darask-bitwarden-guide { padding: 10px 12px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 10px; background: var(--dsw-alias-bg-layer-2); color: var(--dsw-alias-label-secondary); }
+.darask-bitwarden-guide summary { cursor: pointer; color: var(--dsw-alias-label-primary); font-weight: 600; }
+.darask-bitwarden-guide ol { margin: 10px 0; padding-left: 22px; display: grid; gap: 6px; line-height: 1.6; }
+.darask-bitwarden-guide code { display: block; padding: 10px; border-radius: 8px; background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); white-space: pre-wrap; overflow-wrap: anywhere; user-select: all; }
+.darask-bitwarden-guide code + code { margin-top: 6px; }
+.darask-bitwarden-guide a { display: inline-block; margin-top: 10px; color: var(--dsw-alias-brand-primary); text-decoration: underline; text-underline-offset: 3px; }
+.darask-bitwarden-overview { margin-bottom: 14px; }
+@media (prefers-reduced-motion: reduce) { .darask button[role="switch"], .darask button[role="switch"] > span { transition: none !important; } }
 .darask-model-visibility { display: grid; gap: 10px; padding: 12px; border: .5px solid var(--dsw-alias-border-l2); border-radius: 10px; }
 .darask-model-visibility > strong { font-size: 13px; font-weight: 600; }
 .darask-model-visibility-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
@@ -149,6 +166,8 @@
 .darask-card-section + .darask-card-section { border-top: .5px solid var(--dsw-alias-border-l2); }
 .darask-card-section-title { margin: 0 0 12px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--dsw-alias-label-tertiary); }
 .darask-card-section-body { display: grid; gap: 12px; }
+.darask-jev-inline { display: grid; gap: 12px; margin-top: 4px; padding-top: 16px; border-top: .5px solid var(--dsw-alias-border-l2); }
+.darask-jev-inline .darask-line > div { display: grid; gap: 3px; }
 .darask-usage-sidebar { width: 100%; min-width: 0; color: var(--dsw-alias-label-primary); }
 .darask-usage-trigger { width: 100%; display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: transparent; color: var(--dsw-alias-label-primary); font: inherit; font-size: 12px; border: 0; border-radius: 8px; cursor: pointer; text-align: left; }
 .darask-usage-trigger:hover { background: var(--dsw-alias-interactive-bg-hover); }

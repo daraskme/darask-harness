@@ -3,7 +3,9 @@ import { spawnBounded } from './providers/cli.mjs';
 import { CATALOG, credentialValue } from './shared-credentials.mjs';
 
 export const BITWARDEN_TOKEN = 'DARASK_BITWARDEN_ACCESS_TOKEN';
-export const BITWARDEN_TARGETS = Object.freeze(CATALOG.map(({ ref, label, group, hint }) => Object.freeze({ ref, label, group, hint })));
+export const BITWARDEN_AUTO_REFS = Object.freeze(['DEEPSEEK_API_KEY', 'AI_GATEWAY_API_KEY', 'DARASK_R2_ACCESS_KEY_ID', 'DARASK_R2_SECRET_ACCESS_KEY', 'DARASK_CLOUDFLARE_BROWSER_RUN']);
+const AUTO_REF_SET = new Set(BITWARDEN_AUTO_REFS);
+export const BITWARDEN_TARGETS = Object.freeze(CATALOG.map(({ ref, label, group, hint }) => Object.freeze({ ref, label, group, hint, automatic: AUTO_REF_SET.has(ref) })));
 const TARGET_REFS = new Set(BITWARDEN_TARGETS.map(target => target.ref));
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -40,39 +42,63 @@ function childEnvironment(source, token) {
   return env;
 }
 
-function secretObject(raw, expectedId) {
+function secretObject(raw, expectedId, ref) {
   let value;
-  try { value = JSON.parse(raw); } catch { throw new Error('Bitwarden Secrets Manager returned invalid JSON'); }
+  try { value = JSON.parse(raw); } catch { throw new Error(`Bitwarden Secrets Manager returned invalid JSON for ${ref}`); }
   if (Array.isArray(value)) value = value.length === 1 ? value[0] : null;
-  if (!value || typeof value !== 'object' || value.object !== 'secret' || value.id !== expectedId || !credentialValue(value.value)) throw new Error('Bitwarden Secrets Manager returned an invalid secret');
+  if (!value || typeof value !== 'object' || (value.object !== undefined && value.object !== 'secret') || value.id !== expectedId || !credentialValue(value.value)) throw new Error(`Bitwarden Secrets Manager returned an invalid secret for ${ref}`);
   return value.value;
+}
+
+function secretIds(raw) {
+  let values;
+  try { values = JSON.parse(raw); } catch { throw new Error('Bitwarden Secrets Manager returned an invalid secret catalog'); }
+  if (!Array.isArray(values) || values.length > 10000) throw new Error('Bitwarden Secrets Manager returned an invalid secret catalog');
+  const found = new Map();
+  for (const value of values) {
+    if (!value || typeof value !== 'object' || (value.object !== undefined && value.object !== 'secret') || typeof value.key !== 'string' || !UUID.test(value.id ?? '')) throw new Error('Bitwarden Secrets Manager returned an invalid secret catalog');
+    if (!AUTO_REF_SET.has(value.key)) continue;
+    if (found.has(value.key)) throw new Error(`Bitwarden Secrets Manager has duplicate secrets for ${value.key}`);
+    found.set(value.key, value.id);
+  }
+  const missing = BITWARDEN_AUTO_REFS.filter(ref => !found.has(ref));
+  if (missing.length) throw new Error(`Bitwarden Secrets Manager is missing ${missing.join(', ')}`);
+  return BITWARDEN_AUTO_REFS.map(ref => [ref, found.get(ref)]);
 }
 
 export function createBitwarden({ credentials, run = spawnBounded, env = process.env, now = () => new Date().toISOString() } = {}) {
   let state = { configured: false, syncing: false, mapped: 0, lastSyncedAt: null, error: null };
-  const status = config => ({ ...state, configured: Boolean(config?.enabled && config.executable && state.token && state.mapped), targets: BITWARDEN_TARGETS, config: structuredClone(config ?? defaultBitwarden()) });
+  const status = config => ({ ...state, configured: Boolean(state.configured && config?.enabled && config.executable && state.token), targets: BITWARDEN_TARGETS, config: structuredClone(config ?? defaultBitwarden()) });
   async function token() {
     const value = (await credentials.resolve(BITWARDEN_TOKEN))?.value;
     state.token = Boolean(value);
     return value;
   }
-  async function getSecret(executable, id, accessToken, signal) {
-    const operation = run({ command: executable, args: [], executable }, ['secret', 'get', id, '--output', 'json'], { timeoutMs: 30000, maxBytes: 128 * 1024, env: childEnvironment(env, accessToken) });
+  async function execute(executable, args, accessToken, signal, maxBytes) {
+    const operation = run({ command: executable, args: [], executable }, args, { timeoutMs: 30000, maxBytes, env: childEnvironment(env, accessToken) });
     const cancel = () => operation.cancel();
     signal?.addEventListener('abort', cancel, { once: true });
     if (signal?.aborted) cancel();
     try {
       const result = await operation.completion;
       if (signal?.aborted) throw signal.reason;
-      if (result.error || result.code !== 0) throw new Error('Bitwarden Secrets Manager could not retrieve a configured secret');
-      return secretObject(result.stdout, id);
+      return result;
     } finally { signal?.removeEventListener('abort', cancel); }
+  }
+  async function discover(executable, accessToken, signal) {
+    const result = await execute(executable, ['secret', 'list', '--output', 'json'], accessToken, signal, 4 * 1024 * 1024);
+    if (result.error || result.code !== 0) throw new Error('Bitwarden Secrets Manager could not discover configured secrets');
+    return secretIds(result.stdout);
+  }
+  async function getSecret(executable, id, ref, accessToken, signal) {
+    const result = await execute(executable, ['secret', 'get', id, '--output', 'json'], accessToken, signal, 128 * 1024);
+    if (result.error || result.code !== 0) throw new Error(`Bitwarden Secrets Manager could not retrieve ${ref}`);
+    return secretObject(result.stdout, id, ref);
   }
   return {
     async status(config) {
-      const accessToken = await token();
-      state.mapped = Object.values(config?.secretIds ?? {}).filter(Boolean).length;
-      return { ...status(config), configured: Boolean(config?.enabled && config.executable && accessToken && state.mapped) };
+      await token();
+      return status(config);
     },
     async save(config, accessToken) {
       validateBitwarden(config);
@@ -89,16 +115,16 @@ export function createBitwarden({ credentials, run = spawnBounded, env = process
     },
     async sync(config, signal) {
       const validated = validateBitwarden(config);
-      const entries = Object.entries(validated.secretIds).filter(([, id]) => id);
-      state = { ...state, syncing: true, mapped: entries.length, error: null };
+      state = { ...state, syncing: true, mapped: 0, error: null };
       try {
         if (!validated.enabled) throw new Error('Bitwarden Secrets Manager integration is disabled');
         if (!validated.executable) throw new Error('Bitwarden bws executable is not configured');
-        if (!entries.length) throw new Error('No Bitwarden secret IDs are configured');
         const accessToken = await token();
         if (!accessToken) throw new Error('Bitwarden Machine Account access token is not configured');
+        const entries = await discover(validated.executable, accessToken, signal);
+        state.mapped = entries.length;
         const values = [];
-        for (const [ref, id] of entries) values.push([ref, await getSecret(validated.executable, id, accessToken, signal)]);
+        for (const [ref, id] of entries) values.push([ref, await getSecret(validated.executable, id, ref, accessToken, signal)]);
         for (const [ref, value] of values) await credentials.set(ref, value);
         state = { configured: true, syncing: false, mapped: entries.length, lastSyncedAt: now(), error: null, token: true };
         return status(validated);

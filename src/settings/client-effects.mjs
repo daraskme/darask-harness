@@ -13,6 +13,36 @@ export function completeOpenRouterRedirect(win = globalThis.window, fetchImpl = 
   }).then(response => { if (!response.ok) throw new Error('OpenRouter callback failed') })
 }
 
+function codexAuthorizationUrl(value) {
+  if (typeof value !== 'string' || value.length === 0 || value.length > 16384) return null
+  let url
+  try { url = new URL(value) } catch { return null }
+  return url.protocol === 'https:' && !url.username && !url.password ? url.href : null
+}
+
+export async function openCodexAuthorization(action, win = globalThis.window) {
+  if (typeof action !== 'function') throw new TypeError('Codex login action is required')
+  let popup = null
+  try {
+    popup = win?.open?.('about:blank', '_blank') ?? null
+    if (popup) popup.opener = null
+  } catch { popup = null }
+  try {
+    const result = await action()
+    const url = codexAuthorizationUrl(result?.login?.url)
+    if (!url) { try { popup?.close?.() } catch {} return { result, url: null, opened: false } }
+    if (!popup) return { result, url, opened: false }
+    try {
+      if (typeof popup.location?.replace === 'function') popup.location.replace(url)
+      else popup.location.href = url
+      return { result, url, opened: true }
+    } catch { try { popup.close?.() } catch {} return { result, url, opened: false } }
+  } catch (error) {
+    try { popup?.close?.() } catch {}
+    throw error
+  }
+}
+
 function autoPermissionIcon(doc) {
   const ns = 'http://www.w3.org/2000/svg'
   const svg = doc.createElementNS(ns, 'svg')
