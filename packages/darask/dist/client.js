@@ -11724,6 +11724,7 @@ function StatusMark({ row }) {
 }
 function useRemoteGroups(loadGroups) {
   const [groups2, setGroups] = (0, import_react4.useState)([]), [error, setError] = (0, import_react4.useState)("");
+  const [tick, setTick] = (0, import_react4.useState)(0);
   (0, import_react4.useEffect)(() => {
     const controller = new AbortController();
     let reading = false, again = false;
@@ -11743,6 +11744,8 @@ function useRemoteGroups(loadGroups) {
           }
         } catch (e) {
           if (!controller.signal.aborted) setError(e.message);
+        } finally {
+          if (!controller.signal.aborted) setTick((value) => value + 1);
         }
       } while (again && !controller.signal.aborted);
       reading = false;
@@ -11758,37 +11761,44 @@ function useRemoteGroups(loadGroups) {
       window.removeEventListener("focus", refresh);
     };
   }, [loadGroups]);
-  return { groups: groups2, error };
+  return { groups: groups2, error, tick };
 }
 function useColdSessions(groups2, opened, tick) {
   const [cold, setCold] = (0, import_react4.useState)({});
-  const targets = (0, import_react4.useMemo)(() => {
+  const targetKey = (0, import_react4.useMemo)(() => {
     const live = new Set(opened.filter((entry) => entry.sessions?.length).map((entry) => `${entry.node}:${entry.workspace}`));
     const list = [];
     for (const group of groups2) if (group.node !== "local" && group.status === "online") for (const workspace of group.workspaces ?? []) {
       const key = `${group.node}:${workspace.id}`;
       if (!live.has(key) && typeof workspace.path === "string") list.push({ key, node: group.node, cwd: workspace.path });
     }
-    return list;
+    return JSON.stringify(list.sort((a, b) => a.key.localeCompare(b.key) || a.cwd.localeCompare(b.cwd)));
   }, [groups2, opened]);
   (0, import_react4.useEffect)(() => {
-    if (!targets.length) return;
+    const queue = JSON.parse(targetKey);
+    if (!queue.length) return;
     const controller = new AbortController();
-    const queue = targets.slice();
     const worker = async () => {
       for (let target = queue.shift(); target && !controller.signal.aborted; target = queue.shift()) {
         try {
           const value = await post2({ action: "list", node: target.node, cwd: target.cwd, limit: 50 }, controller.signal);
-          if (!controller.signal.aborted) setCold((current) => ({ ...current, [target.key]: { items: value.items, at: Date.now() } }));
+          if (!controller.signal.aborted) setCold((current) => ({ ...current, [target.key]: { cwd: target.cwd, items: value.items, at: Date.now() } }));
         } catch (e) {
-          if (!controller.signal.aborted) setCold((current) => ({ ...current, [target.key]: { items: current[target.key]?.items ?? [], error: e.message, at: Date.now() } }));
+          if (!controller.signal.aborted) setCold((current) => ({ ...current, [target.key]: { cwd: target.cwd, items: current[target.key]?.cwd === target.cwd ? current[target.key].items : [], error: e.message, at: Date.now() } }));
         }
       }
     };
-    void Promise.all(Array.from({ length: Math.min(COLD_CONCURRENCY, targets.length) }, worker));
+    void Promise.all(Array.from({ length: Math.min(COLD_CONCURRENCY, queue.length) }, worker));
     return () => controller.abort();
-  }, [targets, tick]);
-  return cold;
+  }, [targetKey, tick]);
+  return (0, import_react4.useMemo)(() => {
+    const visible = {};
+    for (const group of groups2) for (const workspace of group.workspaces ?? []) {
+      const key = `${group.node}:${workspace.id}`;
+      if (cold[key]?.cwd === workspace.path) visible[key] = cold[key];
+    }
+    return visible;
+  }, [groups2, cold]);
 }
 function PeekPane({ target, onClose }) {
   const [state, setState] = (0, import_react4.useState)({ items: [], loading: true, error: "", nextOffset: null, notice: "" });
@@ -11850,8 +11860,7 @@ function DashboardPanel({ navigation, openLocal, loadGroups, hostName, useSessio
   const pending = useSessionPendingInteraction((snapshot) => snapshot);
   const workspaces = useWorkspaces((snapshot) => snapshot);
   const opened = (0, import_react4.useSyncExternalStore)(navigation.subscribe, navigation.getOpenedSnapshot, navigation.getOpenedSnapshot);
-  const { groups: groups2, error } = useRemoteGroups(loadGroups);
-  const [tick, setTick] = (0, import_react4.useState)(0);
+  const { groups: groups2, error, tick } = useRemoteGroups(loadGroups);
   const cold = useColdSessions(groups2, opened, tick);
   const [prefs, setPrefs] = (0, import_react4.useState)(() => loadPrefs(window.localStorage));
   const [query, setQuery] = (0, import_react4.useState)(""), [peek, setPeek] = (0, import_react4.useState)(null);
@@ -11906,10 +11915,7 @@ function DashboardPanel({ navigation, openLocal, loadGroups, hostName, useSessio
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Switch, { checked: prefs.showSubagents, onChange: (checked) => update({ showSubagents: checked }), label: "\u30B5\u30D6\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8\u3092\u8868\u793A" }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { "aria-hidden": "true", children: "\u30B5\u30D6\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "outline", size: "sm", onClick: () => {
-          setTick((value) => value + 1);
-          window.dispatchEvent(new Event("darask-workspaces-changed"));
-        }, children: "\u66F4\u65B0" })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_dsh_client_ui_primitives4.Button, { variant: "outline", size: "sm", onClick: () => window.dispatchEvent(new Event("darask-workspaces-changed")), children: "\u66F4\u65B0" })
       ] }),
       error && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "darask-error", role: "alert", children: error }),
       view.groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "darask-dashboard-group", "data-collapsed": group.collapsed || void 0, children: [
