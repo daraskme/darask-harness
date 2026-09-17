@@ -1,0 +1,31 @@
+{
+  "name": "@darask/dsh-rules",
+  "version": "0.1.0-alpha.1",
+  "description": "DeepSeek Harness 向けのディレクトリ型プロジェクトルール (.grok/rules, .claude/rules, .cursor/rules)。grok-build の rules ローダーと cursor_rules_on_read を移植。",
+  "type": "module",
+  "license": "MIT",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-home-paths": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-llm": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "cursor-rules",
+    "grok-build"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@darask/dsh-status-line",
+  "version": "0.1.0-alpha.1",
+  "description": "DeepSeek Harness 向けステータスライン。モデル・コンテキスト使用率・トークン・コスト・経過時間を上流の projection から集計し、grok-build 互換の外部コマンド契約 (JSON on stdin) を提供。",
+  "type": "module",
+  "license": "MIT",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./client": "./dist/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "dist/client.js"
+  ],
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-api-session-controller",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "dependencies": {
+    "zod": "4.6.5"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-home-paths": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.9",
+    "react": "18.3.1"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "status-line",
+    "grok-build"
+  ]
+}

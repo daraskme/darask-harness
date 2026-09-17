@@ -52,5 +52,17 @@
       name: dsh-darask
     - id: darask-hashline
       name: '@darask/dsh-hashline'
+    # grok-build 由来: .grok/.claude/.cursor rules ディレクトリ。AGENTS.md 系は上流
+    # agent-instructions がそのまま担当し、ここでは glob 条件ルールの読み取り時注入だけ足す。
+    - id: darask-rules
+      name: '@darask/dsh-rules'
+    # grok-build 由来: ステータスライン。tokenUsage / contextPressure / sessionStats を
+    # 再計算せず参照し、モデル・ターン・料金だけを daraskStatus projection で持つ。
+    # 利用者は $DSH_HOME/darask/status-line.json で type/command/items/pricing を上書きできる。
+    - id: darask-status-line
+      name: '@darask/dsh-status-line'
+      config:
+        type: builtin
+        items: [model, context, cost, turn-timer]
     - id: darask-harness
       name: darask-harness
