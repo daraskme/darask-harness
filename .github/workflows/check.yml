@@ -7,9 +7,9 @@ on:
 
 jobs:
   check:
-    # dsh-darask (packages/darask) targets Windows hosts (taskkill, UI Automation,
-    # Windows paths in fixtures); its suite runs on Windows only. The root plugin
-    # and hashline are portable and run on both.
+    # darask-harness targets Windows hosts (taskkill, UI Automation,
+    # Windows paths in fixtures); its full suite runs on Windows only. The
+    # portable subset and independent workspaces run on both.
     strategy:
       fail-fast: false
       matrix:

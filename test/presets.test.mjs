@@ -26,6 +26,28 @@ test('darask preset extends agent-instructions with grok-build file names and ke
   for (const row of ['tool-fs', 'tool-fs-search', 'tool-jobs', 'plan-mode', 'tool-subagent']) assert.match(text, new RegExp(`^\\s*- id: ${row}$`, 'm'));
 });
 
+test('bundle enables Grok live web and X search for delegated research', async () => {
+  const text = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8');
+  assert.match(text, /- id: llm-grok\n\s+name: dsh-grok-provider\n\s+config:\n\s+webSearch: true\n\s+xSearch: true/);
+});
+
+test('bundle merges account and model settings while retaining Cloudflare remote access', async () => {
+  const text = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8');
+  assert.match(text, /- id: ui-settings-models\n\s+disabled: true/);
+  assert.match(text, /- id: dsh-bridge-gateway\n\s+name: dsh-bridge-gateway/);
+});
+
+test('profile exposes one DARASK plugin entry with the internal implementation composed by the root', async () => {
+  const patch = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8');
+  const source = await readFile(new URL('../src/index.mjs', import.meta.url), 'utf8');
+  const manifest = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.equal([...patch.matchAll(/^\s+- id: darask-harness$/gm)].length, 1);
+  assert.match(source, /export const name = 'darask-harness'/);
+  assert.equal(manifest.name, 'darask-harness');
+  assert.equal(manifest.exports['./client'], './dist/client.js');
+  assert.equal(manifest.dsh.client.platform, 'web');
+});
+
 test('syncPreset creates, updates, prunes and never overwrites a user-authored preset', async () => {
   await using home = await scratch();
   await using src = await scratch();

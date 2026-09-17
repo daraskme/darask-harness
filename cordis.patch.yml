@@ -1,8 +1,7 @@
 # darask-harness bundle patch. `dsh plugin --profile web add <darask-harness>`
 # applies this layer over @deepseek-ai/dsh-base + dsh-web-app; nothing here
-# re-implements an upstream row. dsh-darask's own cordis.patch.yml is folded
-# in below so the profile composes each plugin exactly once — do not add
-# dsh-darask to the profile separately.
+# re-implements an upstream row. The profile composes each dependency exactly
+# once and exposes darask-harness as the single DARASK plugin.
 
 # Restate the permission table so Auto sits beside the shipped presets.
 # A patch replaces the targeted row's whole config.
@@ -31,11 +30,17 @@
   config:
     default: darask
 
+- id: ui-settings-models
+  disabled: true
+
 - insert:
     - id: locale-ja
       name: '@fang2hou/dsh-locale-ja'
     - id: llm-grok
       name: dsh-grok-provider
+      config:
+        webSearch: true
+        xSearch: true
     - id: llm-openai-codex
       name: dsh-codex-connect
       config:
@@ -48,8 +53,6 @@
         enableAutoReview: false
     - id: dsh-bridge-gateway
       name: dsh-bridge-gateway
-    - id: dsh-darask
-      name: dsh-darask
     - id: darask-hashline
       name: '@darask/dsh-hashline'
     # grok-build 由来: .grok/.claude/.cursor rules ディレクトリ。AGENTS.md 系は上流

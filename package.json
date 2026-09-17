@@ -1,7 +1,7 @@
 {
   "name": "darask-harness",
   "version": "0.1.0-alpha.1",
-  "description": "DeepSeek Harness を軸に、dsh-darask の DARASK 固有機能と grok-build 由来のツールを一つのプロファイルとして合成するハーネス。",
+  "description": "DeepSeek Harnessを軸に、DARASKの認証・モデル・リモート接続とgrok-build由来のツールを一つのプラグインとして合成するハーネス。",
   "type": "module",
   "license": "MIT",
   "author": "daraskme",
@@ -19,11 +19,16 @@
   "main": "src/index.mjs",
   "exports": {
     ".": "./src/index.mjs",
+    "./client": "./dist/client.js",
     "./package.json": "./package.json"
   },
   "files": [
     "src",
+    "dist/client.js",
+    "scripts",
+    "skills",
     "presets",
+    "vendor",
     "cordis.patch.yml",
     "AGENTS.md",
     "README.md",
@@ -34,33 +39,57 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "test": "node --test test/*.test.mjs && npm test --workspaces --if-present",
+    "dev": "node scripts/dev.mjs",
+    "start": "node scripts/start.mjs --no-open",
+    "build": "node scripts/build.mjs && npm run build --workspaces --if-present",
+    "test": "node --test test/*.test.mjs vendor/dsh-grok-provider/spikes/protocol/test/*.test.mjs && npm test --workspaces --if-present",
     "check": "npm run build && npm test",
     "check:portable": "npm run build && node --test test/*.test.mjs && npm test --workspace @darask/dsh-hashline --workspace @darask/dsh-rules --workspace @darask/dsh-status-line",
-    "start": "npm start --workspace dsh-darask --",
-    "dev": "npm run dev --workspace dsh-darask --"
+    "prepack": "npm run check"
   },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
     }
   },
   "dependencies": {
+    "@ai-sdk/gateway": "4.0.85",
     "@darask/dsh-hashline": "file:packages/dsh-hashline",
     "@darask/dsh-rules": "file:packages/dsh-rules",
     "@darask/dsh-status-line": "file:packages/dsh-status-line",
-    "dsh-darask": "file:packages/darask"
+    "@deepseek-ai/dsh-mcp-client": "0.1.5-rc.2",
+    "@fang2hou/dsh-locale-ja": "0.5.0",
+    "ai": "7.0.105",
+    "chrome-devtools-mcp": "1.9.0",
+    "dsh-bridge-gateway": "file:vendor/dsh-bridge-gateway",
+    "dsh-codex-connect": "0.1.0-alpha.4.35",
+    "dsh-grok-provider": "file:vendor/dsh-grok-provider",
+    "jsqr": "1.4.0",
+    "qrcode": "1.5.4"
   },
   "bundleDependencies": [
     "@darask/dsh-hashline",
     "@darask/dsh-rules",
     "@darask/dsh-status-line",
-    "dsh-darask"
+    "dsh-bridge-gateway",
+    "dsh-grok-provider"
   ],
   "peerDependencies": {
     "@deepseek-ai/cordis": "4.0.2",
     "@deepseek-ai/dsh-home-paths": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-llm": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-settings": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
     "@deepseek-ai/schemastery": "3.18.2"
   },
   "devDependencies": {
@@ -69,10 +98,18 @@
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
   "keywords": [
     "dsh-plugin",
     "deepseek-harness",
-    "grok-build",
+    "openrouter",
+    "grok",
+    "cursor",
+    "codex",
+    "claude",
     "hashline",
     "japanese"
   ]

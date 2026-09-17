@@ -1,34 +1,31 @@
 # darask-harness
 
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) を軸に、[dsh-darask](https://github.com/daraskme/dsh-darask) の DARASK 固有機能と [grok-build](https://github.com/xai-org/grok-build) の優れたツールを **一つの DSH プロファイル** として合成するハーネスです。上流はフォークせず npm 依存として使い、追加・差し替えはすべて DSH の拡張点 (bundle patch / agent preset / `ctx.tools` / `ctx.fs` / `systemPrompt`) 経由で行います。
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 0.1.5-rc.2を基盤に、AIアカウント、モデルルーティング、Jev評価、Grok検索、リモートPC、Cloudflare接続、開発・更新機能を一つのDSHプラグインとして提供します。
 
-対象は **DSH 0.1.5-rc.2 / Node.js 24.19.0 以上**。
+パッケージ名、DSHプラグインID、開発起動、更新アーカイブはすべて `darask-harness` に統一されています。別のDARASKプラグインを追加する必要はありません。
+
+## 必要環境
+
+- Node.js 24.19.0以上
+- npm
+- WindowsまたはmacOS（全機能の対象はWindows）
+- リモートPC連携を使う場合はTailscale
 
 ## 構成
 
-```
-darask-harness/            DSH bundle plugin (dsh.bundle.patch = cordis.patch.yml)
-├─ cordis.patch.yml        プロファイル合成: 権限テーブル、既定 preset、各プラグインの insert
-├─ presets/darask/         既定 agent preset (上流 standard + grok-build 互換の指示ファイル名)
-├─ src/                    host 側の glue (preset を $DSH_HOME/.agent-presets へ配置)
-└─ packages/
-   ├─ darask/              dsh-darask (パッケージ名は互換のため dsh-darask のまま)
-   ├─ dsh-hashline/        @darask/dsh-hashline — grok-build の hashline read/edit/grep 移植
-   ├─ dsh-rules/           @darask/dsh-rules — .grok/.claude/.cursor rules ディレクトリと glob 条件ルール
-   └─ dsh-status-line/     @darask/dsh-status-line — モデル/コンテキスト/コスト/経過時間のステータスライン
+```text
+darask-harness/
+├─ src/                 DARASKホスト・UI・モデル・接続機能
+├─ scripts/             起動、ビルド、導入、更新配布
+├─ skills/              DSHから利用するスキル
+├─ presets/darask/      既定エージェントプリセット
+├─ vendor/              Grok providerとBridge Gateway
+├─ packages/            Hashline、Rules、Status Line
+├─ test/                統合テスト
+└─ cordis.patch.yml     DSHプロファイル全体の合成
 ```
 
-### どこから何を採ったか
-
-| 領域 | 採用元 | 実装 |
-|---|---|---|
-| ランタイム・プラグイン基盤・Plan mode・Hooks・Sandbox・Jobs・Subagent・MCP・ACP・LSP・Browser/Computer use・セッション永続化・Skills/Workflows・AGENTS.md ローダー | DSH (上流) | そのまま使用。再実装しない |
-| 日本語 UI、OpenAI/OpenRouter/Grok/Cursor/Codex/Claude/ローカルモデルの Usage・認証、リモート PC / ワークスペース、Cloudflare Access 対応 Bridge Gateway、GPU / LoRA、ハブ→リモート更新配布 | dsh-darask | `packages/darask` |
-| Hashline 行アンカー編集 (`hashline_read` / `hashline_edit` / `hashline_grep`): FNV-1a 正規化ハッシュ、stale/shift/ambiguous 検出、範囲・重複検証、bottom-up 一括適用 | grok-build `GrokBuildHashline` | `packages/dsh-hashline` (JS 再実装、`ctx.fs` + sandbox policy 経由) |
-| プロジェクト指示ファイル名 (`AGENTS.md` / `AGENT.md` / `GROK.md` / `CLAUDE.md` と `.local` 版) | grok-build | `presets/darask` で上流 `@deepseek-ai/dsh-agent-instructions` を設定 (独自ローダーは持たない) |
-| ディレクトリ型ルール (`.grok/rules` / `.claude/rules` / `.cursor/rules` の `.md` / `.mdc`、`alwaysApply` / `globs` / `paths` frontmatter): 常時ルールはステップ前に、glob 条件ルールは該当ファイルの読み取り成功後に一度だけ注入 | grok-build `project_rules` / cursor-rules-on-read | `packages/dsh-rules` (`agent/pre-step` と `tools/result` を購読) |
-| ステータスライン (モデル、コンテキスト使用率、トークン、コスト、ターン経過時間、セッション名): 表示項目の設定と外部コマンド契約 (JSON on stdin) | grok-build `ui.status_line` | `packages/dsh-status-line`。上流の `tokenUsage` / `contextPressure` / `sessionStats` projection を参照し、独自 projection はモデル・ターン・料金だけ |
-| Auto 権限プリセット | dsh-darask | `cordis.patch.yml` の `permission` 行 |
+DSH上流が提供するPlan mode、Hooks、Sandbox、Jobs、Subagent、MCP、ACP、LSP、Browser/Computer use、セッション永続化、Skills、Workflows、AGENTS.mdローダーはそのまま利用します。
 
 ## 導入
 
@@ -39,61 +36,127 @@ npm ci
 npm run check
 ```
 
-DSH の web プロファイルへ登録する (dsh-darask を別途 add しないこと。patch は本パッケージが一括で持つ):
+DSHのwebプロファイルへ登録する場合:
 
 ```powershell
-dsh plugin --profile web add link:"C:\path\to\darask-harness"
-dsh --profile web
+npx dsh plugin --profile web add 'link:C:\path\to\darask-harness'
+npx dsh --profile web
 ```
 
-開発モード (ソース監視・HMR・Git 更新 UI) は dsh-darask のものをそのまま使えます。チェックアウト直下から:
+開発モードでは、チェックアウト直下から次を実行します。
 
 ```powershell
-npm run dev            # = packages/darask/scripts/dev.mjs。ハーネスの root を link し、cordis.patch.yml を適用
+npm run dev
 ```
 
-## Hashline ツール
+既定では `C:\Users\<ユーザー>\Documents\Codex\DSH` をDSHルートとして使い、`127.0.0.1:3080` で起動します。別の場所を使う場合:
 
-`hashline_read` は各行を `行番号:ハッシュ→内容` で返し、`hashline_edit` はそのアンカーで `replace` / `insert_after` / `write` を一括適用します。ハッシュが合わない行は stale として拒否し、±15 行以内に一意な移動先があれば候補を提示します。全操作を元のスナップショットに対して検証してから適用するため、部分適用は起きません。`hashline_grep` は `ctx.fs` 上でディレクトリを走査し、同じアンカー形式で一致行と前後文脈を返します。
-
-## リモート PC と対人ゲーム
-
-`darask_computer` はハブ PC (`node: local`) と、認証済みの登録済み PC を同じ操作経路から扱います。ゲームは各 PC の「設定 → アカウント → ブラウザーと画面操作」で、実行ファイル・引数・作業フォルダーを起動プロファイルとして保存します。モデルやリモート要求から任意のコマンドやパスは指定できず、保存済みプロファイルだけを `shell: false` で起動します。
-
-二台での検証は `pcs → launch_game_pair → pair_screenshot` の順に開始します。`pair_screenshot` が返す画像と `snapshotId` は PC ごとに分かれるため、その後の操作では同じ node と `snapshotId` を組み合わせます。片方だけ起動した場合も自動再送しません。ロビー表示だけでは成功とせず、一方の入力が相手側へ反映されることを両方向の画面で確認して、対人動作の成功と判定します。
-
-実機検証には、Computer Use を有効にしたログイン済み Windows PC 二台、双方で動く同じゲーム、接続済み Tailscale、ゲーム固有のロビー／参加手順が必要です。Linux ではゲームプロファイルの設定画面を検証できますが、ネイティブ画面操作は実行できません。
-
-## ステータスライン
-
-セッションヘッダーに `deepseek-chat │ 42% (54K/128K) │ $0.0123 │ 12s` の形式で表示します。`$DSH_HOME/darask/status-line.json` で上書きできます (grok-build の `[ui.status_line]` と同じ語彙):
-
-```json
-{
-  "type": "builtin",
-  "items": ["model", "context", "cost", "turn-timer", "session-name"],
-  "pricing": { "deepseek/deepseek-chat": { "input": 0.28, "output": 0.42, "cacheRead": 0.028 } }
-}
+```powershell
+npm run dev -- --dsh-root "D:\Apps\DSH"
 ```
 
-`type: "command"` と `command` を指定すると、ホストが作業ディレクトリでそのコマンドを実行し、stdin に 1 行の JSON (`schema_version: 1`、`model` / `context_window` / `cost` / `turn` / `workspace` / `cwd` / `session_id`) を渡し、stdout の最初の非空行を表示します。ANSI 制御列は除去し、長さとタイムアウトで打ち切ります。料金は USD / 1M トークンで、モデル名または `provider/model` の glob をキーにします。料金が無いモデルはコスト項目を省きます。
+起動ログに表示される `token=` 付きURLを開いて認証してください。トークン付きURLやQRをGit、チャット、通常ログへ保存しないでください。
 
-## ハブ更新の配布
+## アカウントとモデル
 
-dsh-darask の `host-update` はこの monorepo でも動作します。開発モードの PC はハーネスのチェックアウトを `git merge --ff-only` し、インストール済み PC には `packages/darask` を `npm pack` したアーカイブ (`dsh-darask-*.tgz`) を配布します。配布単位をハーネス全体にするのは今後の課題です (下記)。
+モデル設定は **設定 → アカウント** に統合されています。DSH標準の独立した「モデル」ページは表示せず、次の項目を同じ画面で管理します。
 
-## dsh-darask の移行状況
+- AIサービスのログインとAPIキー
+- 使用するモデルID
+- プロバイダーの有効・無効
+- 通常の優先順位
+- 用途別ルーティング
+- モデル選択に表示するモデル
+- JevとVercel AI Gateway
 
-移設時点の `daraskme/dsh-darask` の既定ブランチと照合し、ソース、テスト、スキル、vendor、生成物、ライセンス、固定依存は `packages/darask` とルート lockfile へ移行済みです。開発起動、更新制御、ロケール検査、画面 bundle は monorepo 配置に合わせて調整しています。パッケージ名 `dsh-darask` は、既存プロファイル、更新アーカイブ、インストーラーとの互換性のため意図的に維持します。
+使用量と残量は左サイドバーの **Usage** に表示します。取得できない使用量を0として扱わず、異なるアカウント・通貨・単位を合算しません。
 
-リポジトリ運用まで完全に一本化した状態ではありません。インストール済みリモート PC への配布とセットアップは現在も `dsh-darask` パッケージ単位で、パッケージ内の移行スクリプト・メタデータ・一部の単体導入ドキュメントは旧リポジトリを参照します。旧コミット履歴とリリースタグも `darask-harness` の履歴へは移さず、旧リポジトリ側に保持しています。
+## DeepSeek V4 Pro、Jev、Grok
 
-## 今後の課題
+既定の役割分担は次の通りです。
 
-- 配布単位を `darask-harness` パッケージにし、リモート PC のインストーラーもハーネスを導入する。
-- grok-build の Memory v2、Hunk tracker、Codebase graph、Agent Dashboard の DSH プラグイン化。
-- dsh-darask 内で上流と重なる補助 UI の整理。
+| 役割 | 経路 |
+|---|---|
+| 会話、計画、ツール選択、全体管理、コード、統合、最終回答 | Vercel AI Gatewayの `deepseek/deepseek-v4-pro` |
+| 型付き分類、ルーティング、採点、検証 | `typesafe-ai/jev` |
+| 最新Web検索、ページ調査、X検索 | Grok 4.6の `web_search` / `x_search` |
+
+DeepSeek V4 Proが司令塔となり、必要な場合だけJevまたはGrokへ委任します。Jevは会話・ブラウザー操作・コード実装には使いません。Grok検索やJevが利用できない場合、DeepSeekが安全に処理を継続し、実行していない処理を実行済みとは報告しません。
+
+### Vercel AI Gateway
+
+1. [Vercel AI Gateway API Keys](https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys&title=AI+Gateway+API+Keys) でキーを発行します。
+2. **設定 → アカウント → AIアカウント → Jev評価** にキーを入力します。
+3. 変更を保存します。
+
+同じ `AI_GATEWAY_API_KEY` をJevとDeepSeek V4 Proが共有します。キーはDSHの資格情報ストアへ保存し、設定ファイルや画面の状態応答には含めません。Jev呼び出しはZero Data Retentionを要求します。
+
+### Grok検索
+
+Grokへログインし、Grok 4.6を利用可能にしてください。最新情報が必要な処理では、DeepSeekがGrokサブエージェントへ委任し、Grok側でWeb検索とX検索を実行します。検索結果や引用は外部入力として扱い、重要な操作の前に出典を確認してください。
+
+## リモートWindows PC
+
+PC間接続にはCloudflare Accessの公開URLではなく、同じTailscaleネットワークのURLを使います。
+
+### 接続先PC
+
+1. ハブPCと同じTailscaleへログインします。
+2. このリポジトリを導入し、`npm ci` と `npm run dev` を実行します。
+3. 認証URLでDSHを開きます。
+4. **設定 → アカウント → PC・Tailscale** を開きます。
+5. **Tailscale内でDSHを共有** を有効にします。
+6. **このPCのQRを表示** を開きます。
+
+### ハブPC
+
+1. **設定 → アカウント → PC・Tailscale → PCの接続** を開きます。
+2. **QRでPCを追加** を押します。
+3. 接続先PCのQRをカメラ、画像、または接続リンクから読み取ります。
+4. PC名を確認し、**接続を確認して保存** を押します。
+
+手入力する場合は、接続先の `https://<Tailscale DNS名>:8443` と、その起動URLの `token=` 以降を使用します。保存後はワークスペース画面で作成先PCを選択できます。
+
+## Cloudflare
+
+DSHルートを新規作成した場合、以前のCloudflare資格情報は引き継がれないため再登録が必要です。
+
+### Cloudflare Browser Run
+
+**設定 → アカウント → ブラウザー・画面操作 → Cloudflare Browser Run** で以下を保存します。
+
+- Cloudflare Account ID
+- Browser Rendering — Edit権限を持つAPIトークン
+
+Browser Runは明示的に選択された公開HTTPSページで使用します。通常の対話ブラウザーはKitesurfです。
+
+### Cloudflare TunnelとZero Trust Access
+
+同梱Bridge Gatewayの **設定 → リモートアクセス** で管理します。
+
+- Cloudflare TunnelのTokenと固定ホスト名
+- 自動起動
+- アクセス認証モード
+- Cloudflare Zero Trust Accessの有効・無効
+- Team Domain
+- Application Audience（AUD）
+
+Origin、Host、DSHセッション、Cloudflare Accessの検証は無効化しないでください。対話ログインが必要なCloudflare公開URLは、PC間の自動更新配布には使いません。
+
+## 開発・更新
+
+**設定 → 開発・更新** では、Git状態、差分、再ビルド、GitHub更新、DSH再起動、登録済みPCへの配布を管理できます。
+
+開発モードのPCは自身の `origin/main` をfast-forwardします。インストール済みPCには `darask-harness-<version>.tgz` を配布します。未コミット変更や分岐した履歴は自動で破棄しません。
+
+## 検証
+
+```powershell
+npm run check
+```
+
+このコマンドはルートのクライアント、同梱Gateway、全テスト、独立ワークスペースを検証します。生成物である `dist/client.js`、`vendor/dsh-bridge-gateway/client/client.js`、`packages/dsh-status-line/dist/client.js` は直接編集しないでください。
 
 ## ライセンス
 
-MIT。取り込んだ第三者コードの出典とライセンスは [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) を参照。
+MIT。第三者成果物の出典とライセンスは [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) と `vendor/` 内の表示を参照してください。

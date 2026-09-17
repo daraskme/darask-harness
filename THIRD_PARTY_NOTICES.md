@@ -1,6 +1,6 @@
 # 第三者ソフトウェアの表示
 
-darask-harness は以下の成果物を利用・移植しています。各パッケージの LICENSE / NOTICE は配布物に同梱されます。`packages/darask` が取り込む依存 (Bridge Gateway、Grok provider、Codex Connect、Chrome DevTools MCP、jsQR、qrcode、フォントなど) は [packages/darask/THIRD_PARTY_NOTICES.md](./packages/darask/THIRD_PARTY_NOTICES.md) を参照してください。
+darask-harness は以下の成果物を利用・移植しています。各パッケージの LICENSE / NOTICE は配布物に同梱されます。Bridge Gateway と Grok provider の表示は `vendor/`、その他の依存情報は `package-lock.json` と各依存パッケージの LICENSE を参照してください。
 
 | 用途 | 出典 | ライセンス | 取り込み方 |
 |---|---|---|---|
@@ -9,4 +9,3 @@ darask-harness は以下の成果物を利用・移植しています。各パ�
 | プロジェクト指示ファイル名の互換 (`AGENT.md`, `GROK.md`, `.local` 版) | xai-org/grok-build `agents_md_tracker.rs` | Apache-2.0 | ファイル名リストのみ参照し、上流 DSH ローダーの設定として反映 |
 | ディレクトリ型ルール (`.grok/rules` / `.claude/rules` / `.cursor/rules`、`.mdc` frontmatter の `alwaysApply` / `globs` / `description`、読み取り時の glob 一致ルール注入) | xai-org/grok-build `project_rules.rs` / `cursor_rules_on_read.rs` | Apache-2.0 | 探索順序・frontmatter 語彙・注入タイミングを参照して JavaScript で再実装 (`packages/dsh-rules`)。コードの直接コピーはしていない |
 | ステータスライン (`[ui.status_line]` の `type` / `command` / `items` / `padding` / `refresh_interval` 語彙、外部コマンドへの JSON stdin 契約 `schema_version` / `model` / `context_window` / `cost` / `turn` / `workspace`) | xai-org/grok-build `status_line.rs` / `status_line_command.rs` | Apache-2.0 | 設定語彙と JSON 契約の互換性のみ参照し、集計は上流 DSH の projection で実装 (`packages/dsh-status-line`) |
-| DARASK 機能一式 | [daraskme/dsh-darask](https://github.com/daraskme/dsh-darask) | MIT / Copyright 2026 daraskme | `packages/darask` として同一リポジトリに移設 |
