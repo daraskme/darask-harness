@@ -12699,6 +12699,16 @@ var dictionaries = {
     deepseekApiKey: "DeepSeek\u516C\u5F0FAPI\u30AD\u30FC",
     removeDeepseekKey: "\u4FDD\u5B58\u6E08\u307FDeepSeek\u30AD\u30FC\u3092\u524A\u9664",
     deepseekHint: "DeepSeek\u516C\u5F0FAPI\u306E deepseek-v4-pro \u3092\u53F8\u4EE4\u5854\u3068\u3057\u3066\u4F7F\u3044\u307E\u3059\u3002Vercel AI Gateway\u30AD\u30FC\u306FJev\u8A55\u4FA1\u306B\u3060\u3051\u4F7F\u7528\u3057\u307E\u3059\u3002",
+    bitwardenType: "\u7121\u6599\u306ESecrets Manager\u9023\u643A",
+    bitwardenHint: "\u8AAD\u307F\u53D6\u308A\u5C02\u7528Machine Account\u304C\u8A31\u53EF\u3055\u308C\u305FSecret UUID\u3060\u3051\u3092bws CLI\u3067\u53D6\u5F97\u3057\u307E\u3059\u3002Password Manager\u4FDD\u7BA1\u5EAB\u306E\u4E00\u89A7\u30FB\u30D1\u30B9\u30EF\u30FC\u30C9\u30FBCookie\u306F\u8AAD\u307F\u53D6\u308A\u307E\u305B\u3093\u3002",
+    bitwardenEnabled: "\u8D77\u52D5\u6642\u306B\u81EA\u52D5\u540C\u671F",
+    bitwardenExecutable: "bws CLI\u306E\u5B9F\u884C\u30D5\u30A1\u30A4\u30EB",
+    bitwardenExecutableHint: "bws.exe\u306E\u7D76\u5BFE\u30D1\u30B9\u3092\u6307\u5B9A\u3057\u307E\u3059\u3002\u30B7\u30A7\u30EB\u3084PATH\u691C\u7D22\u306F\u4F7F\u7528\u3057\u307E\u305B\u3093\u3002",
+    bitwardenToken: "Machine Account\u30A2\u30AF\u30BB\u30B9\u30C8\u30FC\u30AF\u30F3",
+    bitwardenSecretId: "Secret UUID",
+    bitwardenSync: "\u4ECA\u3059\u3050\u540C\u671F",
+    bitwardenRemove: "Machine Account\u30C8\u30FC\u30AF\u30F3\u3092\u524A\u9664",
+    bitwardenLastSync: "\u6700\u7D42\u540C\u671F",
     priority: "\u4F7F\u7528\u3059\u308B\u512A\u5148\u9806\u4F4D",
     priorityHint: "\u4E0A\u307B\u3069\u512A\u5148\u3055\u308C\u307E\u3059\u3002\u5909\u66F4\u306F\u4FDD\u5B58\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059\u3002",
     up: "\u512A\u5148\u9806\u4F4D\u3092\u4E0A\u3052\u308B",
@@ -12886,6 +12896,16 @@ var dictionaries = {
     deepseekApiKey: "Official DeepSeek API key",
     removeDeepseekKey: "Remove stored DeepSeek key",
     deepseekHint: "Uses deepseek-v4-pro through the official DeepSeek API as the lead. The Vercel AI Gateway key is used only for Jev evaluation.",
+    bitwardenType: "Free Secrets Manager integration",
+    bitwardenHint: "Uses the bws CLI to retrieve only explicitly mapped Secret UUIDs available to a read-only Machine Account. It never lists Password Manager vault items, passwords, or cookies.",
+    bitwardenEnabled: "Sync automatically at startup",
+    bitwardenExecutable: "bws CLI executable",
+    bitwardenExecutableHint: "Enter the absolute path to bws. Shell and PATH lookup are not used.",
+    bitwardenToken: "Machine Account access token",
+    bitwardenSecretId: "Secret UUID",
+    bitwardenSync: "Sync now",
+    bitwardenRemove: "Remove Machine Account token",
+    bitwardenLastSync: "Last sync",
     priority: "Provider priority",
     priorityHint: "Higher providers are preferred. Save to apply changes.",
     up: "Raise priority",
@@ -14464,6 +14484,7 @@ function configuration(data) {
     modelVisibility: structuredClone(data?.modelVisibility ?? defaultModelVisibility()),
     ...data?.local ? { local: { ...data.local } } : {},
     ...data?.openai ? { openai: { ...data.openai } } : {},
+    ...data?.bitwarden?.config ? { bitwarden: { ...data.bitwarden.config, secretIds: { ...data.bitwarden.config.secretIds } } } : {},
     providers: Object.fromEntries(providers.map((provider) => [provider.id, {
       enabled: provider.enabled === true,
       model: provider.model ?? "",
@@ -14475,7 +14496,7 @@ function DaraskPanel(props) {
   const state = props.useDaraskStatus((snapshot) => snapshot);
   const { t } = props;
   const [draft, setDraft] = (0, import_react12.useState)(null);
-  const emptyKeys = { deepseekApiKey: "", openrouterApiKey: "", openrouterManagementKey: "", localApiKey: "", openaiApiKey: "", openaiAdminKey: "", aiGatewayApiKey: "" };
+  const emptyKeys = { bitwardenAccessToken: "", deepseekApiKey: "", openrouterApiKey: "", openrouterManagementKey: "", localApiKey: "", openaiApiKey: "", openaiAdminKey: "", aiGatewayApiKey: "" };
   const [keys, setKeys] = (0, import_react12.useState)(emptyKeys);
   const [saved, setSaved] = (0, import_react12.useState)(false);
   const [tab, setTab] = (0, import_react12.useState)("ai");
@@ -14581,6 +14602,50 @@ function DaraskPanel(props) {
                 });
               }, children: t("removeAiGatewayKey") })
             ] })
+          ] }) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("section", { className: "darask-jev", "aria-labelledby": "darask-bitwarden-title", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-provider-header", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-provider-name", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { id: "darask-bitwarden-title", children: "Bitwarden Secrets Manager" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "darask-meta", children: t("bitwardenType") })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Tag, { tone: data.bitwarden?.configured ? "success" : data.bitwarden?.error ? "warning" : "neutral", children: t(data.bitwarden?.configured ? "configured" : "disconnected") })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-card-section", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-card-section-body", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-muted", children: t("bitwardenHint") }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Switch, { checked: config.bitwarden?.enabled === true, disabled: pending, label: t("bitwardenEnabled"), onChange: (enabled) => change((current) => ({ ...current, bitwarden: { ...current.bitwarden, enabled } })) }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: t("bitwardenExecutable") }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Input, { value: config.bitwarden?.executable ?? "", disabled: pending, onChange: (event) => change((current) => ({ ...current, bitwarden: { ...current.bitwarden, executable: event.target.value } })), autoComplete: "off", spellCheck: false, placeholder: "C:\\\\Tools\\\\bws.exe" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("small", { children: t("bitwardenExecutableHint") })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: t("bitwardenToken") }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Input, { type: "password", value: keys.bitwardenAccessToken, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, bitwardenAccessToken: event.target.value })), autoComplete: "new-password", spellCheck: false }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("small", { children: t("keyHint") })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "darask-fields", children: (data.bitwarden?.targets ?? []).map((target) => /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "darask-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: target.label }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Input, { value: config.bitwarden?.secretIds?.[target.ref] ?? "", disabled: pending, onChange: (event) => change((current) => ({ ...current, bitwarden: { ...current.bitwarden, secretIds: { ...current.bitwarden.secretIds, [target.ref]: event.target.value.trim() } } })), autoComplete: "off", spellCheck: false, placeholder: t("bitwardenSecretId") }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("small", { children: target.ref })
+            ] }, target.ref)) }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-actions", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", variant: "primary", disabled: pending || dirty || !config.bitwarden?.enabled, onClick: () => {
+                void props.action({ action: "syncBitwarden", provider: "bitwarden", config: config.bitwarden }).catch(() => {
+                });
+              }, children: t("bitwardenSync") }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_dsh_client_ui_primitives11.Button, { size: "sm", disabled: pending || !data.bitwarden?.configured, onClick: () => {
+                void props.action({ action: "removeBitwarden", provider: "bitwarden", config: config.bitwarden }).catch(() => {
+                });
+              }, children: t("bitwardenRemove") })
+            ] }),
+            data.bitwarden?.lastSyncedAt && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("small", { children: [
+              t("bitwardenLastSync"),
+              ": ",
+              new Date(data.bitwarden.lastSyncedAt).toLocaleString(t("dateLocale"))
+            ] }),
+            data.bitwarden?.error && /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "darask-error", role: "alert", children: data.bitwarden.error })
           ] }) })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "darask-section-heading", children: [

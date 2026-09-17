@@ -16,6 +16,7 @@
 /** Credential references a remote DSH may hold on the hub's behalf. */
 export const CATALOG = Object.freeze([
   { ref: 'DEEPSEEK_API_KEY', label: 'DeepSeek API', group: 'モデル', hint: 'DeepSeek のモデル（DeepSeek API キー）' },
+  { ref: 'AI_GATEWAY_API_KEY', label: 'Vercel AI Gateway', group: 'モデル', hint: 'Jev 評価専用の Vercel AI Gateway API キー' },
   { ref: 'DARASK_OPENAI_API_KEY', label: 'OpenAI API', group: 'モデル', hint: 'OpenAI の API キー' },
   { ref: 'DARASK_OPENAI_ADMIN_KEY', label: 'OpenAI 管理キー', group: 'モデル', hint: 'OpenAI の利用量取得に使う管理キー' },
   { ref: 'DARASK_OPENROUTER_API_KEY', label: 'OpenRouter', group: 'モデル', hint: 'OpenRouter の API キー' },

@@ -115,7 +115,7 @@ test('preferences store never persists supplied keys and serializes concurrent p
   const store = createStore(location);
   await store.load();
   await Promise.all([
-    store.save({ openrouterApiKey: 'secret-api-value', openrouterManagementKey: 'secret-management-value', aiGatewayApiKey: 'secret-gateway-value', routingEnabled: true }),
+    store.save({ openrouterApiKey: 'secret-api-value', openrouterManagementKey: 'secret-management-value', aiGatewayApiKey: 'secret-gateway-value', bitwardenAccessToken: 'secret-bitwarden-token', routingEnabled: true }),
     store.save({ providers: { cursor: { enabled: false } } }),
   ]);
   const raw = await readFile(path.join(location, 'preferences.json'), 'utf8');

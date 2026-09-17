@@ -76,7 +76,7 @@ test('Accounts centralizes provider login; sidebar Usage displays available bala
   assert.ok(!sidebar.includes('Cursor')); assert.ok(!sidebar.includes('Claude')); assert.ok(!sidebar.includes('残り 0%'));
   const panel = renderToStaticMarkup(React.createElement(accounts.component, props));
   for (const text of ['アカウント', 'DeepSeek API', 'DeepSeek公式APIキー', 'DeepSeek V4 Pro', 'OpenAI API', 'データ共有の危険', 'OpenRouter', 'Grok', 'Cursor', 'Codex', 'Claude', 'ログイン', '会話モデル・CLI への作業委任', 'モデル選択に表示', 'OpenRouter · OpenAI Sol', 'Codex · Astra', 'Claude Fable 5.1']) assert.ok(panel.includes(text), text);
-  for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行']) assert.ok(panel.includes(text), text);
+  for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行', 'Bitwarden Secrets Manager', 'Machine Accountアクセストークン', 'bws CLIの実行ファイル']) assert.ok(panel.includes(text), text);
   assert.match(panel, /<select[^>]*><option value="">通常の優先順位<\/option>.*?<option value="grok" selected="">Grok<\/option>/);
   assert.ok(!panel.includes('<progress'));
   for (const label of ['QR でかんたん接続', 'QR で PC を追加', 'この PC の QR を表示']) assert.ok(panel.includes(label), label);

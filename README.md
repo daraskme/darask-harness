@@ -99,6 +99,21 @@ DeepSeek V4 Proが司令塔となり、必要な場合だけJevまたはGrokへ�
 
 `AI_GATEWAY_API_KEY` はJev評価にだけ使用し、DeepSeekの会話リクエストには使用しません。キーはDSHの資格情報ストアへ保存し、設定ファイルや画面の状態応答には含めません。Jev呼び出しはZero Data Retentionを要求します。
 
+### Bitwarden Secrets Manager
+
+無料のBitwarden Secrets Managerから、許可したAPIキーを起動時または手動操作で同期できます。
+
+1. Bitwarden Secrets ManagerにDARASK専用Projectを作成します。
+2. ProjectへAPIキーをSecretとして登録します。
+3. 読み取り専用Machine Accountを作成し、そのProjectだけを割り当てます。
+4. Machine AccountのAccess Tokenを発行します。
+5. `bws` CLIをインストールします。
+6. **設定 → アカウント → AIアカウント → Bitwarden Secrets Manager** を開きます。
+7. `bws.exe`の絶対パス、Machine Account Access Token、各APIキーに対応するSecret UUIDを入力します。
+8. **起動時に自動同期**を有効にして保存するか、**今すぐ同期**を押します。
+
+対応先には `DEEPSEEK_API_KEY`、Jev専用の `AI_GATEWAY_API_KEY`、OpenAI、OpenRouter、xAI、Cloudflare Browser Run、R2があります。DARASKは指定されたUUIDに対して `bws secret get <UUID> --output json` だけを実行し、Secret一覧や通常のPassword Manager保管庫を検索しません。Access Tokenと取得値は資格情報ストアへ保存し、preferences.json、画面応答、ログ、モデル入力へ出しません。
+
 ### Grok検索
 
 Grokへログインし、Grok 4.6を利用可能にしてください。最新情報が必要な処理では、DeepSeekがGrokサブエージェントへ委任し、Grok側でWeb検索とX検索を実行します。検索結果や引用は外部入力として扱い、重要な操作の前に出典を確認してください。

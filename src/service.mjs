@@ -5,6 +5,7 @@ import { createCliProvider } from './providers/cli.mjs';
 import { createOpenRouterProvider } from './providers/openrouter.mjs';
 import { createOpenAiProvider, defaultOpenAi } from './providers/openai.mjs';
 import { createJev } from './jev.mjs';
+import { createBitwarden } from './bitwarden.mjs';
 
 const blank = source => ({ status: 'unavailable', source, updatedAt: null, windows: [], credits: null });
 export function normalizeClaudeStatusline(input) {
@@ -18,7 +19,7 @@ export function normalizeClaudeStatusline(input) {
   }
   return { status: windows.length ? 'available' : 'unavailable', source: 'Claude Code statusLine', updatedAt: input.updatedAt, windows, credits: null, stale: Date.now() - Date.parse(input.updatedAt) > 120000, message: windows.length ? null : 'Claude Code has not supplied subscription limits.' };
 }
-export function createService({ store, credentials, enableOpenRouterRoute, enableOpenAiRoute, deepseekConfigured = false, jevConfigured = false, syncOpenAiModels, enableLocalRoute, enableClaudeRoute, directory, cliFactory = createCliProvider, fetch, tailscale, browserRun, localModel, computer, compatibility = () => ({}), jev = createJev({ credentials }) }) {
+export function createService({ store, credentials, enableOpenRouterRoute, enableOpenAiRoute, deepseekConfigured = false, jevConfigured = false, syncOpenAiModels, enableLocalRoute, enableClaudeRoute, directory, cliFactory = createCliProvider, fetch, tailscale, browserRun, localModel, computer, compatibility = () => ({}), jev = createJev({ credentials }), bitwarden = createBitwarden({ credentials }) }) {
   const providers = {};
   const snapshots = Object.fromEntries(IDS.map(id => [id, { auth: 'unknown', usage: blank(id) }]));
   snapshots.deepseek = { auth: deepseekConfigured ? 'authenticated' : 'unauthenticated', usage: blank('DeepSeek API') };
@@ -32,6 +33,7 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
   let browserRunState;
   let computerState;
   let jevState = { model: 'typesafe-ai/jev', configured: jevConfigured };
+  let bitwardenState = { configured: false, syncing: false, mapped: 0, lastSyncedAt: null, error: null, targets: [], config: store.get().bitwarden };
   async function cli(id) {
     const executable = store.get().providers[id].executable;
     const old = providers[id];
@@ -70,6 +72,8 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
       computerState = computer?.status();
       try { jevState = await jev.status(); }
       catch { jevState = { model: 'typesafe-ai/jev', configured: false, error: 'AI Gateway の認証状態を確認できません。' }; }
+      try { bitwardenState = await bitwarden.status(store.get().bitwarden); }
+      catch { bitwardenState = { ...bitwardenState, configured: false, syncing: false, error: 'Bitwarden の状態を確認できません。' }; }
       try { snapshots.deepseek = { auth: (await credentials.resolve(DEEPSEEK_CREDENTIAL))?.value ? 'authenticated' : 'unauthenticated', usage: blank('DeepSeek API') }; }
       catch { snapshots.deepseek = { auth: 'unknown', usage: { ...blank('DeepSeek API'), status: 'error', message: 'DeepSeek API の認証状態を確認できません。' } }; }
       if (localModel) snapshots.local = await localModel.status();
@@ -79,10 +83,15 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
   }
   function snapshot() {
     const config = store.get();
-    return { priority: config.priority, routingEnabled: config.routingEnabled, purposeRoutes: config.purposeRoutes, modelVisibility: config.modelVisibility, local: config.local, openai: config.openai, jev: structuredClone(jevState), computer: computerState ?? { enabled: config.computer?.enabled === true }, providers: config.priority.map(id => ({ id, name: NAMES[id], ...structuredClone(snapshots[id]), ...config.providers[id], capability: MODEL_ROUTES[id] ? 'model' : 'agent' })), tailscale: tailscaleState, browserRun: browserRunState, compatibility: compatibility() };
+    return { priority: config.priority, routingEnabled: config.routingEnabled, purposeRoutes: config.purposeRoutes, modelVisibility: config.modelVisibility, local: config.local, openai: config.openai, jev: structuredClone(jevState), bitwarden: structuredClone(bitwardenState), computer: computerState ?? { enabled: config.computer?.enabled === true }, providers: config.priority.map(id => ({ id, name: NAMES[id], ...structuredClone(snapshots[id]), ...config.providers[id], capability: MODEL_ROUTES[id] ? 'model' : 'agent' })), tailscale: tailscaleState, browserRun: browserRunState, compatibility: compatibility() };
   }
   return {
     snapshots, refresh, snapshot,
+    async initialize() {
+      const config = store.get().bitwarden;
+      if (config.enabled) await bitwarden.sync(config).catch(() => {});
+      bitwardenState = await bitwarden.status(config);
+    },
     evaluateJev(args, signal) { return jev.run(args, signal); },
     async status() { if (Date.now() - lastRefresh > 30000) await refresh(); return snapshot(); },
     async callback(url) { await openrouter.callback(url); await refresh(); },
@@ -100,6 +109,10 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
           if (!browserRun) throw new Error('Browser Run: integration unavailable.');
           if (action === 'saveBrowserRun') await browserRun.save(payload.config);
           else await browserRun.remove();
+        } else if (provider === 'bitwarden' && ['syncBitwarden', 'removeBitwarden'].includes(action)) {
+          const config = payload.config === undefined ? store.get().bitwarden : validateConfig({ bitwarden: payload.config }, store.get()).bitwarden;
+          if (action === 'syncBitwarden') bitwardenState = await bitwarden.sync(config);
+          else bitwardenState = await bitwarden.remove(config);
         } else if (provider === 'computer' && ['enableComputer', 'disableComputer', 'saveComputerGame'].includes(action)) {
           if (!computer) throw new Error('Computer: integration unavailable.');
           if (action === 'saveComputerGame') {
@@ -120,7 +133,9 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
           await openai.saveKeys(payload.config);
           if (payload.config.deepseekApiKey) await credentials.set(DEEPSEEK_CREDENTIAL, payload.config.deepseekApiKey);
           await jev.save(payload.config);
+          await bitwarden.save(validated.bitwarden, payload.config.bitwardenAccessToken);
           await store.save(payload.config);
+          if (validated.bitwarden.enabled && (payload.config.bitwarden || payload.config.bitwardenAccessToken)) bitwardenState = await bitwarden.sync(validated.bitwarden);
         } else if (action === 'refresh') {
           // Refresh is shared across concurrent clients below.
         } else {

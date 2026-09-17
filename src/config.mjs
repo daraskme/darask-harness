@@ -3,6 +3,7 @@ import { defaultComputer, validateComputer } from './computer.mjs';
 import { defaultLocal, validateLocal } from './local-settings.mjs';
 import { complimentaryGroup, defaultOpenAi, OPENAI_DEFAULT_MODEL, validateOpenAi } from './providers/openai.mjs';
 import { defaultModelVisibility, validateModelVisibility } from './model-catalogs.mjs';
+import { defaultBitwarden, validateBitwarden } from './bitwarden.mjs';
 
 export const DEEPSEEK_CREDENTIAL = 'DEEPSEEK_API_KEY';
 export const DEEPSEEK_ROUTE = 'deepseek-official';
@@ -15,13 +16,14 @@ export function defaultPurposeRoutes() {
   return Object.fromEntries(PURPOSE_IDS.map(id => [id, 'deepseek']));
 }
 export function defaultConfig() {
-  return { priority: [...IDS], routingEnabled: true, purposeRoutes: defaultPurposeRoutes(), modelVisibility: defaultModelVisibility(), local: defaultLocal(), computer: defaultComputer(), openai: defaultOpenAi(), providers: Object.fromEntries(IDS.map(id => [id, { enabled: id !== 'local', model: id === 'deepseek' ? DEEPSEEK_MODEL : id === 'grok' ? 'grok-4.6' : id === 'openai' ? OPENAI_DEFAULT_MODEL : '', executable: '' }])) };
+  return { priority: [...IDS], routingEnabled: true, purposeRoutes: defaultPurposeRoutes(), modelVisibility: defaultModelVisibility(), bitwarden: defaultBitwarden(), local: defaultLocal(), computer: defaultComputer(), openai: defaultOpenAi(), providers: Object.fromEntries(IDS.map(id => [id, { enabled: id !== 'local', model: id === 'deepseek' ? DEEPSEEK_MODEL : id === 'grok' ? 'grok-4.6' : id === 'openai' ? OPENAI_DEFAULT_MODEL : '', executable: '' }])) };
 }
 export function validateConfig(input, base = defaultConfig()) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Invalid configuration');
-  const allowed = new Set(['priority', 'routingEnabled', 'purposeRoutes', 'modelVisibility', 'providers', 'deepseekApiKey', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey', 'local', 'computer', 'openai']);
+  const allowed = new Set(['priority', 'routingEnabled', 'purposeRoutes', 'modelVisibility', 'providers', 'bitwarden', 'bitwardenAccessToken', 'deepseekApiKey', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey', 'local', 'computer', 'openai']);
   if (Object.keys(input).some(key => !allowed.has(key))) throw new Error('Unknown configuration field');
   const result = structuredClone(base);
+  if (input.bitwarden !== undefined) result.bitwarden = validateBitwarden(input.bitwarden, result.bitwarden);
   if (input.local !== undefined) result.local = validateLocal(input.local, result.local);
   if (input.computer !== undefined) result.computer = validateComputer(input.computer, result.computer);
   if (input.openai !== undefined) result.openai = validateOpenAi(input.openai, result.openai);
@@ -71,7 +73,7 @@ export function validateConfig(input, base = defaultConfig()) {
   const cursor = result.providers.cursor.executable;
   const grok = result.providers.grok.executable;
   if (cursor && grok && path.win32.normalize(cursor).toLowerCase() === path.win32.normalize(grok).toLowerCase()) throw new Error('Cursor and Grok must use different executables');
-  for (const key of ['deepseekApiKey', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey']) {
+  for (const key of ['bitwardenAccessToken', 'deepseekApiKey', 'openrouterApiKey', 'openrouterManagementKey', 'openaiApiKey', 'openaiAdminKey', 'aiGatewayApiKey', 'localApiKey']) {
     if (input[key] !== undefined && (typeof input[key] !== 'string' || input[key].length > 8192 || /[\s\x00-\x1f]/.test(input[key]))) throw new Error('Invalid API key');
   }
   return result;

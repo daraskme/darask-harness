@@ -12,7 +12,7 @@ function configuration(data) {
   const priority = [...new Set([...(data?.priority ?? []), ...known])].filter(id => known.has(id))
   return {
     priority, routingEnabled: data?.routingEnabled === true, purposeRoutes: structuredClone(data?.purposeRoutes ?? {}), modelVisibility: structuredClone(data?.modelVisibility ?? defaultModelVisibility()), ...(data?.local ? { local: { ...data.local } } : {}),
-    ...(data?.openai ? { openai: { ...data.openai } } : {}),
+    ...(data?.openai ? { openai: { ...data.openai } } : {}), ...(data?.bitwarden?.config ? { bitwarden: { ...data.bitwarden.config, secretIds: { ...data.bitwarden.config.secretIds } } } : {}),
     providers: Object.fromEntries(providers.map(provider => [provider.id, {
       enabled: provider.enabled === true, model: provider.model ?? '', executable: provider.executable ?? '',
     }])),
@@ -23,7 +23,7 @@ export function DaraskPanel(props) {
   const state = props.useDaraskStatus(snapshot => snapshot)
   const { t } = props
   const [draft, setDraft] = useState(null)
-  const emptyKeys = { deepseekApiKey: '', openrouterApiKey: '', openrouterManagementKey: '', localApiKey: '', openaiApiKey: '', openaiAdminKey: '', aiGatewayApiKey: '' }
+  const emptyKeys = { bitwardenAccessToken: '', deepseekApiKey: '', openrouterApiKey: '', openrouterManagementKey: '', localApiKey: '', openaiApiKey: '', openaiAdminKey: '', aiGatewayApiKey: '' }
   const [keys, setKeys] = useState(emptyKeys)
   const [saved, setSaved] = useState(false)
   const [tab, setTab] = useState('ai')
@@ -82,6 +82,22 @@ export function DaraskPanel(props) {
             </div>
           </div>
         </div>
+      </section>
+      <section className="darask-jev" aria-labelledby="darask-bitwarden-title">
+        <div className="darask-provider-header">
+          <div className="darask-provider-name"><h3 id="darask-bitwarden-title">Bitwarden Secrets Manager</h3><span className="darask-meta">{t('bitwardenType')}</span></div>
+          <Tag tone={data.bitwarden?.configured ? 'success' : data.bitwarden?.error ? 'warning' : 'neutral'}>{t(data.bitwarden?.configured ? 'configured' : 'disconnected')}</Tag>
+        </div>
+        <div className="darask-card-section"><div className="darask-card-section-body">
+          <p className="darask-muted">{t('bitwardenHint')}</p>
+          <Switch checked={config.bitwarden?.enabled === true} disabled={pending} label={t('bitwardenEnabled')} onChange={enabled => change(current => ({ ...current, bitwarden: { ...current.bitwarden, enabled } }))} />
+          <label className="darask-field"><span>{t('bitwardenExecutable')}</span><Input value={config.bitwarden?.executable ?? ''} disabled={pending} onChange={event => change(current => ({ ...current, bitwarden: { ...current.bitwarden, executable: event.target.value } }))} autoComplete="off" spellCheck={false} placeholder="C:\\Tools\\bws.exe" /><small>{t('bitwardenExecutableHint')}</small></label>
+          <label className="darask-field"><span>{t('bitwardenToken')}</span><Input type="password" value={keys.bitwardenAccessToken} disabled={pending} onChange={event => setKeys(previous => ({ ...previous, bitwardenAccessToken: event.target.value }))} autoComplete="new-password" spellCheck={false} /><small>{t('keyHint')}</small></label>
+          <div className="darask-fields">{(data.bitwarden?.targets ?? []).map(target => <label className="darask-field" key={target.ref}><span>{target.label}</span><Input value={config.bitwarden?.secretIds?.[target.ref] ?? ''} disabled={pending} onChange={event => change(current => ({ ...current, bitwarden: { ...current.bitwarden, secretIds: { ...current.bitwarden.secretIds, [target.ref]: event.target.value.trim() } } }))} autoComplete="off" spellCheck={false} placeholder={t('bitwardenSecretId')} /><small>{target.ref}</small></label>)}</div>
+          <div className="darask-actions"><Button size="sm" variant="primary" disabled={pending || dirty || !config.bitwarden?.enabled} onClick={() => { void props.action({ action: 'syncBitwarden', provider: 'bitwarden', config: config.bitwarden }).catch(() => {}) }}>{t('bitwardenSync')}</Button><Button size="sm" disabled={pending || !data.bitwarden?.configured} onClick={() => { void props.action({ action: 'removeBitwarden', provider: 'bitwarden', config: config.bitwarden }).catch(() => {}) }}>{t('bitwardenRemove')}</Button></div>
+          {data.bitwarden?.lastSyncedAt && <small>{t('bitwardenLastSync')}: {new Date(data.bitwarden.lastSyncedAt).toLocaleString(t('dateLocale'))}</small>}
+          {data.bitwarden?.error && <p className="darask-error" role="alert">{data.bitwarden.error}</p>}
+        </div></div>
       </section>
       <div className="darask-section-heading"><h3>{t('priority')}</h3><p>{t('priorityHint')}</p></div>
       <div className="darask-provider-list">

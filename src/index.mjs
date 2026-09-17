@@ -212,6 +212,7 @@ export async function apply(ctx, config) {
   const deepseekConfigured = Boolean((await ctx.credentials.resolve(DEEPSEEK_CREDENTIAL))?.value);
   const jevConfigured = Boolean((await ctx.credentials.resolve(JEV_CREDENTIAL))?.value);
   const service = createService({ store, directory, credentials: ctx.credentials, tailscale, browserRun, localModel, computer, enableLocalRoute, deepseekConfigured, jevConfigured, enableClaudeRoute: () => enableClaudeRoute({ settings: ctx.settings, credentials: ctx.credentials, visibleModels: store.get().modelVisibility?.claude }), enableOpenRouterRoute: ref => enablePiAiKey('openrouter', ref), enableOpenAiRoute: ref => enablePiAiKey('openai', ref), syncOpenAiModels: syncModelCatalogs, compatibility: () => ({ dsh: '0.1.5-rc.2', subagentPackagesRequired: false, cursor: 'isolated-cli', grok: 'isolated-cli', routing: 'before-request', claudeUsage: 'statusLine', kitesurf: config.kitesurf, computer: store.get().computer?.enabled ? 'desktop' : 'opt-in' }) });
+  await service.initialize();
   await syncModelCatalogs(service.snapshots.openai?.usage);
   serviceRef = service;
   const tailState = await tailscale.status();
