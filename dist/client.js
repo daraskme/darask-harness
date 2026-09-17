@@ -12323,8 +12323,8 @@ var import_dsh_client_ui_primitives6 = require("@deepseek-ai/dsh-client-ui-primi
 // src/addons/locale.mjs
 var addonsDictionaries = {
   ja: {
-    title: "\u30D7\u30E9\u30B0\u30A4\u30F3",
-    description: "Hermes / oh-my-deepseek \u304B\u3089\u30D5\u30A9\u30FC\u30AF\u3057\u305F\u6A5F\u80FD\u3067\u3059\u3002\u521D\u671F\u72B6\u614B\u306F\u3059\u3079\u3066\u6709\u52B9\u3067\u3059\u3002\u79D8\u5BC6\u60C5\u5831\u306F\u4FDD\u5B58\u6E08\u307F\u3067\u3082\u518D\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
+    title: "\u62E1\u5F35\u6A5F\u80FD",
+    description: "Hermes / oh-my-deepseek \u304B\u3089\u30D5\u30A9\u30FC\u30AF\u3057\u305FDARASK\u306E\u8FFD\u52A0\u6A5F\u80FD\u3067\u3059\u3002\u521D\u671F\u72B6\u614B\u306F\u3059\u3079\u3066\u6709\u52B9\u3067\u3059\u3002\u79D8\u5BC6\u60C5\u5831\u306F\u4FDD\u5B58\u6E08\u307F\u3067\u3082\u518D\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
     refresh: "\u72B6\u614B\u3092\u66F4\u65B0",
     loading: "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026",
     retry: "\u518D\u8AAD\u307F\u8FBC\u307F",
@@ -12333,7 +12333,7 @@ var addonsDictionaries = {
     saving: "\u4FDD\u5B58\u4E2D\u2026",
     unsaved: "\u672A\u4FDD\u5B58\u306E\u5909\u66F4",
     failed: "\u4FDD\u5B58\u306B\u5931\u6557\u3057\u307E\u3057\u305F\u3002",
-    loadFailed: "\u30D7\u30E9\u30B0\u30A4\u30F3\u72B6\u614B\u3092\u53D6\u5F97\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
+    loadFailed: "\u62E1\u5F35\u6A5F\u80FD\u306E\u72B6\u614B\u3092\u53D6\u5F97\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
     enabled: "\u6709\u52B9",
     disabled: "\u7121\u52B9",
     origin: "\u7531\u6765",
@@ -12355,11 +12355,11 @@ var addonsDictionaries = {
     kanban: "\u304B\u3093\u3070\u3093",
     achievements: "\u30D0\u30C3\u30B8",
     empty: "\u307E\u3060\u30AB\u30FC\u30C9\u304C\u3042\u308A\u307E\u305B\u3093\u3002darask_kanban \u3067\u8FFD\u52A0\u3057\u307E\u3059\u3002",
-    groups: "\u30D7\u30E9\u30B0\u30A4\u30F3\u306E\u7A2E\u985E"
+    groups: "\u62E1\u5F35\u6A5F\u80FD\u306E\u7A2E\u985E"
   },
   en: {
-    title: "Plugins",
-    description: "Forked Hermes / oh-my-deepseek capabilities. All start enabled. Stored secrets are never redisplayed.",
+    title: "Add-ons",
+    description: "DARASK add-on capabilities forked from Hermes / oh-my-deepseek. All start enabled. Stored secrets are never redisplayed.",
     refresh: "Refresh",
     loading: "Loading\u2026",
     retry: "Reload",
@@ -12368,7 +12368,7 @@ var addonsDictionaries = {
     saving: "Saving\u2026",
     unsaved: "Unsaved changes",
     failed: "Save failed.",
-    loadFailed: "Unable to load plugin status.",
+    loadFailed: "Unable to load add-on status.",
     enabled: "Enabled",
     disabled: "Disabled",
     origin: "Origin",
@@ -12390,7 +12390,7 @@ var addonsDictionaries = {
     kanban: "Kanban",
     achievements: "Badges",
     empty: "No cards yet. Use darask_kanban to add one.",
-    groups: "Plugin groups"
+    groups: "Add-on groups"
   }
 };
 
@@ -12692,13 +12692,15 @@ var dictionaries = {
     purpose_spec_driven: "\u4ED5\u69D8\u30FBRFC",
     jevTitle: "Jev \u8A55\u4FA1",
     jevType: "\u8A55\u4FA1\u30E2\u30C7\u30EB",
-    jevHint: "Jev \u306F\u4F1A\u8A71\u3084\u30D6\u30E9\u30A6\u30B6\u30FC\u64CD\u4F5C\u3067\u306F\u306A\u304F\u3001\u72B6\u614B\u306E\u5206\u985E\u30FB\u30EB\u30FC\u30C6\u30A3\u30F3\u30B0\u30FB\u63A1\u70B9\u30FB\u691C\u8A3C\u306B\u4F7F\u3044\u307E\u3059\u3002darask_jev_evaluate \u30C4\u30FC\u30EB\u304C\u30BC\u30ED\u30C7\u30FC\u30BF\u4FDD\u6301\u3092\u8981\u6C42\u3057\u3066\u5B9F\u884C\u3057\u307E\u3059\u3002",
+    jevHint: "\u5404\u30E6\u30FC\u30B6\u30FC\u30BF\u30FC\u30F3\u306E\u6700\u521D\u306BJev\u3067\u7528\u9014\u3092\u81EA\u52D5\u5224\u5B9A\u3057\u307E\u3059\u3002\u540C\u3058\u30BF\u30FC\u30F3\u3067\u306F\u7D50\u679C\u3092\u518D\u5229\u7528\u3057\u307E\u3059\u3002Jev\u306F\u4F1A\u8A71\u3084\u30D6\u30E9\u30A6\u30B6\u30FC\u64CD\u4F5C\u3067\u306F\u306A\u304F\u3001\u5206\u985E\u30FB\u30EB\u30FC\u30C6\u30A3\u30F3\u30B0\u30FB\u63A1\u70B9\u30FB\u691C\u8A3C\u306B\u4F7F\u3044\u3001\u30BC\u30ED\u30C7\u30FC\u30BF\u4FDD\u6301\u3092\u8981\u6C42\u3057\u307E\u3059\u3002",
+    jevRoutingLast: "\u524D\u56DE\u306EJev\u81EA\u52D5\u5224\u5B9A",
+    jevRoutingFallback: "Jev\u306E\u81EA\u52D5\u5224\u5B9A\u3092\u5229\u7528\u3067\u304D\u306A\u304B\u3063\u305F\u305F\u3081\u3001\u30ED\u30FC\u30AB\u30EB\u5224\u5B9A\u3078\u623B\u308A\u307E\u3057\u305F\u3002",
     aiGatewayApiKey: "Vercel AI Gateway API \u30AD\u30FC",
     createAiGatewayKey: "API \u30AD\u30FC\u3092\u767A\u884C",
     removeAiGatewayKey: "\u4FDD\u5B58\u6E08\u307F\u30AD\u30FC\u3092\u524A\u9664",
     deepseekApiKey: "DeepSeek\u516C\u5F0FAPI\u30AD\u30FC",
     removeDeepseekKey: "\u4FDD\u5B58\u6E08\u307FDeepSeek\u30AD\u30FC\u3092\u524A\u9664",
-    deepseekHint: "DeepSeek\u516C\u5F0FAPI\u306E deepseek-v4-pro \u3092\u53F8\u4EE4\u5854\u3068\u3057\u3066\u4F7F\u3044\u307E\u3059\u3002Vercel AI Gateway\u30AD\u30FC\u306FJev\u8A55\u4FA1\u306B\u3060\u3051\u4F7F\u7528\u3057\u307E\u3059\u3002",
+    deepseekHint: "DeepSeek\u516C\u5F0FAPI\u306E deepseek-v4-pro \u307E\u305F\u306F deepseek-flash\uFF08V4.1 Flash\uFF09\u3092\u53F8\u4EE4\u5854\u3068\u3057\u3066\u9078\u3079\u307E\u3059\u3002Vercel AI Gateway\u30AD\u30FC\u306FJev\u8A55\u4FA1\u306B\u3060\u3051\u4F7F\u7528\u3057\u307E\u3059\u3002",
     bitwardenType: "\u7121\u6599\u306ESecrets Manager\u9023\u643A",
     bitwardenHint: "\u8AAD\u307F\u53D6\u308A\u5C02\u7528Machine Account\u304B\u3089\u3001\u8868\u793A\u3055\u308C\u305F5\u3064\u306ESecret Key\u3060\u3051\u3092\u5B8C\u5168\u4E00\u81F4\u3067\u81EA\u52D5\u691C\u51FA\u3057\u3066\u53D6\u5F97\u3057\u307E\u3059\u3002Machine Account\u306FDARASK\u5C02\u7528Project\u3060\u3051\u306B\u5236\u9650\u3057\u3066\u304F\u3060\u3055\u3044\u3002Password Manager\u4FDD\u7BA1\u5EAB\u30FB\u30D1\u30B9\u30EF\u30FC\u30C9\u30FBCookie\u306F\u8AAD\u307F\u53D6\u308A\u307E\u305B\u3093\u3002",
     bitwardenEnabled: "\u8D77\u52D5\u6642\u306B\u81EA\u52D5\u540C\u671F",
@@ -12924,13 +12926,15 @@ var dictionaries = {
     purpose_spec_driven: "Specifications and RFCs",
     jevTitle: "Jev evaluation",
     jevType: "Evaluation model",
-    jevHint: "Jev is for classification, routing, scoring, and verification\u2014not conversation or browser control. The darask_jev_evaluate tool requests zero data retention.",
+    jevHint: "Jev automatically classifies purpose once at the start of each user turn and reuses that result within the turn. It is for classification, routing, scoring, and verification\u2014not conversation or browser control\u2014and requests zero data retention.",
+    jevRoutingLast: "Last automatic Jev classification",
+    jevRoutingFallback: "Automatic Jev classification was unavailable, so DARASK used its local classifier.",
     aiGatewayApiKey: "Vercel AI Gateway API key",
     createAiGatewayKey: "Create API key",
     removeAiGatewayKey: "Remove stored key",
     deepseekApiKey: "Official DeepSeek API key",
     removeDeepseekKey: "Remove stored DeepSeek key",
-    deepseekHint: "Uses deepseek-v4-pro through the official DeepSeek API as the lead. The Vercel AI Gateway key is used only for Jev evaluation.",
+    deepseekHint: "Choose deepseek-v4-pro or deepseek-flash (V4.1 Flash) as the lead through the official DeepSeek API. The Vercel AI Gateway key is used only for Jev evaluation.",
     bitwardenType: "Free Secrets Manager integration",
     bitwardenHint: "Automatically discovers and retrieves only the five displayed Secret Keys by exact name from a read-only Machine Account. Restrict the Machine Account to a DARASK-only project. It never reads Password Manager vault items, passwords, or cookies.",
     bitwardenEnabled: "Sync automatically at startup",
@@ -13730,6 +13734,7 @@ var import_dsh_client_ui_primitives11 = require("@deepseek-ai/dsh-client-ui-prim
 // src/model-catalogs.mjs
 var MODEL_CATALOGS = Object.freeze({
   deepseek: Object.freeze([
+    Object.freeze({ id: "deepseek-flash", name: "DeepSeek API \xB7 DeepSeek V4.1 Flash" }),
     Object.freeze({ id: "deepseek-v4-pro", name: "DeepSeek API \xB7 DeepSeek V4 Pro" })
   ]),
   openai: Object.freeze([
@@ -14336,6 +14341,12 @@ function ProviderCard({ provider, value, index, count, edit, move, action, pendi
               /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Tag, { tone: jev?.configured ? "success" : "neutral", children: jev?.configured ? t("configured") : t("disconnected") })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("jevHint") }),
+            jev?.routing?.status === "available" && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("p", { className: "darask-meta", role: "status", children: [
+              t("jevRoutingLast"),
+              ": ",
+              t(`purpose_${jev.routing.purpose}`)
+            ] }),
+            jev?.routing?.status === "error" && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-error", role: "status", children: jev.routing.message || t("jevRoutingFallback") }),
             /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
               /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("aiGatewayApiKey") }),
               /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { type: "password", value: keys.aiGatewayApiKey, disabled: pending, onChange: (event) => setKeys((previous) => ({ ...previous, aiGatewayApiKey: event.target.value })), autoComplete: "new-password", spellCheck: false }),
@@ -14434,7 +14445,7 @@ function ProviderCard({ provider, value, index, count, edit, move, action, pendi
           provider.id === "claude" && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "darask-muted", children: t("claudeHint") }),
           !cliOnly && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "darask-field", children: [
             /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("model") }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { value: value.model, disabled: pending, onChange: (event) => edit({ model: event.target.value }), autoComplete: "off", spellCheck: false }),
+            provider.id === "deepseek" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("select", { value: value.model, disabled: pending, onChange: (event) => edit({ model: event.target.value }), children: MODEL_CATALOGS.deepseek.map((model) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: model.id, children: model.name }, model.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_dsh_client_ui_primitives9.Input, { value: value.model, disabled: pending, onChange: (event) => edit({ model: event.target.value }), autoComplete: "off", spellCheck: false }),
             /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("small", { children: t(provider.id === "openai" ? "openaiModelHint" : "modelHint") })
           ] }),
           MODEL_CATALOGS[provider.id]?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "darask-model-visibility", role: "group", "aria-label": `${providerName}: ${t("modelVisibility")}`, children: [

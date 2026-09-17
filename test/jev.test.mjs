@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createJev, JEV_CREDENTIAL, JEV_MODEL, normalizeJevQuestions } from '../src/jev.mjs';
+import { createJev, createJevPurposeRouter, JEV_CREDENTIAL, JEV_MODEL, JEV_PURPOSE_CRITERIA, normalizeJevQuestions } from '../src/jev.mjs';
 
 test('Jev converts typed tool questions to AI SDK evaluation questions', () => {
   assert.deepEqual(normalizeJevQuestions([
@@ -57,6 +57,41 @@ test('Jev stores only the Gateway credential and calls the evaluation model with
   await jev.remove();
   assert.equal(removed, JEV_CREDENTIAL);
   assert.equal((await jev.status()).configured, false);
+});
+
+test('Jev purpose routing runs once per user turn and falls back when unavailable', async () => {
+  let calls = 0;
+  const route = createJevPurposeRouter(async state => { calls += 1; return state.includes('public') ? 'research' : null; });
+  const agent = {};
+  assert.equal(await route({ agent, state: 'current public facts', fallback: 'medium' }), 'research');
+  assert.equal(await route({ agent, state: 'current public facts', fallback: 'simple' }), 'research');
+  assert.equal(calls, 1);
+  assert.equal(await route({ agent, state: 'local files', fallback: 'medium' }), 'medium');
+  assert.equal(calls, 2);
+  assert.equal(await route({ agent: null, state: 'current public facts', fallback: 'simple' }), 'simple');
+});
+
+test('Jev automatically classifies public research with the evaluation model and ZDR', async () => {
+  let request;
+  const jev = createJev({
+    credentials: { resolve: async () => ({ value: 'private-gateway-key' }) },
+    createGatewayImpl: () => ({ evaluationModel: id => ({ id }) }),
+    evaluateImpl: async options => { request = options; return { answers: { purpose: { type: 'choice', choice: 'research' } }, usage: {} }; },
+  });
+  assert.equal(await jev.classifyPurpose('Find current public release information.'), 'research');
+  assert.equal(request.model.id, JEV_MODEL);
+  assert.deepEqual(request.questions.purpose.criteria, JEV_PURPOSE_CRITERIA);
+  assert.deepEqual(request.providerOptions, { gateway: { zeroDataRetention: true } });
+  assert.match(request.questions.purpose.instructions, /public Web or X/);
+});
+
+test('Jev routing exposes only safe Gateway diagnostics', async () => {
+  const jev = createJev({
+    credentials: { resolve: async () => ({ value: 'private-gateway-key' }) },
+    createGatewayImpl: () => ({ evaluationModel: () => ({}) }),
+    evaluateImpl: async () => { throw Object.assign(new Error('private-gateway-key and response body'), { statusCode: 401, type: 'authentication_error', data: 'private-response' }); },
+  });
+  await assert.rejects(jev.classifyPurpose('current public facts'), error => error.diagnostic === 'HTTP 401 / authentication_error' && !JSON.stringify(error).includes('private'));
 });
 
 test('Jev errors do not expose Gateway credentials', async () => {

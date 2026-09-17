@@ -70,8 +70,8 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
       tailscaleState = await tailscale?.status();
       browserRunState = await browserRun?.status();
       computerState = computer?.status();
-      try { jevState = await jev.status(); }
-      catch { jevState = { model: 'typesafe-ai/jev', configured: false, error: 'AI Gateway の認証状態を確認できません。' }; }
+      try { jevState = { ...jevState, ...await jev.status() }; }
+      catch { jevState = { ...jevState, model: 'typesafe-ai/jev', configured: false, error: 'AI Gateway の認証状態を確認できません。' }; }
       try { bitwardenState = await bitwarden.status(store.get().bitwarden); }
       catch { bitwardenState = { ...bitwardenState, configured: false, syncing: false, error: 'Bitwarden の状態を確認できません。' }; }
       try { snapshots.deepseek = { auth: (await credentials.resolve(DEEPSEEK_CREDENTIAL))?.value ? 'authenticated' : 'unauthenticated', usage: blank('DeepSeek API') }; }
@@ -93,6 +93,18 @@ export function createService({ store, credentials, enableOpenRouterRoute, enabl
       bitwardenState = await bitwarden.status(config);
     },
     evaluateJev(args, signal) { return jev.run(args, signal); },
+    async classifyJevPurpose(state, signal) {
+      try {
+        const purpose = await jev.classifyPurpose(state, signal);
+        jevState = { ...jevState, configured: true, routing: { status: 'available', purpose, updatedAt: new Date().toISOString() } };
+        return purpose;
+      } catch (error) {
+        if (signal?.aborted) throw error;
+        const diagnostic = typeof error?.diagnostic === 'string' && error.diagnostic ? `（${error.diagnostic}）` : '';
+        jevState = { ...jevState, routing: { status: 'error', message: `Jevの自動用途判定を利用できないため、ローカル判定へ戻りました。${diagnostic}`, updatedAt: new Date().toISOString() } };
+        return null;
+      }
+    },
     async status() { if (Date.now() - lastRefresh > 30000) await refresh(); return snapshot(); },
     async callback(url) { await openrouter.callback(url); await refresh(); },
     action(payload, origin) {

@@ -5586,12 +5586,12 @@ function RemoteDirectoryFlow(props) {
 // ---- 插件入口 ----
 
 function AdditionalConnections({ rpcCall }) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(true);
   return React.createElement('section', { style: { color: 'var(--dsw-alias-label-primary)', lineHeight: 1.7 } },
-    React.createElement('h2', null, '追加の接続'),
-    React.createElement('p', null, 'PC 間の接続は「アカウント → PC・Tailscale」で設定できます。'),
+    React.createElement('h2', null, 'リモートアクセス'),
+    React.createElement('p', null, 'PC 間接続は「アカウント → PC・Tailscale」、公開接続はCloudflare TunnelとZero Trust Accessで設定します。'),
     React.createElement('details', { open: expanded, onToggle: event => setExpanded(event.currentTarget.open) },
-      React.createElement('summary', { style: { cursor: 'pointer', padding: '14px 0' } }, 'Cloudflare・LAN・外部サービスの詳細設定'),
+      React.createElement('summary', { style: { cursor: 'pointer', padding: '14px 0' } }, 'Cloudflare Tunnel・Zero Trust Access・LAN・外部サービス'),
       expanded && React.createElement(BridgePanel, { rpcCall }),
     ),
   );
@@ -5603,15 +5603,15 @@ function apply(ctx) {
     ctx.connection.rpc.call(BRIDGE_RPC_CHANNEL, endpoint, payload, signal);
 
   // DARASK owns the native workspace picker and leaves the native mobile shell
-  // intact. Optional transports remain accessible under Plugins, without
+  // intact. Optional transports remain accessible under Remote Access, without
   // installing a second sidebar, click interceptor or upstream update banner.
-  ctx.slots.inject('settings.plugins.tab', () =>
+  ctx.slots.inject('settings.section', () =>
     ctx.slots.register(
       {
-        name: 'settings.plugins.tab',
+        name: 'settings.section',
         id: 'dsh-bridge-advanced',
-        order: 90,
-        label: () => '追加の接続',
+        order: 14,
+        label: () => 'リモートアクセス',
         inject: () => ({ rpcCall }),
       },
       AdditionalConnections,

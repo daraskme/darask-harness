@@ -3,7 +3,7 @@ import Schema from '@deepseek-ai/schemastery';
 import { resolveDshHome } from '@deepseek-ai/dsh-home-paths';
 import { createStore } from './store.mjs';
 import { createService } from './service.mjs';
-import { JEV_CREDENTIAL } from './jev.mjs';
+import { createJevPurposeRouter, JEV_CREDENTIAL } from './jev.mjs';
 import { createRoutes, createOpenRouterCallbackRoute } from './http.mjs';
 import { DEEPSEEK_CREDENTIAL, candidatesForPurpose, MODEL_ROUTES } from './config.mjs';
 import { enableClaudeRoute } from './claude-route.mjs';
@@ -218,13 +218,17 @@ export async function apply(ctx, config) {
   const tailState = await tailscale.status();
   tls.httpsHosts = tailState.url ? [new URL(tailState.url).host] : [];
   for (const route of createRoutes(service, tls)) ctx.connection.fetch.register(route);
-  ctx.on('agent/request', async ({ signal }, next) => {
+  const routePurpose = createJevPurposeRouter((state, signal) => service.classifyJevPurpose(state, signal));
+  ctx.on('agent/request', async ({ agent, signal }, next) => {
     const original = await next();
     const current = store.get();
     let request = original;
     if (current.routingEnabled) {
       signal.throwIfAborted();
-      const purpose = addons.api.currentObservation?.()?.intent?.id;
+      const observation = addons.api.observationFor(agent);
+      const localPurpose = observation?.intent?.id;
+      const state = observation?.text ?? '';
+      const purpose = await routePurpose({ agent, state, fallback: localPurpose, signal });
       const choices = candidatesForPurpose(current, service.snapshots, purpose);
       let routed;
       for (const id of choices) {

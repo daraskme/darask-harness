@@ -7,13 +7,15 @@ import { defaultBitwarden, validateBitwarden } from './bitwarden.mjs';
 
 export const DEEPSEEK_CREDENTIAL = 'DEEPSEEK_API_KEY';
 export const DEEPSEEK_ROUTE = 'deepseek-official';
-export const DEEPSEEK_MODEL = 'deepseek-v4-pro';
+export const DEEPSEEK_PRO_MODEL = 'deepseek-v4-pro';
+export const DEEPSEEK_FLASH_MODEL = 'deepseek-flash';
+export const DEEPSEEK_MODEL = DEEPSEEK_FLASH_MODEL;
 export const IDS = Object.freeze(['deepseek', 'grok', 'openai', 'openrouter', 'cursor', 'codex', 'claude', 'local']);
 export const NAMES = Object.freeze({ deepseek: 'DeepSeek API', openai: 'OpenAI API', openrouter: 'OpenRouter', grok: 'Grok Build', cursor: 'Cursor', codex: 'Codex', claude: 'Claude Code', local: 'ローカルモデル' });
 export const MODEL_ROUTES = Object.freeze({ deepseek: DEEPSEEK_ROUTE, openai: 'openai', openrouter: 'openrouter', grok: 'grok', codex: 'openai-codex', claude: 'anthropic', local: 'darask-local' });
 export const PURPOSE_IDS = Object.freeze(['architecture', 'research', 'collaboration', 'refactor', 'new', 'medium', 'simple', 'spec_driven']);
 export function defaultPurposeRoutes() {
-  return Object.fromEntries(PURPOSE_IDS.map(id => [id, 'deepseek']));
+  return Object.fromEntries(PURPOSE_IDS.map(id => [id, id === 'research' ? 'grok' : 'deepseek']));
 }
 export function defaultConfig() {
   return { priority: [...IDS], routingEnabled: true, purposeRoutes: defaultPurposeRoutes(), modelVisibility: defaultModelVisibility(), bitwarden: defaultBitwarden(), local: defaultLocal(), computer: defaultComputer(), openai: defaultOpenAi(), providers: Object.fromEntries(IDS.map(id => [id, { enabled: id !== 'local', model: id === 'deepseek' ? DEEPSEEK_MODEL : id === 'grok' ? 'grok-4.6' : id === 'openai' ? OPENAI_DEFAULT_MODEL : '', executable: '' }])) };
@@ -53,7 +55,7 @@ export function validateConfig(input, base = defaultConfig()) {
     if (!input.providers || typeof input.providers !== 'object' || Array.isArray(input.providers)) throw new Error('Invalid providers');
     const providers = { ...input.providers };
     if (providers.gateway !== undefined) {
-      if (providers.deepseek === undefined) providers.deepseek = { ...providers.gateway, model: providers.gateway.model === 'deepseek/deepseek-v4-pro' ? DEEPSEEK_MODEL : providers.gateway.model };
+      if (providers.deepseek === undefined) providers.deepseek = { ...providers.gateway, model: providers.gateway.model === 'deepseek/deepseek-v4-pro' ? DEEPSEEK_PRO_MODEL : providers.gateway.model };
       delete providers.gateway;
     }
     if (Object.keys(providers).some(id => !IDS.includes(id))) throw new Error('Invalid providers');

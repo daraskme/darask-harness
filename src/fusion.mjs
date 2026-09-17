@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseSkillMarkdown } from './skill-dsh-dev.mjs';
 import { routeFromLookup } from './skill-unseen-gemma4.mjs';
-import { DEEPSEEK_MODEL, DEEPSEEK_ROUTE } from './config.mjs';
+import { DEEPSEEK_FLASH_MODEL, DEEPSEEK_PRO_MODEL, DEEPSEEK_ROUTE } from './config.mjs';
 
 export const FUSION_SKILL_FILE = fileURLToPath(new URL('../skills/cognition-fusion/SKILL.md', import.meta.url));
 export const FUSION_SKILL_PROVIDER = 'darask-cognition-fusion';
@@ -21,9 +21,16 @@ export const FUSION_PROMPT = [
 export const DEEPSEEK_MANAGER_PROMPT = [
   'DARASK orchestration (DeepSeek V4 Pro lead):',
   'You own the user conversation, planning, tool selection, integration, verification, and final answer. Do not hand overall control to Jev or Grok.',
-  'Use darask_jev_evaluate only for typed classification, routing, rubric scoring, or verification when predefined answer types are useful. Jev does not chat, browse, code, or manage tools.',
-  'For facts that require current public Web or X data, use subagent with provider grok and model grok-4.6. Tell it to use its web_search and x_search server tools as appropriate and return sources. Keep the same Grok child for follow-up research when possible.',
-  'Handle coding, local files, system coordination, synthesis, and every task Jev or Grok cannot or should not perform yourself with native tools. If either specialist is unavailable, report that limitation and continue safely without pretending it ran.',
+  'Jev performs one typed purpose classification automatically at the start of each user turn. Use darask_jev_evaluate again for rubric scoring or final verification when predefined answer types are useful. Jev does not chat, browse, code, or manage tools.',
+  'For facts that require current public Web or X data, you MUST use subagent with provider grok and model grok-4.6, instruct it to run web_search or x_search, and require cited sources. Do not answer current public claims from memory or generic search when Grok is available.',
+  'Handle coding, local files, system coordination, synthesis, and every task Jev or Grok cannot or should not perform yourself with native tools. If either specialist is unavailable, explicitly report the fallback and continue safely without pretending it ran.',
+].join('\n');
+
+export const GROK_RESEARCH_PROMPT = [
+  'DARASK public research specialist (Grok 4.6):',
+  'For current public Web facts, run web_search before answering. For X posts or current X discourse, run x_search as well. Do not answer current claims from memory alone.',
+  'Return source URLs and distinguish observed facts from inference. If server search is unavailable, say so instead of pretending it ran.',
+  'Local files, installed software, private Tailnet services, and repository state are not public research; do not fabricate external evidence for them.',
 ].join('\n');
 
 export const SOL_LUNA_PROMPT = [
@@ -47,7 +54,8 @@ export function isOpenAiSolLead(route) {
 }
 
 export function isDeepseekV4Lead(route) {
-  return String(route?.provider ?? '').trim().toLowerCase() === DEEPSEEK_ROUTE && String(route?.model ?? '').trim().toLowerCase() === DEEPSEEK_MODEL;
+  const model = String(route?.model ?? '').trim().toLowerCase();
+  return String(route?.provider ?? '').trim().toLowerCase() === DEEPSEEK_ROUTE && [DEEPSEEK_FLASH_MODEL, DEEPSEEK_PRO_MODEL].includes(model);
 }
 
 export function isFusionLeadRoute(route) {
@@ -67,6 +75,7 @@ export function fusionPrompt(context = {}) {
     model: String(context.variables?.model || fromAgent.model || ''),
   };
   if (isOpenAiSolLead(route)) return SOL_LUNA_PROMPT;
+  if (route.provider.toLowerCase() === 'grok' && route.model.toLowerCase() === 'grok-4.6') return GROK_RESEARCH_PROMPT;
   if (isDeepseekV4Lead(route)) return DEEPSEEK_MANAGER_PROMPT;
   return isFusionLeadRoute(route) ? FUSION_PROMPT : '';
 }

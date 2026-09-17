@@ -4,6 +4,7 @@ import { MODEL_CATALOGS, defaultModelVisibility, updateModelCatalogIfRegistered,
 
 test('default model visibility exposes only the requested provider catalogs', () => {
   const defaults = defaultModelVisibility();
+  assert.deepEqual(defaults.deepseek, ['deepseek-flash', 'deepseek-v4-pro']);
   assert.deepEqual(defaults.openai, ['gpt-5.6-sol', 'gpt-5.6-luna']);
   assert.deepEqual(defaults.codex, ['gpt-6-astra', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna']);
   assert.deepEqual(defaults.grok, ['grok-4.6']);
@@ -12,7 +13,8 @@ test('default model visibility exposes only the requested provider catalogs', ()
 });
 
 test('model visibility persists empty selections and rejects unknown ids', () => {
-  const visibility = validateModelVisibility({ openrouter: [], openai: ['gpt-5.6-luna'] });
+  const visibility = validateModelVisibility({ openrouter: [], openai: ['gpt-5.6-luna'], deepseek: ['deepseek-v4-pro'] });
+  assert.deepEqual(visibleModelCatalog('deepseek', visibility).map(model => model.id), ['deepseek-flash', 'deepseek-v4-pro']);
   assert.deepEqual(visibleModelCatalog('openrouter', visibility), []);
   assert.deepEqual(visibleModelCatalog('openai', visibility).map(model => model.id), ['gpt-5.6-luna']);
   assert.throws(() => validateModelVisibility({ openai: ['made-up-model'] }), /visible models/u);

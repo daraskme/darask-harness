@@ -38,9 +38,9 @@ test('default orchestration uses official DeepSeek lead with Grok search fallbac
   assert.equal(MODEL_ROUTES.deepseek, DEEPSEEK_ROUTE);
   assert.equal(config.providers.deepseek.model, DEEPSEEK_MODEL);
   assert.equal(config.providers.grok.model, 'grok-4.6');
-  for (const purpose of PURPOSE_IDS) assert.equal(config.purposeRoutes[purpose], 'deepseek');
-  assert.equal(candidatesForPurpose(config, { deepseek: { auth: 'authenticated' } }, 'research')[0], 'deepseek');
-  assert.equal(candidatesForPurpose(config, { deepseek: { auth: 'unauthenticated' } }, 'research')[0], 'grok');
+  for (const purpose of PURPOSE_IDS) assert.equal(config.purposeRoutes[purpose], purpose === 'research' ? 'grok' : 'deepseek');
+  assert.equal(candidatesForPurpose(config, { deepseek: { auth: 'authenticated' } }, 'research')[0], 'grok');
+  assert.equal(candidatesForPurpose(config, { grok: { auth: 'unavailable' } }, 'research')[0], 'deepseek');
 });
 
 test('saved Vercel conversation settings migrate to official DeepSeek without sharing the Jev key', () => {
@@ -53,7 +53,7 @@ test('saved Vercel conversation settings migrate to official DeepSeek without sh
   });
   assert.equal(config.priority[0], 'deepseek');
   assert.equal(config.purposeRoutes.research, 'deepseek');
-  assert.deepEqual(config.modelVisibility.deepseek, ['deepseek-v4-pro']);
+  assert.deepEqual(config.modelVisibility.deepseek, ['deepseek-v4-pro', 'deepseek-flash']);
   assert.equal(config.providers.deepseek.model, 'deepseek-v4-pro');
   assert.ok(!JSON.stringify(config).includes('jev-only-key'));
 });

@@ -4359,16 +4359,16 @@ function BridgePanel({ rpcCall }) {
   );
 }
 function AdditionalConnections({ rpcCall }) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(true);
   return React.createElement(
     "section",
     { style: { color: "var(--dsw-alias-label-primary)", lineHeight: 1.7 } },
-    React.createElement("h2", null, "\u8FFD\u52A0\u306E\u63A5\u7D9A"),
-    React.createElement("p", null, "PC \u9593\u306E\u63A5\u7D9A\u306F\u300C\u30A2\u30AB\u30A6\u30F3\u30C8 \u2192 PC\u30FBTailscale\u300D\u3067\u8A2D\u5B9A\u3067\u304D\u307E\u3059\u3002"),
+    React.createElement("h2", null, "\u30EA\u30E2\u30FC\u30C8\u30A2\u30AF\u30BB\u30B9"),
+    React.createElement("p", null, "PC \u9593\u63A5\u7D9A\u306F\u300C\u30A2\u30AB\u30A6\u30F3\u30C8 \u2192 PC\u30FBTailscale\u300D\u3001\u516C\u958B\u63A5\u7D9A\u306FCloudflare Tunnel\u3068Zero Trust Access\u3067\u8A2D\u5B9A\u3057\u307E\u3059\u3002"),
     React.createElement(
       "details",
       { open: expanded, onToggle: (event) => setExpanded(event.currentTarget.open) },
-      React.createElement("summary", { style: { cursor: "pointer", padding: "14px 0" } }, "Cloudflare\u30FBLAN\u30FB\u5916\u90E8\u30B5\u30FC\u30D3\u30B9\u306E\u8A73\u7D30\u8A2D\u5B9A"),
+      React.createElement("summary", { style: { cursor: "pointer", padding: "14px 0" } }, "Cloudflare Tunnel\u30FBZero Trust Access\u30FBLAN\u30FB\u5916\u90E8\u30B5\u30FC\u30D3\u30B9"),
       expanded && React.createElement(BridgePanel, { rpcCall })
     )
   );
@@ -4377,13 +4377,13 @@ function apply(ctx) {
   ctx.effect(() => installLocale(ctx.locale), "dsh-bridge-gateway:locale");
   const rpcCall = (endpoint, payload, signal) => ctx.connection.rpc.call(BRIDGE_RPC_CHANNEL, endpoint, payload, signal);
   ctx.slots.inject(
-    "settings.plugins.tab",
+    "settings.section",
     () => ctx.slots.register(
       {
-        name: "settings.plugins.tab",
+        name: "settings.section",
         id: "dsh-bridge-advanced",
-        order: 90,
-        label: () => "\u8FFD\u52A0\u306E\u63A5\u7D9A",
+        order: 14,
+        label: () => "\u30EA\u30E2\u30FC\u30C8\u30A2\u30AF\u30BB\u30B9",
         inject: () => ({ rpcCall })
       },
       AdditionalConnections

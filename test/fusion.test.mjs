@@ -8,6 +8,7 @@ import {
   FUSION_PROMPT,
   FUSION_SKILL_FILE,
   FUSION_SKILL_PROVIDER,
+  GROK_RESEARCH_PROMPT,
   SOL_LUNA_PROMPT,
   fusionPrompt,
   isDeepseekV4Lead,
@@ -40,6 +41,7 @@ test('DeepSeek V4 Pro manages work and delegates only typed evaluation and live 
   const route = { provider: 'deepseek-official', model: 'deepseek-v4-pro' };
   assert.equal(isDeepseekV4Lead(route), true);
   assert.equal(fusionPrompt({ agent: { options: route } }), DEEPSEEK_MANAGER_PROMPT);
+  assert.equal(fusionPrompt({ agent: { options: { provider: 'deepseek-official', model: 'deepseek-flash' } } }), DEEPSEEK_MANAGER_PROMPT);
   assert.match(DEEPSEEK_MANAGER_PROMPT, /darask_jev_evaluate/);
   assert.match(DEEPSEEK_MANAGER_PROMPT, /provider grok/);
   assert.match(DEEPSEEK_MANAGER_PROMPT, /grok-4\.6/);
@@ -51,7 +53,10 @@ test('fusionPrompt is empty off the lead route and stable on it', () => {
   const claude = { agent: { options: { provider: 'openrouter', model: 'anthropic/claude-opus-4.6' } } };
   const grok = { agent: { options: { provider: 'grok', model: 'grok-4.6' } } };
   assert.equal(fusionPrompt(claude), FUSION_PROMPT);
-  assert.equal(fusionPrompt(grok), '');
+  assert.equal(fusionPrompt(grok), GROK_RESEARCH_PROMPT);
+  assert.match(GROK_RESEARCH_PROMPT, /run web_search/);
+  assert.match(GROK_RESEARCH_PROMPT, /run x_search/);
+  assert.match(GROK_RESEARCH_PROMPT, /source URLs/);
   assert.equal(fusionPrompt({}), '');
   assert.equal(fusionPrompt({ agent: { options: { provider: 'openai', model: 'gpt-5.6-sol' } } }), SOL_LUNA_PROMPT);
   assert.match(SOL_LUNA_PROMPT, /gpt-5\.6-luna/);

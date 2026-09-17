@@ -93,13 +93,13 @@ test('Accounts centralizes provider login; sidebar Usage displays available bala
     { id: 'claude', name: 'Claude', usage: { status: 'unavailable' } },
   ].map(p => ({ ...p, usage: p.id === 'claude' ? { ...p.usage, message: 'Subscription usage is supplied by Claude Code statusLine during a session; account status does not expose a balance.' } : p.usage, enabled: true, auth: 'authenticated', model: p.model ?? '', executable: '', capability: p.id === 'cursor' ? 'agent' : 'model' }));
   const props = { t: key => dictionary.ja[key], wide: true, action: async () => {}, load: async () => {},
-    useDaraskStatus: () => ({ data: { providers, priority: providers.map(p => p.id), routingEnabled: false, purposeRoutes: { research: 'grok' }, jev: { model: 'typesafe-ai/jev', configured: false }, bitwarden: { configured: false, targets: [{ ref: 'DEEPSEEK_API_KEY', label: 'DeepSeek API', automatic: true }, { ref: 'AI_GATEWAY_API_KEY', label: 'Vercel AI Gateway', automatic: true }, { ref: 'DARASK_R2_ACCESS_KEY_ID', label: 'R2 Access Key ID', automatic: true }, { ref: 'DARASK_R2_SECRET_ACCESS_KEY', label: 'R2 Secret Access Key', automatic: true }, { ref: 'DARASK_CLOUDFLARE_BROWSER_RUN', label: 'Cloudflare Browser Run', automatic: true }], config: { enabled: false, executable: '', secretIds: {} } } }, pending: null, error: null, loading: false }) };
+    useDaraskStatus: () => ({ data: { providers, priority: providers.map(p => p.id), routingEnabled: false, purposeRoutes: { research: 'grok' }, jev: { model: 'typesafe-ai/jev', configured: true, routing: { status: 'available', purpose: 'research' } }, bitwarden: { configured: false, targets: [{ ref: 'DEEPSEEK_API_KEY', label: 'DeepSeek API', automatic: true }, { ref: 'AI_GATEWAY_API_KEY', label: 'Vercel AI Gateway', automatic: true }, { ref: 'DARASK_R2_ACCESS_KEY_ID', label: 'R2 Access Key ID', automatic: true }, { ref: 'DARASK_R2_SECRET_ACCESS_KEY', label: 'R2 Secret Access Key', automatic: true }, { ref: 'DARASK_CLOUDFLARE_BROWSER_RUN', label: 'Cloudflare Browser Run', automatic: true }], config: { enabled: false, executable: '', secretIds: {} } } }, pending: null, error: null, loading: false }) };
   const sidebar = renderToStaticMarkup(React.createElement(usage.component, props));
   for (const text of ['Usage', 'OpenAI API', 'OpenRouter', 'Grok', 'Codex', 'Claude', '残り 64%', '12.3456789', '0 USD', '1,200', 'Claude Code のステータス表示連携を設定すると、取得できる利用枠を表示します。']) assert.ok(sidebar.includes(text), text);
   assert.ok(!sidebar.includes('Cursor')); assert.ok(!sidebar.includes('残り 0%'));
   const panel = renderToStaticMarkup(React.createElement(accounts.component, props));
-  for (const text of ['アカウント', 'DeepSeek API', 'DeepSeek公式APIキー', 'DeepSeek V4 Pro', 'OpenAI API', 'データ共有の危険', 'OpenRouter', 'Grok', 'Cursor', 'Codex', 'Claude', 'ログイン', '会話モデル・CLI への作業委任', 'モデル選択に表示', 'OpenRouter · OpenAI Sol', 'Codex · Astra', 'Claude Fable 5.1']) assert.ok(panel.includes(text), text);
-  for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行', 'Bitwarden Secrets Manager', 'Machine Accountアクセストークン', 'bws CLIの実行ファイル', 'Bitwarden Secrets Manager全体の設定方法', 'DeepSeek APIキーの取得・保存方法', 'Vercel AI Gateway APIキーの取得・保存方法', 'Cloudflare R2資格情報の取得・保存方法', 'Cloudflare Browser Runの設定方法', 'DARASK_R2_ACCESS_KEY_ID', 'DARASK_R2_SECRET_ACCESS_KEY', 'Browser Rendering', 'DARASK_CLOUDFLARE_BROWSER_RUN', '32文字のCloudflareアカウントID', 'bitwarden.com/help/secrets-manager-quick-start', 'api-docs.deepseek.com', 'vercel.com/docs/ai-gateway', 'developers.cloudflare.com/r2/api/tokens', 'developers.cloudflare.com/browser-run/get-started']) assert.ok(panel.includes(text), text);
+  for (const text of ['アカウント', 'DeepSeek API', 'DeepSeek公式APIキー', 'DeepSeek V4 Pro', 'DeepSeek V4.1 Flash', 'OpenAI API', 'データ共有の危険', 'OpenRouter', 'Grok', 'Cursor', 'Codex', 'Claude', 'ログイン', '会話モデル・CLI への作業委任', 'モデル選択に表示', 'OpenRouter · OpenAI Sol', 'Codex · Astra', 'Claude Fable 5.1']) assert.ok(panel.includes(text), text);
+  for (const text of ['用途別のモデル', '検索・調査', 'Jev 評価', '前回のJev自動判定', 'typesafe-ai/jev', 'Vercel AI Gateway API キー', 'API キーを発行', 'Bitwarden Secrets Manager', 'Machine Accountアクセストークン', 'bws CLIの実行ファイル', 'Bitwarden Secrets Manager全体の設定方法', 'DeepSeek APIキーの取得・保存方法', 'Vercel AI Gateway APIキーの取得・保存方法', 'Cloudflare R2資格情報の取得・保存方法', 'Cloudflare Browser Runの設定方法', 'DARASK_R2_ACCESS_KEY_ID', 'DARASK_R2_SECRET_ACCESS_KEY', 'Browser Rendering', 'DARASK_CLOUDFLARE_BROWSER_RUN', '32文字のCloudflareアカウントID', 'bitwarden.com/help/secrets-manager-quick-start', 'api-docs.deepseek.com', 'vercel.com/docs/ai-gateway', 'developers.cloudflare.com/r2/api/tokens', 'developers.cloudflare.com/browser-run/get-started']) assert.ok(panel.includes(text), text);
   assert.ok(panel.indexOf('DeepSeek公式APIキー') < panel.indexOf('Jev 評価'));
   assert.ok(!panel.includes('placeholder="Secret UUID"'));
   assert.match(panel, /<select[^>]*><option value="">通常の優先順位<\/option>.*?<option value="grok" selected="">Grok<\/option>/);
@@ -183,9 +183,9 @@ test('workspace UI retains other PCs and shows existing and added remote workspa
   assert.ok(localStatus.includes('data-state="ongoing"'));
 });
 
-test('optional Bridge UI does not install duplicate workspace or mobile navigation handlers', () => {
+test('Bridge UI exposes Cloudflare remote access without duplicate workspace or mobile navigation handlers', () => {
   let plugin; const entries = [], disposers = [];
-  const window = { crypto: { randomUUID: () => 'test' }, __ModuleLoader__: { load({ factory }) { plugin = factory(require); } } };
+  const window = { location: { hostname: 'localhost', port: '3080', protocol: 'http:' }, crypto: { randomUUID: () => 'test' }, __ModuleLoader__: { load({ factory }) { plugin = factory(require); } } };
   vm.runInNewContext(readFileSync(new URL('../vendor/dsh-bridge-gateway/client/client.js', import.meta.url), 'utf8'), {
     window, document: new Proxy({}, { get() { throw new Error('Bridge must not intercept the native shell'); } }), URL, setTimeout, clearTimeout,
   });
@@ -194,11 +194,12 @@ test('optional Bridge UI does not install duplicate workspace or mobile navigati
     slots: { inject(_slot, callback) { return callback(); }, register(options, component) { entries.push({ options, component }); return () => {}; } },
   });
   assert.equal(entries.length, 1);
-  assert.equal(entries[0].options.name, 'settings.plugins.tab');
+  assert.equal(entries[0].options.name, 'settings.section');
   assert.equal(entries[0].options.id, 'dsh-bridge-advanced');
+  assert.equal(entries[0].options.label(), 'リモートアクセス');
   assert.equal(window.__dshOpenRemoteWorkspaceModal, undefined);
   const panel = renderToStaticMarkup(React.createElement(entries[0].component));
-  assert.ok(panel.includes('PC・Tailscale')); assert.ok(!panel.includes('直通ゲートウェイ'));
+  for (const text of ['PC・Tailscale', 'Cloudflare Tunnel', 'Zero Trust Access']) assert.ok(panel.includes(text), text);
   disposers.forEach(dispose => dispose?.());
 });
 
